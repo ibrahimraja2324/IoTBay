@@ -1,10 +1,9 @@
 package model;
 
 public class User {
-    private Integer userID;
+    private String email;
     private String fullName;
     private Integer phoneNumber;
-    private String email;
     private String password;
     private String address1;
     private String address2;
@@ -15,5 +14,5 @@ public class User {
     private Integer cardExpiry;
     private Integer cardCVV;
 
-    
+
 }
