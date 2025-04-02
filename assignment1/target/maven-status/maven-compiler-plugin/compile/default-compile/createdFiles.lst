@@ -1,0 +1,6 @@
+iotbay\model\Device.class
+iotbay\controller\LoginServlet.class
+iotbay\model\Order.class
+iotbay\model\User.class
+iotbay\dao\UserDAO.class
+iotbay\util\DBConnector.class
