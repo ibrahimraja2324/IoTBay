@@ -1,7 +1,8 @@
 package iotbay.dao;
 
-import uts.isd.model.User;
+import iotbay.model.*;
 import java.sql.*;
+
 
 /* 
 * DBManager is the primary DAO class to interact with the database. 
@@ -18,7 +19,7 @@ public class DBManager {
 
     // Find user by email and password in the database
     public User findUser(String email, String password) throws SQLException {
-        String query = "SELECT * FROM Users WHERE email='" + email + "' AND password='" + password + "'";
+        String query = "SELECT * FROM User WHERE email='" + email + "' AND password='" + password + "'";
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
             String userEmail = rs.getString("email");
@@ -35,7 +36,7 @@ public class DBManager {
     public void addUser(String email, String name, String password, String gender, String favcol) throws SQLException { // code
                                                                                                                         // for
                                                                                                                         // add-operation
-        String query = "INSERT INTO Users (email, name, password, gender, favcol) VALUES ('" + email + "', '" + name + "', '" + password + "', '" + gender + "', '" + favcol + "')";
+        String query = "INSERT INTO User (email, name, password, gender, favcol) VALUES ('" + email + "', '" + name + "', '" + password + "', '" + gender + "', '" + favcol + "')";
         st.executeUpdate(query);
 
     }
@@ -43,14 +44,14 @@ public class DBManager {
     // update a user details in the database
     public void updateUser(String email, String name, String password, String gender, String favcol)
             throws SQLException {
-        String query = "UPDATE Users SET name='" + name + "', password='" + password + "', gender='" + gender + "', favcol='" + favcol + "' WHERE email='" + email + "'";
+        String query = "UPDATE User SET name='" + name + "', password='" + password + "', gender='" + gender + "', favcol='" + favcol + "' WHERE email='" + email + "'";
         st.executeUpdate(query);
 
     }
 
     // delete a user from the database
     public void deleteUser(String email) throws SQLException {
-        String query = "DELETE FROM Users WHERE email='" + email + "'";
+        String query = "DELETE FROM User WHERE email='" + email + "'";
         st.executeUpdate(query);
 
     }

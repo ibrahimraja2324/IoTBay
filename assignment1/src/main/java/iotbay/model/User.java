@@ -3,8 +3,9 @@ package iotbay.model;
 public class User {
     private int userID;
     private String name;
+    private String gender;
     private String emailAddress;
-
+    private String favouriteColour;
     private String email;
     private String phone;
     private String fullName;
@@ -30,7 +31,15 @@ public class User {
         this.password = password;
     }
     
-   
+    
+
+    public User(String userEmail, String userName, String userPassword, String userGender, String userFavcol) {
+        this.email = userEmail;
+        this.name = userName;
+        this.password = userPassword;
+        this.gender = userGender;
+        this.favouriteColour = userFavcol;
+    }
     public int getUserID() {
         return userID;
     }
