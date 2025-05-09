@@ -2,12 +2,9 @@ package iotbay.controller;
 
 import iotbay.dao.UserDAO;
 import iotbay.model.User;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.*;
 import java.io.IOException;
-
-@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -25,7 +22,7 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("currentUser", user);
             // Redirect to the main page or dashboard
-            response.sendRedirect("main.jsp");
+            response.sendRedirect("welcome.jsp");
         } else {
             // If login fails, set an error attribute and forward back to login page
             request.setAttribute("errorMessage", "Invalid email or password.");
@@ -37,4 +34,6 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.sendRedirect("login.jsp");
     }
+
+
 }

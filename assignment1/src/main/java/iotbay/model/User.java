@@ -2,14 +2,15 @@ package iotbay.model;
 
 public class User {
     private int userID;
-    private String name;
-    private String gender;
-    private String emailAddress;
-    private String favouriteColour;
+    private String firstName;
+    private String lastName;
     private String email;
-    private String phone;
-    private String fullName;
     private String password;
+    private String phone;  
+
+    // currently not used
+    private String gender;
+    private String favouriteColour;   
     private String address1;
     private String address2;
     private String suburb;
@@ -24,50 +25,35 @@ public class User {
     }
     
  
-    public User(String fullName, String email, String phone, String password) {
-        this.fullName = fullName;
+    public User(String firstName, String lastName, String email, String password, String phone) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
-        this.phone = phone;
         this.password = password;
+        this.phone = phone;
     }
     
-    
-
-    public User(String userEmail, String userName, String userPassword, String userGender, String userFavcol) {
-        this.email = userEmail;
-        this.name = userName;
-        this.password = userPassword;
-        this.gender = userGender;
-        this.favouriteColour = userFavcol;
-    }
     public int getUserID() {
         return userID;
     }
     public void setUserID(int userID) {
         this.userID = userID;
     }
-    
-    public String getFullName() {
-        return fullName;
+
+    public String getFirstName() {
+        return firstName;
     }
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getName() {
-        return name;
+    public String getLastName() {
+        return lastName;
     }
     
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-    
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
     
     public String getEmail() {
@@ -77,6 +63,13 @@ public class User {
         this.email = email;
     }
     
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -84,12 +77,7 @@ public class User {
         this.phone = phone;
     }
     
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    
 
 
 }

@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en" id="login-page">
 <head>
@@ -14,14 +13,10 @@
        <div class="nav-left">
           <a href="index.jsp">Home</a>
        </div>
-       <div class="nav-right">
-          <a href="login.jsp">Login</a>
-          <a href="register.jsp">Register</a>
-       </div>
     </nav>
     
  
-    <form class="login-box" action="welcome.jsp" method="post">
+    <form class="login-box" action="${pageContext.request.contextPath}/LoginServlet" method="post">
         <h2>Welcome Back</h2>
         <c:if test="${not empty errorMessage}">
             <p style="color: red;">${errorMessage}</p>

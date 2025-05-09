@@ -13,16 +13,17 @@
        <div class="nav-left">
           <a href="index.jsp">Home</a>
        </div>
-       <div class="nav-right">
-          <a href="login.jsp">Login</a>
-          <a href="register.jsp">Register</a>
-       </div>
     </nav>
     
    
     <div class="index-content">
-        <h2>Hello World!</h2>
-        <p>Welcome to IoTBay</p>
+        <h2>Welcome to IoTBay!</h2>
+        <p>Your one-stop solution for IoT Devices</p>
+
+        <div class="action-buttons">
+            <a href="login.jsp" class="btn-primary">Login</a>
+            <a href="register.jsp" class="btn-secondary">Register</a>
+        </div>
     </div>
 </body>
 </html>

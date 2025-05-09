@@ -1,7 +1,7 @@
 package iotbay.dao;
 
-import iotbay.model.User;
-import iotbay.util.DBConnector;
+import iotbay.model.*;
+import iotbay.dao.DBConnector;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,27 +12,60 @@ public class UserDAO {
     // Validate a user login by checking email and password
     public User validateUser(String email, String password) {
         User user = null;
-        String sql = "SELECT * FROM User WHERE EmailAddress = ? AND Password = ?";
-        try (Connection conn = DBConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
+        String sql = "SELECT * FROM User WHERE Email = ? AND Password = ?";
+        DBConnector db = null;
+        try {
+            db = new DBConnector();
+            Connection conn = db.openConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
             stmt.setString(1, email);
-            stmt.setString(2, password);  // In production, use hashed passwords!
-            
+            stmt.setString(2, password);
+
             ResultSet rs = stmt.executeQuery();
-            
+
             if (rs.next()) {
                 user = new User();
                 user.setUserID(rs.getInt("UserID"));
-                user.setName(rs.getString("Name"));
-                user.setEmailAddress(rs.getString("EmailAddress"));
-                // set other fields as needed...
+                user.setFirstName(rs.getString("FirstName"));
+                user.setLastName(rs.getString("LastName"));
+                user.setEmail(rs.getString("EmailAddress"));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();  // Handle exceptions appropriately
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (db != null) {
+                db.closeConnection(); // Ensure the connection is closed
+            }
         }
         return user;
     }
-    
+
+    public boolean registerUser(User user) {
+        String sql = "INSERT INTO User (FirstName, LastName, Email, Password, PhoneNumber) VALUES (?, ?, ?, ?, ?)";
+        DBConnector db = null;
+        try {
+            db = new DBConnector();
+            Connection conn = db.openConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, user.getFirstName());
+            stmt.setString(2, user.getLastName());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getPassword());
+            stmt.setString(5, user.getPhone());
+
+            stmt.executeUpdate();
+            return true; // Registration successful
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle exceptions appropriately
+            return false; // Registration failed
+        } finally {
+            if (db != null) {
+                db.closeConnection(); // Ensure the connection is closed
+            }
+        }
+    }
+
     // You can add more methods to register new users, update user info, etc.
 }

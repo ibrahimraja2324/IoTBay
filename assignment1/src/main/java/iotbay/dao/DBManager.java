@@ -19,15 +19,15 @@ public class DBManager {
 
     // Find user by email and password in the database
     public User findUser(String email, String password) throws SQLException {
-        String query = "SELECT * FROM User WHERE email='" + email + "' AND password='" + password + "'";
+        String query = "SELECT * FROM User WHERE Email='" + email + "' AND Password='" + password + "'";
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
-            String userEmail = rs.getString("email");
-            String userName = rs.getString("name");
-            String userPassword = rs.getString("password");
-            String userGender = rs.getString("gender");
-            String userFavcol = rs.getString("favcol");
-            return new User(userEmail, userName, userPassword, userGender, userFavcol);
+            String FirstName = rs.getString("FirstName");
+            String LastName = rs.getString("LastName");
+            String userEmail = rs.getString("Email");
+            String userPassword = rs.getString("Password");
+            String userPhone = rs.getString("PhoneNumber");
+            return new User(FirstName, LastName, userEmail, userPassword, userPhone);
         }
         return null;
     }

@@ -23,35 +23,33 @@
   <div id="welcome-page">
     <div class="welcome-box">
       <%
-        
-        String name = request.getParameter("name");
-        String phone = request.getParameter("phone");
-        String emailParam = request.getParameter("email");
-        String passwordParam = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirmPassword");
-        
-        User newUser = new User();
-        newUser.setName(name);
-        newUser.setPhone(phone);
-        newUser.setEmailAddress(emailParam);
-        newUser.setPassword(passwordParam);
-        
-        session.setAttribute("currentUser", newUser);
+        User newUser = (User) session.getAttribute("currentUser");
+        if (newUser == null) {
+            response.sendRedirect("login.jsp");
+        }
       %>
-      
-      <h2>Registration Successful!</h2>
-      <p>The following details have been registered:</p>
-      <ul>
-        <li>Full Name: <%= newUser.getName() %></li>
-        <li>Email: <%= newUser.getEmailAddress() %></li>
-        <li>Phone: <%= newUser.getPhone() %></li>
-      </ul>
-      
-      <p>Please choose an option:</p>
-      <a href="login.jsp">Return to Login</a>
-      <a href="main.jsp">Proceed to Main</a>
+
+  <h2>Registration Successful!</h2>
+  <p>The following details have been registered:</p>
+  <ul>
+      <li>Full Name: <%= newUser.getFirstName() + " " + newUser.getLastName() %></li>
+      <li>Email: <%= newUser.getEmail() %></li>
+      <li>Phone: <%= newUser.getPhone() %></li>
+  </ul>
+        
+        <h2>Registration Successful!</h2>
+        <p>The following details have been registered:</p>
+        <ul>
+          <li>Full Name: <%= newUser.getFirstName() + " " + newUser.getLastName() %></li>
+          <li>Email: <%= newUser.getEmail() %></li>
+          <li>Phone: <%= newUser.getPhone() %></li>
+        </ul>
+        
+        <p>Please choose an option:</p>
+        <a href="login.jsp">Return to Login</a>
+        <a href="main.jsp">Proceed to Main</a>
+      </div>
     </div>
-  </div>
-  
-</body>
+    
+  </body>
 </html>
