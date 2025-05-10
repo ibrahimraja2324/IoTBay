@@ -27,10 +27,19 @@
          User user = (User) session.getAttribute("currentUser");
          boolean submitted = false;
 
-         if(request.getParameter("name") != null) {
-             user.setName(request.getParameter("name"));
+         if (request.getParameter("name") != null) {
+             // Split the name field into first and last name.
+             String nameInput = request.getParameter("name").trim();
+             String[] names = nameInput.split(" ", 2);
+             user.setFirstName(names[0]);
+             if (names.length > 1) {
+                 user.setLastName(names[1]);
+             } else {
+                 user.setLastName("");
+             }
+             // Update the remaining fields using the correct setter methods
              user.setPhone(request.getParameter("phone"));
-             user.setEmailAddress(request.getParameter("email"));
+             user.setEmail(request.getParameter("email"));
              user.setPassword(request.getParameter("password"));
              
              session.setAttribute("currentUser", user);
@@ -38,7 +47,7 @@
          }
       %>
       
-      <% if(submitted) { %>
+      <% if (submitted) { %>
          <h2>Profile Updated!</h2>
          <p>Your profile has been updated successfully.</p>
          <p>
@@ -48,13 +57,14 @@
          <h2>Edit Your Profile</h2>
          <form class="edit-form" action="edit.jsp" method="post">
              <label>Full Name:</label>
-             <input type="text" name="name" value="<%= user.getName() != null ? user.getName() : "" %>" required>
+             <input type="text" name="name" value="<%= ((user.getFirstName() != null ? user.getFirstName() : "") 
+                     + " " + (user.getLastName() != null ? user.getLastName() : "")).trim() %>" required>
              
              <label>Phone Number:</label>
              <input type="text" name="phone" value="<%= user.getPhone() != null ? user.getPhone() : "" %>" required>
              
              <label>Email:</label>
-             <input type="text" name="email" value="<%= user.getEmailAddress() != null ? user.getEmailAddress() : "" %>" required>
+             <input type="text" name="email" value="<%= user.getEmail() != null ? user.getEmail() : "" %>" required>
              
              <label>Password:</label>
              <input type="password" name="password" value="<%= user.getPassword() != null ? user.getPassword() : "" %>" required>

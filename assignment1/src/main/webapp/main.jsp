@@ -26,7 +26,7 @@
         User currentUser = (User) session.getAttribute("currentUser");
         if(currentUser != null) {
       %>
-        <h2>Welcome, <%= currentUser.getName() != null ? currentUser.getName() : currentUser.getEmailAddress() %>!</h2>
+      <h2>Welcome, <%= (currentUser.getFirstName() + " " + currentUser.getLastName()).trim().isEmpty() ? currentUser.getEmail() : (currentUser.getFirstName() + " " + currentUser.getLastName()) %>!</h2>
         <p>Your details are as follows:</p>
         <table class="user-details">
            <tr>
@@ -39,11 +39,13 @@
            </tr>
            <tr>
              <td>Full Name</td>
-             <td><%= currentUser.getName() %></td>
+             <td><%= currentUser.getFirstName() + " " + currentUser.getLastName() %></td>
+
            </tr>
            <tr>
              <td>Email</td>
-             <td><%= currentUser.getEmailAddress() %></td>
+             <td><%= currentUser.getEmail() %></td>
+
            </tr>
            <tr>
              <td>Phone</td>
