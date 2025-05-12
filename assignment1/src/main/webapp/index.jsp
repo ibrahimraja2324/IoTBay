@@ -25,6 +25,6 @@
             <a href="register.jsp" class="btn-secondary">Register</a>
         </div>
     </div>
-    <jsp:include page="/ConnServlet" flush="true" />
+    
 </body>
 </html>

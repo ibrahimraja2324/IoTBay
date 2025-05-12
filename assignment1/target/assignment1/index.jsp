@@ -25,5 +25,6 @@
             <a href="register.jsp" class="btn-secondary">Register</a>
         </div>
     </div>
+    
 </body>
 </html>

@@ -24,9 +24,6 @@ package iotbay.controller;
 
    import iotbay.dao.*;
 
-
- 
-
    public class ConnServlet extends HttpServlet {
 
  
