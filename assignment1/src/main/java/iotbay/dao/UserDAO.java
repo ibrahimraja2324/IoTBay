@@ -29,13 +29,17 @@ public class UserDAO {
                 user.setUserID(rs.getInt("UserID"));
                 user.setFirstName(rs.getString("FirstName"));
                 user.setLastName(rs.getString("LastName"));
-                user.setEmail(rs.getString("EmailAddress"));
+                user.setEmail(rs.getString("Email"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (db != null) {
-                db.closeConnection(); // Ensure the connection is closed
+                try {
+                    db.closeConnection(); // Ensure the connection is closed
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
         return user;
@@ -62,7 +66,11 @@ public class UserDAO {
             return false; // Registration failed
         } finally {
             if (db != null) {
-                db.closeConnection(); // Ensure the connection is closed
+                try {
+                    db.closeConnection(); // Ensure the connection is closed
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }

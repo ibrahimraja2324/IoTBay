@@ -11,21 +11,16 @@ public class DBConnector extends DB {
         conn = DriverManager.getConnection(URL);
     }
 
-    public Connection openConnection() throws SQLException {
-        if (this.conn == null || this.conn.isClosed()) {
-            this.conn = DriverManager.getConnection(URL);
-        }
-        return this.conn;
-    }
+    public Connection openConnection(){
 
-    public void closeConnection() {
-        if (this.conn != null) {
-            try {
-                this.conn.close();
-                System.out.println("Connection closed successfully.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        return this.conn;
+        
+    }
+        
+    
+    public void closeConnection() throws SQLException {
+        
+        this.conn.close();
+        
     }
 }

@@ -20,6 +20,7 @@ public class DBManager {
     // Find user by email and password in the database
     public User findUser(String email, String password) throws SQLException {
         String query = "SELECT * FROM User WHERE Email='" + email + "' AND Password='" + password + "'";
+
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
             String FirstName = rs.getString("FirstName");
