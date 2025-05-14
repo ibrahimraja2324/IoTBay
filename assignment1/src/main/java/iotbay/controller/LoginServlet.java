@@ -1,39 +1,60 @@
 package iotbay.controller;
 
-import iotbay.dao.UserDAO;
 import iotbay.model.User;
+import iotbay.dao.DBManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class LoginServlet extends HttpServlet {
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Retrieve email and password from the login form
+        
+        HttpSession session = request.getSession();
+        DBManager manager = (DBManager) session.getAttribute("manager");
+        
+        if (manager == null) {
+            throw new ServletException("DBManager not initialized. Please navigate from the home page.");
+        }
+        
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         
-        // Validate credentials using UserDAO
-        UserDAO userDAO = new UserDAO();
-        User user = userDAO.validateUser(email, password);
+        session.setAttribute("emailError", null);
+        session.setAttribute("passwordError", null);
+        session.setAttribute("loginError", null);
+        
+        Validator validator = new Validator();
+        
+        if (!validator.validateEmail(email)) {
+            session.setAttribute("emailError", "Invalid email format.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+        if (!validator.validatePassword(password)) {
+            session.setAttribute("passwordError", "Invalid password.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+        
+        User user = null;
+        try {
+            user = manager.findUser(email, password);
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         if (user != null) {
-            // Create session and store user details
-            HttpSession session = request.getSession();
             session.setAttribute("currentUser", user);
-            // Redirect to the main page or dashboard
-            response.sendRedirect("welcome.jsp");
+            response.sendRedirect("main.jsp");
         } else {
-            // If login fails, set an error attribute and forward back to login page
-            request.setAttribute("errorMessage", "Invalid email or password.");
+            session.setAttribute("loginError", "User does not exist.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.sendRedirect("login.jsp");
-    }
-
-
 }

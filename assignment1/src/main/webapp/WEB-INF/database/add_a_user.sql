@@ -1,8 +1,9 @@
--- Script to add a couple of users to the database
+-- Script to add a test user into the User table
 
-INSERT INTO User (UserID, Username, Password, Email, FirstName, LastName, PhoneNumber, Address, CreatedAt, UpdatedAt) 
-VALUES 
-(1, 'john_doe', 'password123', 'john.doe@example.com', 'John', 'Dang', '0492876890', '123 park road', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- If you already have data in the table and UserID is meant to be auto-generated,
+-- you might not include the UserID here. If it's not auto-generated, then include it.
+INSERT INTO User (UserID, FirstName, LastName, Email, Password, PhoneNumber)
+VALUES (1, 'John', 'Doe', 'john.doe@example.com', 'password123', '0492876890');
 
--- Verify the inserted users
-SELECT * FROM users;
+-- Verify the inserted record by selecting from the table:
+SELECT * FROM User;
