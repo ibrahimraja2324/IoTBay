@@ -1,79 +1,72 @@
 package iotbay.dao;
 
-import iotbay.model.*;
-import iotbay.dao.DBConnector;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import iotbay.model.User;
+import java.sql.*;
+
 
 public class UserDAO {
+    private Connection conn;
 
-    // Validate a user login by checking email and password
-    public User validateUser(String email, String password) {
-        User user = null;
+    public UserDAO(Connection conn) {
+        this.conn = conn;
+    }
+    
+
+    public User findUser(String email, String password) throws SQLException {
         String sql = "SELECT * FROM User WHERE Email = ? AND Password = ?";
-        DBConnector db = null;
-        try {
-            db = new DBConnector();
-            Connection conn = db.openConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-
-            stmt.setString(1, email);
-            stmt.setString(2, password);
-
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                user = new User();
-                user.setUserID(rs.getInt("UserID"));
-                user.setFirstName(rs.getString("FirstName"));
-                user.setLastName(rs.getString("LastName"));
-                user.setEmail(rs.getString("Email"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (db != null) {
-                try {
-                    db.closeConnection(); // Ensure the connection is closed
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, email);
+        ps.setString(2, password);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            String firstName = rs.getString("FirstName");
+            String lastName = rs.getString("LastName");
+            String userEmail = rs.getString("Email");
+            String userPassword = rs.getString("Password");
+            String phoneNumber = rs.getString("PhoneNumber");
+            return new User(firstName, lastName, userEmail, userPassword, phoneNumber);
         }
-        return user;
+        return null;
     }
 
-    public boolean registerUser(User user) {
-        String sql = "INSERT INTO User (FirstName, LastName, Email, Password, PhoneNumber) VALUES (?, ?, ?, ?, ?)";
-        DBConnector db = null;
-        try {
-            db = new DBConnector();
-            Connection conn = db.openConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-
-            stmt.setString(1, user.getFirstName());
-            stmt.setString(2, user.getLastName());
-            stmt.setString(3, user.getEmail());
-            stmt.setString(4, user.getPassword());
-            stmt.setString(5, user.getPhone());
-
-            stmt.executeUpdate();
-            return true; // Registration successful
-        } catch (Exception e) {
-            e.printStackTrace(); // Handle exceptions appropriately
-            return false; // Registration failed
-        } finally {
-            if (db != null) {
-                try {
-                    db.closeConnection(); // Ensure the connection is closed
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
+    public boolean registerUser(User user) throws SQLException {
+        String sql = "INSERT INTO User (Email, FirstName, LastName, Password, PhoneNumber) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, user.getEmail());
+        ps.setString(2, user.getFirstName());
+        ps.setString(3, user.getLastName());
+        ps.setString(4, user.getPassword());
+        ps.setString(5, user.getPhone());
+        int affectedRows = ps.executeUpdate();
+        return affectedRows > 0;
+    }
+    
+    public void addUser(User user) throws SQLException {
+        String sql = "INSERT INTO User (Email, FirstName, LastName, Password, PhoneNumber) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, user.getEmail());
+        ps.setString(2, user.getFirstName());
+        ps.setString(3, user.getLastName());
+        ps.setString(4, user.getPassword());
+        ps.setString(5, user.getPhone());
+        ps.executeUpdate();
+    }
+    
+    public void updateUser(User user) throws SQLException {
+        String sql = "UPDATE User SET FirstName = ?, LastName = ?, Password = ?, PhoneNumber = ? WHERE Email = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, user.getFirstName());
+        ps.setString(2, user.getLastName());
+        ps.setString(3, user.getPassword());
+        ps.setString(4, user.getPhone());
+        ps.setString(5, user.getEmail());
+        ps.executeUpdate();
     }
 
-    // You can add more methods to register new users, update user info, etc.
+    public void deleteUser(String email) throws SQLException {
+        String sql = "DELETE FROM User WHERE Email = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, email);
+        ps.executeUpdate();
+    }
 }

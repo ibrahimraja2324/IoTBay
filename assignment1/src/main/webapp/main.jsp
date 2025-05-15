@@ -17,6 +17,8 @@
     <div class="nav-right">
       <a href="edit.jsp">Edit</a>
       <a href="logout.jsp">Logout</a>
+      <a href="payment-dashboard.jsp">Manage Payments</a>
+
     </div>
   </nav>
  

@@ -163,3 +163,19 @@ html, body {
 .login-box a:hover {
     color: #999;
 }
+
+/* Error Message styling, should work for bboth register and login/.*/
+.login-box .error-messages {
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #ffecec;
+    border: 1px solid #f5aca6;
+    border-radius: 4px;
+}
+
+.login-box .error-messages p {
+    margin: 0;
+    font-size: 14px;
+    color: red;
+    font-weight: bold;
+}

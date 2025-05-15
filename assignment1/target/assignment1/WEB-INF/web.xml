@@ -36,6 +36,46 @@
         <url-pattern>/LoginServlet</url-pattern>
     </servlet-mapping>
 
+     <!-- RegisyreServlet Mapping -->
+
+    <servlet>
+        <servlet-name>RegisterServlet</servlet-name>
+        <servlet-class>iotbay.controller.RegisterServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>RegisterServlet</servlet-name>
+        <url-pattern>/RegisterServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- paymentServlet Mapping -->
+
+    <servlet>
+        <servlet-name>PaymentMethodServlet</servlet-name>
+        <servlet-class>iotbay.controller.PaymentMethodServlet</servlet-class>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>PaymentMethodServlet</servlet-name>
+        <url-pattern>/PaymentMethodServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- orderServlet Mapping -->
+
+    <servlet>
+        <servlet-name>OrderHistoryServlet</servlet-name>
+        <servlet-class>iotbay.controller.OrderHistoryServlet</servlet-class>
+        <load-on-startup>4</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>OrderHistoryServlet</servlet-name>
+        <url-pattern>/OrderHistoryServlet</url-pattern>
+    </servlet-mapping>
+
+
     <!-- Session config -->
     <session-config>
         <session-timeout>30</session-timeout>
