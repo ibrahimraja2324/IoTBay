@@ -1,0 +1,17 @@
+iotbay\controller\ConnServlet.class
+iotbay\model\User.class
+iotbay\dao\UserDAO.class
+iotbay\controller\PaymentMethodServlet.class
+iotbay\controller\RegisterServlet.class
+iotbay\dao\DBConnector.class
+iotbay\model\Order.class
+iotbay\dao\DB.class
+iotbay\model\Device.class
+iotbay\controller\LoginServlet.class
+iotbay\controller\TestDB.class
+iotbay\dao\PaymentDAO.class
+iotbay\controller\OrderHistoryServlet.class
+iotbay\dao\OrderDAO.class
+iotbay\model\Payment.class
+iotbay\controller\Validator.class
+iotbay\dao\DBManager.class

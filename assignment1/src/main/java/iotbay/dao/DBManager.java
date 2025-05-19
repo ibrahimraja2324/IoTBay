@@ -1,27 +1,30 @@
 package iotbay.dao;
 
-import iotbay.model.*;
+import iotbay.model.Payment;
+import iotbay.model.User;
 import java.sql.*;
-
-
-/* 
-* DBManager is the primary DAO class to interact with the database. 
-* Complete the existing methods of this classes to perform CRUD operations with the db.
-*/
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBManager {
 
+    private Connection conn;
     private Statement st;
 
     public DBManager(Connection conn) throws SQLException {
+        this.conn = conn;
         st = conn.createStatement();
     }
+    
+    public Connection getConnection() {
+        return conn;
+    }
 
-    // Find user by email and password in the database
+    // ----- User Operations -----
     public User findUser(String email, String password) throws SQLException {
         String query = "SELECT * FROM User WHERE Email='" + email + "' AND Password='" + password + "'";
         ResultSet rs = st.executeQuery(query);
-        while (rs.next()) {
+        if (rs.next()) {
             String FirstName = rs.getString("FirstName");
             String LastName = rs.getString("LastName");
             String userEmail = rs.getString("Email");
@@ -32,28 +35,101 @@ public class DBManager {
         return null;
     }
 
-    // Add a user-data into the database
-    public void addUser(String email, String name, String password, String gender, String favcol) throws SQLException { // code
-                                                                                                                        // for
-                                                                                                                        // add-operation
-        String query = "INSERT INTO User (email, name, password, gender, favcol) VALUES ('" + email + "', '" + name + "', '" + password + "', '" + gender + "', '" + favcol + "')";
-        st.executeUpdate(query);
+    // Other user methods (addUser, updateUser, deleteUser)...
 
+    // ----- Payment Operations -----
+    public List<Payment> findPayments(int userID) throws SQLException {
+        String query = "SELECT * FROM Payment WHERE userId=" + userID;
+        ResultSet rs = st.executeQuery(query);
+        List<Payment> payments = new ArrayList<>();
+        while (rs.next()) {
+            int paymentId = rs.getInt("paymentId");
+            int orderId = rs.getInt("orderId");
+            String paymentMethod = rs.getString("paymentMethod");
+            String cardDetails = rs.getString("cardDetails");
+            double amount = rs.getDouble("amount");
+            String date = rs.getString("date");
+            Payment p = new Payment(paymentId, orderId, paymentMethod, cardDetails, amount, date, userID);
+            payments.add(p);
+        }
+        return payments;
     }
-
-    // update a user details in the database
-    public void updateUser(String email, String name, String password, String gender, String favcol)
-            throws SQLException {
-        String query = "UPDATE User SET name='" + name + "', password='" + password + "', gender='" + gender + "', favcol='" + favcol + "' WHERE email='" + email + "'";
+    
+    public void addPayment(Payment payment) throws SQLException {
+        String query = "INSERT INTO Payment (orderId, paymentMethod, cardDetails, amount, date, userId) VALUES ("
+                + payment.getOrderId() + ", '"
+                + payment.getPaymentMethod() + "', '"
+                + payment.getCardDetails() + "', "
+                + payment.getAmount() + ", '"
+                + payment.getDate() + "', "
+                + payment.getUserId() + ")";
         st.executeUpdate(query);
-
     }
-
-    // delete a user from the database
-    public void deleteUser(String email) throws SQLException {
-        String query = "DELETE FROM User WHERE email='" + email + "'";
+    
+    public Payment findPayment(int paymentId) throws SQLException {
+        String query = "SELECT * FROM Payment WHERE paymentId=" + paymentId;
+        ResultSet rs = st.executeQuery(query);
+        if (rs.next()) {
+            int orderId = rs.getInt("orderId");
+            String paymentMethod = rs.getString("paymentMethod");
+            String cardDetails = rs.getString("cardDetails");
+            double amount = rs.getDouble("amount");
+            String date = rs.getString("date");
+            int userId = rs.getInt("userId");
+            return new Payment(paymentId, orderId, paymentMethod, cardDetails, amount, date, userId);
+        }
+        return null;
+    }
+    
+    public void updatePayment(Payment payment) throws SQLException {
+        String query = "UPDATE Payment SET orderId=" + payment.getOrderId()
+                + ", paymentMethod='" + payment.getPaymentMethod() + "'"
+                + ", cardDetails='" + payment.getCardDetails() + "'"
+                + ", amount=" + payment.getAmount()
+                + ", date='" + payment.getDate() + "'"
+                + ", userId=" + payment.getUserId()
+                + " WHERE paymentId=" + payment.getPaymentId();
         st.executeUpdate(query);
-
     }
+    
+    public void deletePayment(int paymentId) throws SQLException {
+        String query = "DELETE FROM Payment WHERE paymentId=" + paymentId;
+        st.executeUpdate(query);
+    }
+    
+   
 
+    public List<Payment> findPaymentMethods(int userId) throws SQLException {
+        String query = "SELECT * FROM Payment WHERE userId = " + userId + " AND orderId = 0";
+        ResultSet rs = st.executeQuery(query);
+        List<Payment> paymentMethods = new ArrayList<>();
+        while (rs.next()) {
+            int paymentId = rs.getInt("paymentId");
+            int orderId = rs.getInt("orderId"); // 0 for payment method records
+            String paymentMethod = rs.getString("paymentMethod");
+            String cardDetails = rs.getString("cardDetails");
+            double amount = rs.getDouble("amount"); // normally 0
+            String date = rs.getString("date"); // could be an expiry date
+            Payment p = new Payment(paymentId, orderId, paymentMethod, cardDetails, amount, date, userId);
+            paymentMethods.add(p);
+        }
+        return paymentMethods;
+    }
+    
+    public List<Payment> findPaymentHistory(int userId) throws SQLException {
+        String query = "SELECT * FROM Payment WHERE userId = " + userId + " AND orderId > 0 ORDER BY date DESC";
+        ResultSet rs = st.executeQuery(query);
+        List<Payment> orders = new ArrayList<>();
+        while (rs.next()) {
+            int paymentId = rs.getInt("paymentId");
+            int orderId = rs.getInt("orderId");
+            String paymentMethod = rs.getString("paymentMethod");
+            String cardDetails = rs.getString("cardDetails");
+            double amount = rs.getDouble("amount");
+            String date = rs.getString("date");
+            Payment p = new Payment(paymentId, orderId, paymentMethod, cardDetails, amount, date, userId);
+            orders.add(p);
+        }
+        return orders;
+    }
 }
