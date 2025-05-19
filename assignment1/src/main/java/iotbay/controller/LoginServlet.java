@@ -1,7 +1,9 @@
 package iotbay.controller;
 
+import iotbay.model.Log;
 import iotbay.model.User;
 import iotbay.dao.DBManager;
+import iotbay.dao.LogDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import java.io.IOException;
@@ -50,6 +52,13 @@ public class LoginServlet extends HttpServlet {
         }
         
         if (user != null) {
+            Log log = new Log(email, "Login", user.getRole());
+            LogDAO logDAO = new LogDAO(manager.getConnection());
+            try {
+                logDAO.createLog(log);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             session.setAttribute("currentUser", user);
             response.sendRedirect("main.jsp");
         } else {

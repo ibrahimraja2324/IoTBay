@@ -75,6 +75,16 @@
         <url-pattern>/OrderHistoryServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>LogServlet</servlet-name>
+        <servlet-class>iotbay.controller.LogServlet</servlet-class>
+        <load-on-startup>5</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LogServlet</servlet-name>
+        <url-pattern>/LogServlet</url-pattern>
+    </servlet-mapping>
 
     <!-- Session config -->
     <session-config>

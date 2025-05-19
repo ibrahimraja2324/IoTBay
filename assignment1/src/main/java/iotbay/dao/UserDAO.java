@@ -25,7 +25,8 @@ public class UserDAO {
             String userEmail = rs.getString("Email");
             String userPassword = rs.getString("Password");
             String phoneNumber = rs.getString("PhoneNumber");
-            return new User(firstName, lastName, userEmail, userPassword, phoneNumber);
+            String role = rs.getString("Role");
+            return new User(firstName, lastName, userEmail, userPassword, phoneNumber, role);
         }
         return null;
     }
@@ -43,7 +44,8 @@ public class UserDAO {
             String userEmail = rs.getString("Email");
             String userPassword = rs.getString("Password");
             String phoneNumber = rs.getString("PhoneNumber");
-            return new User(firstName, lastName, userEmail, userPassword, phoneNumber);
+            String role = rs.getString("Role");
+            return new User(firstName, lastName, userEmail, userPassword, phoneNumber, role);
         }
         return null;
     }

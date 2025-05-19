@@ -69,7 +69,7 @@ public class PaymentMethodServlet extends HttpServlet {
         }
         Connection conn = manager.getConnection();
         PaymentDAO paymentDAO = new PaymentDAO(conn);
-        List<Payment> paymentMethods = paymentDAO.findPaymentMethods(currentUser.getUserID());
+        List<Payment> paymentMethods = paymentDAO.findPaymentMethods(currentUser.getEmail());
         request.setAttribute("paymentMethods", paymentMethods);
         request.getRequestDispatcher("payment-methods.jsp").forward(request, response);
     }
@@ -89,7 +89,7 @@ public class PaymentMethodServlet extends HttpServlet {
   
         Connection conn = manager.getConnection();
         PaymentDAO paymentDAO = new PaymentDAO(conn);
-        Payment newMethod = new Payment(0, 0, paymentMethod, cardDetails, 0.0, expiryDate, currentUser.getUserID());
+        Payment newMethod = new Payment(0, 0, paymentMethod, cardDetails, 0.0, expiryDate, currentUser.getEmail());
         paymentDAO.addPayment(newMethod);
         response.sendRedirect("payment-dashboard.jsp");
 
@@ -127,7 +127,7 @@ public class PaymentMethodServlet extends HttpServlet {
         User currentUser = (User)session.getAttribute("currentUser");
         Connection conn = manager.getConnection();
         PaymentDAO paymentDAO = new PaymentDAO(conn);
-        Payment updatedMethod = new Payment(paymentId, 0, paymentMethod, cardDetails, 0.0, expiryDate, currentUser.getUserID());
+        Payment updatedMethod = new Payment(paymentId, 0, paymentMethod, cardDetails, 0.0, expiryDate, currentUser.getEmail());
         paymentDAO.updatePayment(updatedMethod);
         response.sendRedirect("PaymentMethodServlet?action=list.jsp");
     }

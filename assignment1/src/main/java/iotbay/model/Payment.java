@@ -7,17 +7,17 @@ public class Payment {
     private String cardDetails;
     private double amount;
     private String date;
-    private int userId;
+    private String userEmail;
 
 
-    public Payment(int paymentId, int orderId, String paymentMethod, String cardDetails, double amount, String date, int userId) {
+    public Payment(int paymentId, int orderId, String paymentMethod, String cardDetails, double amount, String date, String userEmail) {
         this.paymentId = paymentId;
         this.orderId = orderId;
         this.paymentMethod = paymentMethod;
         this.cardDetails = cardDetails;
         this.amount = amount;
         this.date = date;
-        this.userId = userId;
+        this.userEmail = userEmail;
     }
     
     
@@ -69,11 +69,11 @@ public class Payment {
         this.date = date;
     }
     
-    public int getUserId() {
-        return userId;
+    public String getUserEmail() {
+        return userEmail;
     }
-    
-    public void setUserId(int userId) {
-        this.userId = userId;
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

@@ -1,7 +1,9 @@
 package iotbay.controller;
 
 import iotbay.dao.DBManager;
+import iotbay.dao.LogDAO;
 import iotbay.dao.UserDAO;
+import iotbay.model.Log;
 import iotbay.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -70,7 +72,7 @@ public class RegisterServlet extends HttpServlet {
         }
 
         // Create User object using the validated values
-        User user = new User(firstName, lastName, email, password, phone);
+        User user = new User(firstName, lastName, email, password, phone, "USER");
 
         // Get the underlying connection from the DBManager and instantiate UserDAO
         Connection conn = manager.getConnection();
@@ -95,6 +97,13 @@ public class RegisterServlet extends HttpServlet {
 
         if (isRegistered) {
             // Registration successful: set the user in the session and redirect to welcome page
+            Log log = new Log(email, "User registered", user.getRole());
+            LogDAO logDAO = new LogDAO(conn);
+            try {
+                logDAO.createLog(log);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             session.setAttribute("currentUser", user);
             response.sendRedirect("welcome.jsp");
         } else {

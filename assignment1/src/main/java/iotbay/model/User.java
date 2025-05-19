@@ -1,12 +1,12 @@
 package iotbay.model;
 
 public class User {
-    private int userID;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
-    private String phone;  
+    private String phone;
+    private String role;
 
     // currently not used
     private String gender;
@@ -25,19 +25,13 @@ public class User {
     }
     
  
-    public User(String firstName, String lastName, String email, String password, String phone) {
+    public User(String firstName, String lastName, String email, String password, String phone, String role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.phone = phone;
-    }
-    
-    public int getUserID() {
-        return userID;
-    }
-    public void setUserID(int userID) {
-        this.userID = userID;
+        this.role = role;
     }
 
     public String getFirstName() {
@@ -77,7 +71,11 @@ public class User {
         this.phone = phone;
     }
     
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
     
-
-
 }

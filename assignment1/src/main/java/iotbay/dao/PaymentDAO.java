@@ -12,10 +12,10 @@ public class PaymentDAO {
         this.conn = conn;
     }
     
-    public List<Payment> findPaymentMethods(int userId) throws SQLException {
-        String sql = "SELECT * FROM Payment WHERE userId = ? AND orderId = 0";
+    public List<Payment> findPaymentMethods(String userEmail) throws SQLException {
+        String sql = "SELECT * FROM Payment WHERE userEmail = ? AND orderId = 0";
         PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, userId);
+        ps.setString(1, userEmail);
         ResultSet rs = ps.executeQuery();
         List<Payment> paymentMethods = new ArrayList<>();
         while (rs.next()){
@@ -25,21 +25,21 @@ public class PaymentDAO {
             String cardDetails = rs.getString("cardDetails");
             double amount = rs.getDouble("amount");
             String date = rs.getString("date");
-            Payment p = new Payment(paymentId, orderId, method, cardDetails, amount, date, userId);
+            Payment p = new Payment(paymentId, orderId, method, cardDetails, amount, date, userEmail);
             paymentMethods.add(p);
         }
         return paymentMethods;
     }
     
     public void addPayment(Payment payment) throws SQLException {
-        String sql = "INSERT INTO Payment (orderId, paymentMethod, cardDetails, amount, date, userId) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Payment (orderId, paymentMethod, cardDetails, amount, date, userEmail) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setInt(1, payment.getOrderId());
         ps.setString(2, payment.getPaymentMethod());
         ps.setString(3, payment.getCardDetails());
         ps.setDouble(4, payment.getAmount());
         ps.setString(5, payment.getDate());
-        ps.setInt(6, payment.getUserId());
+        ps.setString(6, payment.getUserEmail());
         ps.executeUpdate();
     }
     
@@ -61,21 +61,21 @@ public class PaymentDAO {
             String cardDetails = rs.getString("cardDetails");
             double amount = rs.getDouble("amount");
             String date = rs.getString("date");
-            int userId = rs.getInt("userId");
-            return new Payment(paymentId, orderId, method, cardDetails, amount, date, userId);
+            String userEmail = rs.getString("userEmail");
+            return new Payment(paymentId, orderId, method, cardDetails, amount, date, userEmail);
         }
         return null;
     }
     
     public void updatePayment(Payment payment) throws SQLException {
-        String sql = "UPDATE Payment SET orderId = ?, paymentMethod = ?, cardDetails = ?, amount = ?, date = ?, userId = ? WHERE paymentId = ?";
+        String sql = "UPDATE Payment SET orderId = ?, paymentMethod = ?, cardDetails = ?, amount = ?, date = ?, userEmail = ? WHERE paymentId = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setInt(1, payment.getOrderId());
         ps.setString(2, payment.getPaymentMethod());
         ps.setString(3, payment.getCardDetails());
         ps.setDouble(4, payment.getAmount());
         ps.setString(5, payment.getDate());
-        ps.setInt(6, payment.getUserId());
+        ps.setString(6, payment.getUserEmail());
         ps.setInt(7, payment.getPaymentId());
         ps.executeUpdate();
     }

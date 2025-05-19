@@ -5,15 +5,15 @@ public class Order {
     private String orderDate;
     private String status;
     private double totalAmount;
-    private int userId;
+    private String userEmail;
 
 
-    public Order(int orderId, String orderDate, String status, double totalAmount, int userId) {
+    public Order(int orderId, String orderDate, String status, double totalAmount, String userEmail) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.status = status;
         this.totalAmount = totalAmount;
-        this.userId = userId;
+        this.userEmail = userEmail;
     }
     
 
@@ -41,10 +41,10 @@ public class Order {
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
-    public int getUserId() {
-        return userId;
+    public String getUserEmail() {
+        return userEmail;
     }
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

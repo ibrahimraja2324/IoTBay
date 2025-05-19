@@ -49,7 +49,7 @@ public class OrderHistoryServlet extends HttpServlet {
         }
         Connection conn = manager.getConnection();
         OrderDAO orderDAO = new OrderDAO(conn);
-        List<Order> orders = orderDAO.findOrdersByUser(currentUser.getUserID());
+        List<Order> orders = orderDAO.findOrdersByUser(currentUser.getEmail());
         request.setAttribute("orders", orders);
         request.getRequestDispatcher("order-history.jsp").forward(request, response);
     }
