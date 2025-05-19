@@ -4,8 +4,8 @@ This is a Java-based web application. The project simulates an IoT device orderi
 
 ## Requirements
 
-- **Java JDK** 8 or later
-- **Apache Tomcat** version **9**
+- **Java JDK** 17 
+- **Apache Tomcat** version **11**
 - **NetBeans** 
 
 ## How to Run
