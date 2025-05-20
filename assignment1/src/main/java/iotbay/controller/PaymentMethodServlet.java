@@ -78,31 +78,70 @@ public class PaymentMethodServlet extends HttpServlet {
     private void addPaymentMethod(HttpServletRequest request, HttpServletResponse response, DBManager manager)
             throws ServletException, IOException, SQLException {
         HttpSession session = request.getSession();
-        User currentUser = (User)session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             response.sendRedirect("login.jsp");
             return;
         }
+        
+
         String paymentMethod = request.getParameter("paymentMethod");
-        String cardDetails = request.getParameter("cardDetails");
+        String cardHolderName = request.getParameter("cardHolderName");
+        String cardNumber = request.getParameter("cardNumber");
+        String cvv = request.getParameter("cvv");
         String expiryDate = request.getParameter("expiryDate");
+
+
+        iotbay.controller.Validator validator = new iotbay.controller.Validator();
+        boolean hasError = false;
+        if (!validator.validatePaymentMethod(paymentMethod)) {
+            request.setAttribute("paymentMethodError", "Please select a valid payment method.");
+            hasError = true;
+        }
+        if (!validator.validateCardHolderName(cardHolderName)) {
+            request.setAttribute("cardHolderNameError", "Card holder name is required.");
+            hasError = true;
+        }
+        if (!validator.validateCardNumber(cardNumber)) {
+            request.setAttribute("cardNumberError", "Card number must be exactly 16 digits.");
+            hasError = true;
+        }
+        if (!validator.validateCVV(cvv)) {
+            request.setAttribute("cvvError", "CVV must be 3 or 4 digits.");
+            hasError = true;
+        }
+        if (!validator.validateExpiryDateFuture(expiryDate)) {
+            request.setAttribute("expiryDateError", "Expiry date must be in the future and in the format YYYY-MM-DD.");
+            hasError = true;
+        }
+        
+
+        request.setAttribute("paymentMethodInput", paymentMethod);
+        request.setAttribute("cardHolderNameInput", cardHolderName);
+        request.setAttribute("cardNumberInput", cardNumber);
+        request.setAttribute("cvvInput", cvv);
+        request.setAttribute("expiryDateInput", expiryDate);
+        
   
+        if (hasError) {
+            request.getRequestDispatcher("payment-dashboard.jsp").forward(request, response);
+            return;
+        }
+        
         Connection conn = manager.getConnection();
         PaymentDAO paymentDAO = new PaymentDAO(conn);
-        Payment newMethod = new Payment(0, 0, paymentMethod, cardDetails, 0.0, expiryDate, currentUser.getEmail());
-        paymentDAO.addPayment(newMethod);
+        Payment newPayment = new Payment(0, 0, paymentMethod, cardHolderName, cardNumber, cvv, expiryDate, 0.0, currentUser.getEmail());
+        paymentDAO.addPayment(newPayment);
         response.sendRedirect("payment-dashboard.jsp");
-
     }
     
-
     private void deletePaymentMethod(HttpServletRequest request, HttpServletResponse response, DBManager manager)
             throws IOException, SQLException {
         int paymentId = Integer.parseInt(request.getParameter("paymentId"));
         Connection conn = manager.getConnection();
         PaymentDAO paymentDAO = new PaymentDAO(conn);
         paymentDAO.deletePayment(paymentId);
-        response.sendRedirect("PaymentMethodServlet?action=list.jsp");
+        response.sendRedirect("PaymentMethodServlet?action=list");
     }
     
 
@@ -115,20 +154,59 @@ public class PaymentMethodServlet extends HttpServlet {
         request.setAttribute("paymentMethod", paymentMethod);
         request.getRequestDispatcher("payment-method-form.jsp").forward(request, response);
     }
-    
-
+ 
     private void updatePaymentMethod(HttpServletRequest request, HttpServletResponse response, DBManager manager)
-            throws IOException, SQLException {
+            throws ServletException, IOException, SQLException {
         int paymentId = Integer.parseInt(request.getParameter("paymentId"));
         String paymentMethod = request.getParameter("paymentMethod");
-        String cardDetails = request.getParameter("cardDetails");
+        String cardHolderName = request.getParameter("cardHolderName");
+        String cardNumber = request.getParameter("cardNumber");
+        String cvv = request.getParameter("cvv");
         String expiryDate = request.getParameter("expiryDate");
+
+        iotbay.controller.Validator validator = new iotbay.controller.Validator();
+        boolean hasError = false;
+        if (!validator.validatePaymentMethod(paymentMethod)) {
+            request.setAttribute("paymentMethodError", "Please select a valid payment method.");
+            hasError = true;
+        }
+        if (!validator.validateCardHolderName(cardHolderName)) {
+            request.setAttribute("cardHolderNameError", "Card holder name is required.");
+            hasError = true;
+        }
+        if (!validator.validateCardNumber(cardNumber)) {
+            request.setAttribute("cardNumberError", "Card number must be exactly 16 digits.");
+            hasError = true;
+        }
+        if (!validator.validateCVV(cvv)) {
+            request.setAttribute("cvvError", "CVV must be 3 or 4 digits.");
+            hasError = true;
+        }
+        if (!validator.validateExpiryDateFuture(expiryDate)) {
+            request.setAttribute("expiryDateError", "Expiry date must be in the future and in the format YYYY-MM-DD.");
+            hasError = true;
+        }
+        
+        request.setAttribute("paymentMethodInput", paymentMethod);
+        request.setAttribute("cardHolderNameInput", cardHolderName);
+        request.setAttribute("cardNumberInput", cardNumber);
+        request.setAttribute("cvvInput", cvv);
+        request.setAttribute("expiryDateInput", expiryDate);
+        
+        if (hasError) {
+            Payment errorPayment = new Payment(paymentId, 0, paymentMethod, cardHolderName, cardNumber, cvv, expiryDate, 0.0,
+                    ((User) request.getSession().getAttribute("currentUser")).getEmail());
+            request.setAttribute("paymentMethod", errorPayment);
+            request.getRequestDispatcher("payment-method-form.jsp").forward(request, response);
+            return;
+        }
+        
         HttpSession session = request.getSession();
-        User currentUser = (User)session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("currentUser");
         Connection conn = manager.getConnection();
         PaymentDAO paymentDAO = new PaymentDAO(conn);
-        Payment updatedMethod = new Payment(paymentId, 0, paymentMethod, cardDetails, 0.0, expiryDate, currentUser.getEmail());
-        paymentDAO.updatePayment(updatedMethod);
-        response.sendRedirect("PaymentMethodServlet?action=list.jsp");
+        Payment updatedPayment = new Payment(paymentId, 0, paymentMethod, cardHolderName, cardNumber, cvv, expiryDate, 0.0, currentUser.getEmail());
+        paymentDAO.updatePayment(updatedPayment);
+        response.sendRedirect("PaymentMethodServlet?action=list");
     }
 }

@@ -21,25 +21,29 @@ public class PaymentDAO {
         while (rs.next()){
             int paymentId = rs.getInt("paymentId");
             int orderId = rs.getInt("orderId");
-            String method = rs.getString("paymentMethod");
-            String cardDetails = rs.getString("cardDetails");
+            String paymentMethod = rs.getString("paymentMethod");
+            String cardHolderName = rs.getString("cardHolderName");
+            String cardNumber = rs.getString("cardNumber");
+            String cvv = rs.getString("cvv");
+            String expiryDate = rs.getString("expiryDate");
             double amount = rs.getDouble("amount");
-            String date = rs.getString("date");
-            Payment p = new Payment(paymentId, orderId, method, cardDetails, amount, date, userEmail);
+            Payment p = new Payment(paymentId, orderId, paymentMethod, cardHolderName, cardNumber, cvv, expiryDate, amount, userEmail);
             paymentMethods.add(p);
         }
         return paymentMethods;
     }
     
     public void addPayment(Payment payment) throws SQLException {
-        String sql = "INSERT INTO Payment (orderId, paymentMethod, cardDetails, amount, date, userEmail) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Payment (orderId, paymentMethod, cardHolderName, cardNumber, cvv, expiryDate, amount, userEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setInt(1, payment.getOrderId());
         ps.setString(2, payment.getPaymentMethod());
-        ps.setString(3, payment.getCardDetails());
-        ps.setDouble(4, payment.getAmount());
-        ps.setString(5, payment.getDate());
-        ps.setString(6, payment.getUserEmail());
+        ps.setString(3, payment.getCardHolderName());
+        ps.setString(4, payment.getCardNumber());
+        ps.setString(5, payment.getCvv());
+        ps.setString(6, payment.getExpiryDate());
+        ps.setDouble(7, payment.getAmount());
+        ps.setString(8, payment.getUserEmail());
         ps.executeUpdate();
     }
     
@@ -57,26 +61,30 @@ public class PaymentDAO {
         ResultSet rs = ps.executeQuery();
         if (rs.next()){
             int orderId = rs.getInt("orderId");
-            String method = rs.getString("paymentMethod");
-            String cardDetails = rs.getString("cardDetails");
+            String paymentMethod = rs.getString("paymentMethod");
+            String cardHolderName = rs.getString("cardHolderName");
+            String cardNumber = rs.getString("cardNumber");
+            String cvv = rs.getString("cvv");
+            String expiryDate = rs.getString("expiryDate");
             double amount = rs.getDouble("amount");
-            String date = rs.getString("date");
             String userEmail = rs.getString("userEmail");
-            return new Payment(paymentId, orderId, method, cardDetails, amount, date, userEmail);
+            return new Payment(paymentId, orderId, paymentMethod, cardHolderName, cardNumber, cvv, expiryDate, amount, userEmail);
         }
         return null;
     }
     
     public void updatePayment(Payment payment) throws SQLException {
-        String sql = "UPDATE Payment SET orderId = ?, paymentMethod = ?, cardDetails = ?, amount = ?, date = ?, userEmail = ? WHERE paymentId = ?";
+        String sql = "UPDATE Payment SET orderId = ?, paymentMethod = ?, cardHolderName = ?, cardNumber = ?, cvv = ?, expiryDate = ?, amount = ?, userEmail = ? WHERE paymentId = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setInt(1, payment.getOrderId());
         ps.setString(2, payment.getPaymentMethod());
-        ps.setString(3, payment.getCardDetails());
-        ps.setDouble(4, payment.getAmount());
-        ps.setString(5, payment.getDate());
-        ps.setString(6, payment.getUserEmail());
-        ps.setInt(7, payment.getPaymentId());
+        ps.setString(3, payment.getCardHolderName());
+        ps.setString(4, payment.getCardNumber());
+        ps.setString(5, payment.getCvv());
+        ps.setString(6, payment.getExpiryDate());
+        ps.setDouble(7, payment.getAmount());
+        ps.setString(8, payment.getUserEmail());
+        ps.setInt(9, payment.getPaymentId());
         ps.executeUpdate();
     }
 }
