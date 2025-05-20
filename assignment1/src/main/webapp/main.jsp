@@ -35,10 +35,12 @@
              <th>Field</th>
              <th>Value</th>
            </tr>
-           <tr>
+           <!-- <%-- There is no method for getUserID in User, add this later if it;s needed, i dont think 
+            it will be needed tho. --%>
+           <%-- <tr>
              <td>User ID</td>
              <td><%= currentUser.getUserID() %></td>
-           </tr>
+           </tr> --%> -->
            <tr>
              <td>Full Name</td>
              <td><%= currentUser.getFirstName() + " " + currentUser.getLastName() %></td>
