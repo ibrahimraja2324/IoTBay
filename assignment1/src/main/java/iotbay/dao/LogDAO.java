@@ -45,4 +45,37 @@ public class LogDAO {
         }
         return logs;
     }
+
+    public List<Log> getLogsByEmail(String email) throws SQLException {
+        List<Log> filteredLogs = new ArrayList<>();
+        List<Log> logs = getAllLogsAsList();
+        for (Log log : logs) {
+            if (log.getEmail().equals(email)) {
+                filteredLogs.add(log);
+            }
+        }
+        return filteredLogs;
+    }
+
+    public List<Log> filterLogsByDate(List<Log> logs, String dateString, String filterType) {
+        if (dateString == null || dateString.isEmpty()) {
+            return logs;
+        }
+
+        return logs.stream().filter(log -> {
+            String logDateStr = log.getTime().substring(0, 10); // "2025-05-20"
+            int compare = logDateStr.compareTo(dateString); // lexicographic comparison
+            switch (filterType) {
+                case "before":
+                    return compare < 0;
+                case "after":
+                    return compare > 0;
+                case "on":
+                    return compare == 0;
+                default:
+                    return true;
+            }
+        }).toList();
+
+    }
 }

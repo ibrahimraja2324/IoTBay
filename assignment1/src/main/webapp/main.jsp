@@ -15,10 +15,8 @@
       <a href="index.jsp">Home</a>
     </div>
     <div class="nav-right">
-      <a href="edit.jsp">Edit</a>
       <a href="logout.jsp">Logout</a>
       <a href="payment-dashboard.jsp">Manage Payments</a>
-
     </div>
   </nav>
  
@@ -52,6 +50,7 @@
 
     <div class="action-buttons">
       <a href="edit.jsp" class="btn-primary">Edit Details</a>
+      <a href="LogServlet" class="btn-secondary">View Your Logs</a>
     </div>
     <%
       } else {

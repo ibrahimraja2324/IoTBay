@@ -329,3 +329,67 @@ html, body {
 .btn-main:hover {
     background: linear-gradient(to right, #6a11cb, #2575fc);
 }
+
+.user-details.wide {
+    width: 90%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Log Filter Bar Styling */
+.log-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: #2f2c45;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(26, 91, 191, 0.4);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.log-filter-bar span {
+    font-size: 20px;
+    margin-right: 6px;
+    user-select: none;
+}
+
+.log-filter-bar select,
+.log-filter-bar input[type="date"] {
+    background-color: #3a3760;
+    border: none;
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 16px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    min-width: 180px;
+    transition: background-color 0.3s;
+}
+
+.log-filter-bar select:hover,
+.log-filter-bar input[type="date"]:hover,
+.log-filter-bar select:focus,
+.log-filter-bar input[type="date"]:focus {
+    background-color: #55518a;
+    outline: none;
+}
+
+.log-filter-bar .btn-primary {
+    padding: 10px 14px;
+    font-size: 16px;
+    border-radius: 6px;
+    width: auto;
+    min-width: 100px;
+    height: 42px; /* Match input[type="date"] */
+    box-shadow: none;
+    line-height: normal;
+    margin-top: 0;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
