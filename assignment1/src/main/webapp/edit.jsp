@@ -64,6 +64,7 @@
         <input type="text" name="phone" id="phone" placeholder="Phone Number"
                value="<%= user != null && user.getPhone() != null ? user.getPhone() : "" %>" required>
         <input type="submit" value="Save Changes">
+        <a href="delete-confirmation.jsp" class="btn-important">Delete account</a>
         <a href="main.jsp">Cancel</a>
     </form>
 </body>

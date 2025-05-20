@@ -63,7 +63,7 @@ html, body {
     align-items: center;
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary, .btn-secondary, .btn-important {
     padding: 20px 28px;
     border-radius: 8px;
     text-decoration: none;
@@ -93,13 +93,22 @@ html, body {
     background: #bbb;
 }
 
+.btn-important {
+    background: linear-gradient(to right, #e52d27, #b31217);
+    color: #fff;
+}
+
+.btn-important:hover {
+    background: linear-gradient(to right, #b31217, #e52d27);
+}
+
 /* Responsive Design */
 @media (max-width: 600px) {
     .index-content {
         margin-top: 60px;
     }
     
-    .btn-primary, .btn-secondary {
+    .btn-primary, .btn-secondary, .btn-important {
         width: 100%;
         text-align: center;
         font-size: 18px;
@@ -140,6 +149,14 @@ html, body {
     box-sizing: border-box;
 }
 
+.login-box .btn-important {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 0;
+    display: block;
+}
+
+.login-box .btn-important,
 .login-box input[type="submit"] {
     width: 100%;
     background-color: #2575fc;
@@ -184,6 +201,7 @@ html, body {
     color: red;
     font-weight: bold;
 }
+
 /* Register Page Styling */
 .heading {
     text-align: center;

@@ -74,10 +74,11 @@ public class UserDAO {
         return affectedRows > 0;
     }
 
-    public void deleteUser(String email) throws SQLException {
+    public boolean deleteUser(String email) throws SQLException {
         String sql = "DELETE FROM User WHERE Email = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, email);
-        ps.executeUpdate();
+        int affectedRows = ps.executeUpdate();
+        return affectedRows > 0;
     }
 }
