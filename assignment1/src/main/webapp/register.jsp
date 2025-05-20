@@ -13,10 +13,6 @@
         <div class="nav-left">
             <a href="index.jsp">Home</a>
         </div>
-        <div class="nav-right">
-            <a href="login.jsp">Login</a>
-            <a href="register.jsp">Register</a>
-        </div>
     </nav>
     
     <form class="login-box" action="RegisterServlet" method="post">

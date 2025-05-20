@@ -13,3 +13,8 @@ CREATE TABLE "User" (
     UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     Role UserRole DEFAULT 'USER' NOT NULL
 );
+
+-- Insert sample data into User
+INSERT INTO "User" (Email, Password, FirstName, LastName, PhoneNumber, IsActive, Role)
+VALUES
+    ('a@a.com', 'aaaa', 'Carol', 'Smith', '3456789012', TRUE, 'USER');

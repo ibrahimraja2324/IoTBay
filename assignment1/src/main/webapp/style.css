@@ -58,7 +58,9 @@ html, body {
 /* Action Buttons */
 .action-buttons {
     display: flex;
+    flex-direction: column;
     gap: 20px;
+    align-items: center;
 }
 
 .btn-primary, .btn-secondary {
@@ -67,7 +69,10 @@ html, body {
     text-decoration: none;
     font-size: 20px;
     transition: background 0.3s ease;
-    display: inline-block;
+    display: block;
+    width: 240px;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 .btn-primary {
