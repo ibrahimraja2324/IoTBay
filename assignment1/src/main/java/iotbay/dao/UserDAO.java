@@ -62,18 +62,7 @@ public class UserDAO {
         return affectedRows > 0;
     }
     
-    public void addUser(User user) throws SQLException {
-        String sql = "INSERT INTO User (Email, Password, FirstName, LastName, PhoneNumber) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, user.getEmail());
-        ps.setString(2, user.getPassword());
-        ps.setString(3, user.getFirstName());
-        ps.setString(4, user.getLastName());
-        ps.setString(5, user.getPhone());
-        ps.executeUpdate();
-    }
-    
-    public void updateUser(User user) throws SQLException {
+    public boolean updateUser(User user) throws SQLException {
         String sql = "UPDATE User SET FirstName = ?, LastName = ?, Password = ?, PhoneNumber = ? WHERE Email = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, user.getFirstName());
@@ -81,13 +70,15 @@ public class UserDAO {
         ps.setString(3, user.getPassword());
         ps.setString(4, user.getPhone());
         ps.setString(5, user.getEmail());
-        ps.executeUpdate();
+        int affectedRows = ps.executeUpdate();
+        return affectedRows > 0;
     }
 
-    public void deleteUser(String email) throws SQLException {
+    public boolean deleteUser(String email) throws SQLException {
         String sql = "DELETE FROM User WHERE Email = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, email);
-        ps.executeUpdate();
+        int affectedRows = ps.executeUpdate();
+        return affectedRows > 0;
     }
 }

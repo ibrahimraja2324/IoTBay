@@ -14,42 +14,61 @@
     <div class="nav-left">
        <a href="index.jsp">Home</a>
     </div>
-    <div class="nav-right">
-       <a href="login.jsp">Login</a>
-       <a href="register.jsp">Register</a>
-    </div>
   </nav>
-  
-  <div id="welcome-page">
-    <div class="welcome-box">
-      <%
-        User newUser = (User) session.getAttribute("currentUser");
-        if (newUser == null) {
-            response.sendRedirect("login.jsp");
-        }
-      %>
 
-  <h2>Registration Successful!</h2>
-  <p>The following details have been registered:</p>
-  <ul>
-      <li>Full Name: <%= newUser.getFirstName() + " " + newUser.getLastName() %></li>
-      <li>Email: <%= newUser.getEmail() %></li>
-      <li>Phone: <%= newUser.getPhone() %></li>
-  </ul>
-        
-        <h2>Registration Successful!</h2>
-        <p>The following details have been registered:</p>
-        <ul>
-          <li>Full Name: <%= newUser.getFirstName() + " " + newUser.getLastName() %></li>
-          <li>Email: <%= newUser.getEmail() %></li>
-          <li>Phone: <%= newUser.getPhone() %></li>
-        </ul>
-        
-        <p>Please choose an option:</p>
-        <a href="login.jsp">Return to Login</a>
-        <a href="main.jsp">Proceed to Main</a>
-      </div>
-    </div>
+  <div class="index-content">
+    <%
+      User currentUser = (User) session.getAttribute("currentUser");
+      if (currentUser == null) {
+        response.sendRedirect("login.jsp");
+      }
+    %>
+    <%
+      String welcomeMessage = (String) session.getAttribute("welcomeMessage");
+      if (welcomeMessage == null) {
+        welcomeMessage = "Welcome!";
+      }
+      session.removeAttribute("welcomeMessage"); // Clear it so it doesn't show next time
+    %>
+    <h2><%= welcomeMessage %></h2>
+    <p>These are your details:</p>
+
+    <table class="user-details">
+      <tr>
+        <th>Field</th>
+        <th>Value</th>
+      </tr>
+      <tr>
+        <td>Full Name</td>
+        <td><%= currentUser.getFirstName() + " " + currentUser.getLastName() %></td>
+
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td><%= currentUser.getEmail() %></td>
+
+      </tr>
+      <tr>
+        <td>Phone</td>
+        <td><%= currentUser.getPhone() %></td>
+      </tr>
+      <tr>
+        <td>Password</td>
+        <td>
+          <%
+            String password = currentUser.getPassword();
+            if (password != null) {
+              for (int i = 0; i < password.length(); i++) out.print("*");
+            }
+          %>
+        </td>
+      </tr>
+    </table>
     
+    <div class="action-buttons">
+      <a href="main.jsp" class="btn-primary">Go to Main Page</a>
+      <a href="logout.jsp" class="btn-secondary">Logout</a>
+    </div>
+
   </body>
 </html>

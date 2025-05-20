@@ -9,14 +9,19 @@
 </head>
 <body>
   <%
-    session.invalidate();
+    session.removeAttribute("currentUser");
   %>
-  <div id="logout-page">
-    <div class="logout-box">
-      <h2>You have logged out successfully!</h2>
-      <p>
-        <a href="index.jsp" class="btn-home">Back to Home Page</a>
-      </p>
+  <nav class="page-nav">
+        <div class="nav-left">
+            <a href="index.jsp">Home</a>
+        </div>
+    </nav>
+
+  <div class="index-content">
+    <h2>You have logged out successfully!</h2>
+    <div class="action-buttons">
+      <a href="index.jsp" class="btn-primary">Go to Home</a>
+      <a href="login.jsp" class="btn-secondary">Login Again</a>
     </div>
   </div>
 </body>
