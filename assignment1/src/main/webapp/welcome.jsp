@@ -23,8 +23,15 @@
         response.sendRedirect("login.jsp");
       }
     %>
-    <h2>Registration Successful!</h2>
-    <p>The following details have been registered:</p>
+    <%
+      String welcomeMessage = (String) session.getAttribute("welcomeMessage");
+      if (welcomeMessage == null) {
+        welcomeMessage = "Welcome!";
+      }
+      session.removeAttribute("welcomeMessage"); // Clear it so it doesn't show next time
+    %>
+    <h2><%= welcomeMessage %></h2>
+    <p>These are your details:</p>
 
     <table class="user-details">
       <tr>
@@ -47,7 +54,14 @@
       </tr>
       <tr>
         <td>Password</td>
-        <td><%= currentUser.getPassword() %></td>
+        <td>
+          <%
+            String password = currentUser.getPassword();
+            if (password != null) {
+              for (int i = 0; i < password.length(); i++) out.print("*");
+            }
+          %>
+        </td>
       </tr>
     </table>
     

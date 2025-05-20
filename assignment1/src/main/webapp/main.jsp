@@ -48,11 +48,11 @@
           <td>Phone</td>
           <td><%= currentUser.getPhone() %></td>
         </tr>
-        <tr>
-          <td>Password</td>
-          <td><%= currentUser.getPassword() %></td>
-        </tr>
     </table>
+
+    <div class="action-buttons">
+      <a href="edit.jsp" class="btn-primary">Edit Details</a>
+    </div>
     <%
       } else {
     %>

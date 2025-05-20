@@ -1,4 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    String registerError = (String) session.getAttribute("registerError");
+    String emailError    = (String) session.getAttribute("emailError");
+    String passwordError = (String) session.getAttribute("passwordError");
+    String nameError     = (String) session.getAttribute("nameError");
+
+    session.removeAttribute("registerError");
+    session.removeAttribute("emailError");
+    session.removeAttribute("passwordError");
+    session.removeAttribute("nameError");
+%>
 <!DOCTYPE html>
 <html lang="en" id="register-page">
 <head>
@@ -19,10 +30,6 @@
         <h2>Create Account</h2>
         
         <%
-            String registerError = (String) session.getAttribute("registerError");
-            String emailError    = (String) session.getAttribute("emailError");
-            String passwordError = (String) session.getAttribute("passwordError");
-            String nameError     = (String) session.getAttribute("nameError");
             if (registerError != null || emailError != null || passwordError != null || nameError != null) {
         %>
             <div class="error-messages">
@@ -43,12 +50,6 @@
             </div>
         <%
             }
-        %>
-        <%
-            session.setAttribute("registerError", null);
-            session.setAttribute("emailError", null);
-            session.setAttribute("passwordError", null);
-            session.setAttribute("nameError", null);
         %>
         
         <label class="heading" for="firstName">First Name</label>

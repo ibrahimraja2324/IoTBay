@@ -18,3 +18,14 @@ CREATE TABLE "User" (
 INSERT INTO "User" (Email, Password, FirstName, LastName, PhoneNumber, IsActive, Role)
 VALUES
     ('a@a.com', 'aaaa', 'Carol', 'Smith', '3456789012', TRUE, 'USER');
+   
+    -- Update user by searching with Email
+UPDATE "User"
+SET Password = 'newpassword',
+    FirstName = 'UpdatedFirstName',
+    LastName = 'UpdatedLastName',
+    PhoneNumber = '1234567890',
+    IsActive = FALSE,
+    Role = 'ADMIN',
+    UpdatedAt = CURRENT_TIMESTAMP
+WHERE Email = 'a@a.com';

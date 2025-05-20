@@ -9,7 +9,7 @@
 </head>
 <body>
   <%
-    session.invalidate();
+    session.removeAttribute("currentUser");
   %>
   <nav class="page-nav">
         <div class="nav-left">

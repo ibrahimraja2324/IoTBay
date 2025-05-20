@@ -86,9 +86,22 @@
         <url-pattern>/LogServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>EditProfileServlet</servlet-name>
+        <servlet-class>iotbay.controller.EditProfileServlet</servlet-class>
+        <load-on-startup>6</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>EditProfileServlet</servlet-name>
+        <url-pattern>/EditProfileServlet</url-pattern>
+    </servlet-mapping>
+
+
     <!-- Session config -->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+    
 
 </web-app>

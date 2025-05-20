@@ -191,3 +191,141 @@ html, body {
     font-size: 0.8rem;
     color: #b2b2b2;
 }
+
+.user-details {
+    width: 100%;
+    max-width: 500px;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0 auto 20px auto;
+    background: #28243c;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(30, 22, 54, 0.25);
+}
+
+.user-details th,
+.user-details td {
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 16px;
+    border-right: 1.5px solid #35325a;
+}
+
+.user-details th:last-child,
+.user-details td:last-child {
+    border-right: none;
+}
+
+.user-details th {
+    background: #22203a;
+    color: #a6a6ff;
+    font-weight: 600;
+    border-bottom: 2px solid #35325a;
+}
+
+.user-details tr:not(:last-child) td {
+    border-bottom: 1px solid #35325a;
+}
+
+.user-details tr:hover td {
+    background: #23203a;
+}
+
+.user-details td {
+    color: #e0e0e0;
+}
+/* Edit Page Styling */
+.edit-box {
+    width: 400px;
+    margin: 150px auto;
+    background-color: #2c2a3a;
+    border-radius: 8px;
+    padding: 28px 24px 24px 24px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+.edit-box h2 {
+    margin-bottom: 18px;
+    text-align: center;
+    color: #ffffff;
+    font-weight: 600;
+}
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.edit-form label {
+    color: #b2b2b2;
+    font-size: 15px;
+    margin-bottom: 2px;
+    margin-top: 8px;
+    text-align: left;
+    font-weight: 500;
+}
+.edit-form input[type="text"],
+.edit-form input[type="password"] {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    font-size: 15px;
+}
+.edit-form input[type="submit"] {
+    width: 100%;
+    background-color: #2575fc;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+.edit-form input[type="submit"]:hover {
+    background-color: #1a5bbf;
+}
+.btn-cancel {
+    display: block;
+    width: 100%;
+    background: #ccc;
+    color: #000;
+    text-align: center;
+    border-radius: 4px;
+    padding: 10px 0;
+    font-size: 17px;
+    text-decoration: none;
+    transition: background 0.3s;
+    margin-bottom: 4px;
+}
+.btn-cancel:hover {
+    background: #bbb;
+    color: #111;
+}
+.edit-box p {
+    text-align: center;
+    color: #d1ffd7;
+    margin: 14px 0 0 0;
+    font-size: 16px;
+}
+.btn-main {
+    display: inline-block;
+    padding: 12px 36px;
+    background: linear-gradient(to right, #2575fc, #6a11cb);
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 18px;
+    margin-top: 16px;
+    margin-bottom: 0;
+    transition: background 0.3s;
+}
+.btn-main:hover {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+}

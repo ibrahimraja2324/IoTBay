@@ -105,6 +105,7 @@ public class RegisterServlet extends HttpServlet {
                 ex.printStackTrace();
             }
             session.setAttribute("currentUser", user);
+            session.setAttribute("welcomeMessage", "Registration successful. Welcome, " + firstName + "!");
             response.sendRedirect("welcome.jsp");
         } else {
             // Registration failed: set an error message (for example, duplicate email)
