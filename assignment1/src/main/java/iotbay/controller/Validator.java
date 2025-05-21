@@ -17,7 +17,6 @@ public class Validator implements Serializable {
 
     public Validator() { }       
 
-    // Generic validator using regex.
     public boolean validate(String pattern, String input) {       
         Pattern regEx = Pattern.compile(pattern);       
         Matcher match = regEx.matcher(input);       
@@ -42,7 +41,9 @@ public class Validator implements Serializable {
    
    
     public boolean validateCardNumber(String cardNumber) {
-        return cardNumber != null && validate(cardNumberPattern, cardNumber);
+        if (cardNumber == null) return false;
+        String digitsOnly = cardNumber.replaceAll("-", "");
+        return validate(cardNumberPattern, digitsOnly);
     }
 
  

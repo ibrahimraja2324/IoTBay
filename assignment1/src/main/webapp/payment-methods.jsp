@@ -9,11 +9,14 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Your Payment Methods</h1>
-  <table>
+  <h1 style="text-align:center;">Your Payment Methods</h1>
+  <%
+     List<Payment> paymentMethods = (List<Payment>) request.getAttribute("paymentMethods");
+     if (paymentMethods != null && !paymentMethods.isEmpty()) {
+  %>
+  <table class="user-details">
     <thead>
       <tr>
-         <th>Payment ID</th>
          <th>Payment Method</th>
          <th>Card Holder Name</th>
          <th>Card Number</th>
@@ -24,12 +27,9 @@
     </thead>
     <tbody>
       <%
-         List<Payment> paymentMethods = (List<Payment>) request.getAttribute("paymentMethods");
-         if (paymentMethods != null && !paymentMethods.isEmpty()) {
-             for (Payment pm : paymentMethods) {
+         for (Payment pm : paymentMethods) {
       %>
       <tr>
-         <td><%= pm.getPaymentId() %></td>
          <td><%= pm.getPaymentMethod() %></td>
          <td><%= pm.getCardHolderName() %></td>
          <td><%= pm.getCardNumber() %></td>
@@ -41,16 +41,16 @@
          </td>
       </tr>
       <%
-             }
-         } else {
-      %>
-      <tr>
-         <td colspan="7">No payment methods found.</td>
-      </tr>
-      <%
          }
       %>
     </tbody>
   </table>
+  <%
+     } else {
+  %>
+  <p style="text-align:center;">No payment methods found.</p>
+  <%
+     }
+  %>
 </body>
 </html>

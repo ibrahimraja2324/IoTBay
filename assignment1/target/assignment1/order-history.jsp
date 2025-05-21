@@ -5,37 +5,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Order History</title>
-    <style>
-        table { 
-            border-collapse: collapse; 
-            width: 100%; 
-        }
-        table, th, td { 
-            border: 1px solid #ccc; 
-        }
-        th, td { 
-            padding: 8px; 
-            text-align: center; 
-        }
-        th { 
-            background-color: #f0f0f0; 
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Order History</h1>
+    <h1 style="text-align:center;">Order History</h1>
     <%
         List orders = (List) request.getAttribute("orders");
         if (orders == null || orders.isEmpty()) {
     %>
-        <p>No orders found.</p>
+        <p style="text-align:center;">No orders found.</p>
     <%
         } else {
     %>
-        <table>
+        <table class="user-details">
             <thead>
                 <tr>
-                    <th>Order ID</th>
                     <th>Order Date</th>
                     <th>Status</th>
                     <th>Total Amount</th>
@@ -47,7 +31,6 @@
                         Order order = (Order) it.next();
                 %>
                 <tr>
-                    <td><%= order.getOrderId() %></td>
                     <td><%= order.getOrderDate() %></td>
                     <td><%= order.getStatus() %></td>
                     <td><%= order.getTotalAmount() %></td>

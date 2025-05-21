@@ -8,26 +8,28 @@ html, body {
     color: #fff;
 }
 
-/* Navigation Bar */
+
 .page-nav {
-    width: 100%;
-    background-color: #333;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    box-sizing: border-box;
+  background: #22203a;
+  color: #a6a6ff;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
 }
 
-.page-nav a {
-    color: #f2f2f2;
-    text-decoration: none;
-    padding: 10px 15px;
-    transition: background 0.3s;
+.page-nav .nav-left a,
+.page-nav .nav-right a {
+  color: #a6a6ff;
+  margin-right: 15px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.page-nav .nav-right {
+  float: right;
 }
 
 .page-nav a:hover {
@@ -411,3 +413,204 @@ html, body {
     justify-content: center;
 }
 
+
+.dashboard-container {
+  margin: 20px auto;
+  max-width: 900px;
+}
+
+.dashboard-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.payment-form-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 30px auto;
+  background: #28243c;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 16px rgba(30,22,54,0.25);
+  color: #e0e0e0;
+}
+.payment-form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #a6a6ff;
+  font-weight: 600;
+}
+.payment-form-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #a6a6ff;
+}
+.payment-form-container input[type="text"],
+.payment-form-container input[type="date"],
+.payment-form-container select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.payment-form-container input[type="text"],
+.payment-form-container select,
+.payment-form-container input[type="date"] {
+  background-color: #fff;
+  color: #333;
+}
+.payment-form-container input[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #2575fc;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.payment-form-container input[type="submit"]:hover {
+  background-color: #1a5ac7;
+}
+.error {
+  color: #d93025;
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.table-container {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+
+.list-iframe {
+  width: 100%;
+  min-height: 300px; 
+  border: none;
+  margin: 20px auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+
+/* order history table formatting */
+.order-history-table {
+  width: 100%;
+  max-width: 500px;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0 auto 20px auto;
+  background: #28243c;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(30,22,54,0.25);
+}
+
+.order-history-table th,
+.order-history-table td {
+  padding: 16px 20px;
+  text-align: center;
+  font-size: 16px;
+  border-right: 1.5px solid #35325a;
+}
+
+.order-history-table th:last-child,
+.order-history-table td:last-child {
+  border-right: none;
+}
+
+.order-history-table th {
+  background: #22203a;
+  color: #a6a6ff;
+  font-weight: 600;
+  border-bottom: 2px solid #35325a;
+}
+
+.order-history-table tr:not(:last-child) td {
+  border-bottom: 1px solid #35325a;
+}
+
+.order-history-table tr:hover td {
+  background: #23203a;
+}
+
+.order-history-table td {
+  color: #e0e0e0;
+}
+
+/* /* payment edit styles */
+.content-area {
+  margin: 100px auto 20px auto;
+  max-width: 900px;
+  width: 90%;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.edit-payment-form-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 30px auto;
+  background: #28243c;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 16px rgba(30,22,54,0.25);
+  color: #e0e0e0;
+}
+
+
+.edit-payment-form-group {
+  margin-bottom: 15px;
+}
+.edit-payment-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #a6a6ff;
+}
+.edit-payment-form-group input[type="text"],
+.edit-payment-form-group input[type="date"],
+.edit-payment-form-group select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #fff;
+  color: #333;
+}
+.edit-payment-form-group .submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #2575fc;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.edit-payment-form-group .submit-btn:hover {
+  background-color: #1a5ac7;
+}
+
+
+.error-message {
+  color: #d93025;
+  font-size: 14px;
+  margin-top: 2px;
+}

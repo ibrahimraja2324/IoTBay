@@ -38,7 +38,6 @@ public class OrderHistoryServlet extends HttpServlet {
         doGet(request, response);
     }
     
-    // Use OrderDAO to load orders for the current user.
     private void listOrders(HttpServletRequest request, HttpServletResponse response, DBManager manager)
             throws ServletException, IOException, SQLException {
         HttpSession session = request.getSession();
