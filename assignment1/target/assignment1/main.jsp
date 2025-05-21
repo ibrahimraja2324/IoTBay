@@ -17,6 +17,7 @@
     <div class="nav-right">
       <a href="logout.jsp">Logout</a>
       <a href="payment-dashboard.jsp">Manage Payments</a>
+      <a href="shipment-dashboard.jsp">Manage Shipments</a>
     </div>
   </nav>
  

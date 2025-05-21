@@ -12,11 +12,23 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
+    <!-- ShipmentTableInitializer Servlet - Initialize Shipment table -->
+    <servlet>
+        <servlet-name>ShipmentTableInitializer</servlet-name>
+        <servlet-class>iotbay.controller.ShipmentTableInitializer</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ShipmentTableInitializer</servlet-name>
+        <url-pattern>/ShipmentTableInitializer</url-pattern>
+    </servlet-mapping>
+
     <!-- ConnServlet Mapping -->
     <servlet>
         <servlet-name>ConnServlet</servlet-name>
         <servlet-class>iotbay.controller.ConnServlet</servlet-class>
-        <load-on-startup>0</load-on-startup>
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -28,7 +40,7 @@
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>iotbay.controller.LoginServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
+        <load-on-startup>2</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -41,7 +53,7 @@
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>iotbay.controller.RegisterServlet</servlet-class>
-        <load-on-startup>2</load-on-startup>
+        <load-on-startup>3</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -54,7 +66,7 @@
     <servlet>
         <servlet-name>PaymentMethodServlet</servlet-name>
         <servlet-class>iotbay.controller.PaymentMethodServlet</servlet-class>
-        <load-on-startup>3</load-on-startup>
+        <load-on-startup>4</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -67,7 +79,7 @@
     <servlet>
         <servlet-name>OrderHistoryServlet</servlet-name>
         <servlet-class>iotbay.controller.OrderHistoryServlet</servlet-class>
-        <load-on-startup>4</load-on-startup>
+        <load-on-startup>5</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -78,7 +90,7 @@
     <servlet>
         <servlet-name>LogServlet</servlet-name>
         <servlet-class>iotbay.controller.LogServlet</servlet-class>
-        <load-on-startup>5</load-on-startup>
+        <load-on-startup>6</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -89,7 +101,7 @@
     <servlet>
         <servlet-name>EditProfileServlet</servlet-name>
         <servlet-class>iotbay.controller.EditProfileServlet</servlet-class>
-        <load-on-startup>6</load-on-startup>
+        <load-on-startup>7</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -100,7 +112,7 @@
     <servlet>
         <servlet-name>DeleteAccountServlet</servlet-name>
         <servlet-class>iotbay.controller.DeleteAccountServlet</servlet-class>
-        <load-on-startup>7</load-on-startup>
+        <load-on-startup>8</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -108,11 +120,20 @@
         <url-pattern>/DeleteAccountServlet</url-pattern>
     </servlet-mapping>
 
+    <!-- Shipment Servlet Configuration -->
+    <servlet>
+        <servlet-name>ShipmentServlet</servlet-name>
+        <servlet-class>iotbay.controller.ShipmentServlet</servlet-class>
+        <load-on-startup>9</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>ShipmentServlet</servlet-name>
+        <url-pattern>/ShipmentServlet</url-pattern>
+    </servlet-mapping>
 
     <!-- Session config -->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
-    
-
 </web-app>
