@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .details-container {
-            max-width: 600px;
+            max-width: 500px;
             margin: 120px auto 50px auto;
-            background-color: #2c2a3a;
-            border-radius: 8px;
+            background-color: #28243c;
+            border-radius: 12px;
             padding: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
@@ -20,7 +20,8 @@
         .details-container h2 {
             text-align: center;
             margin-bottom: 25px;
-            color: #fff;
+            color: #a6a6ff;
+            font-weight: 600;
         }
         
         .details-section {
@@ -29,13 +30,19 @@
         
         .details-row {
             display: flex;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid #35325a;
+            padding-bottom: 12px;
+        }
+        
+        .details-row:last-child {
+            border-bottom: none;
         }
         
         .details-label {
             flex: 1;
             font-weight: 600;
-            color: #a6a6ff;
+            color: #b2b2b2;
         }
         
         .details-value {
@@ -72,17 +79,20 @@
         
         .action-buttons {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             margin-top: 30px;
         }
         
-        .btn-primary, .btn-secondary, .btn-important {
+        .btn-action {
             padding: 12px 24px;
-            border-radius: 5px;
+            border-radius: 6px;
             text-decoration: none;
             font-size: 16px;
             text-align: center;
+            min-width: 140px;
+            transition: all 0.3s ease;
         }
         
         .btn-primary {
@@ -92,15 +102,18 @@
         
         .btn-primary:hover {
             background: linear-gradient(to right, #6a11cb, #2575fc);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(37, 117, 252, 0.3);
         }
         
         .btn-secondary {
-            background: #ccc;
-            color: #333;
+            background: #35325a;
+            color: #fff;
         }
         
         .btn-secondary:hover {
-            background: #bbb;
+            background: #413d6b;
+            transform: translateY(-2px);
         }
         
         .btn-important {
@@ -110,6 +123,14 @@
         
         .btn-important:hover {
             background: linear-gradient(to right, #b31217, #e52d27);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(229, 45, 39, 0.3);
+        }
+        
+        .not-found {
+            text-align: center;
+            color: #ff6b6b;
+            margin: 20px 0;
         }
     </style>
 </head>
@@ -121,6 +142,7 @@
         </div>
         <div class="nav-right">
             <a href="shipment-dashboard.jsp">Shipments</a>
+            <a href="payment-dashboard.jsp">Payments</a>
             <a href="logout.jsp">Logout</a>
         </div>
     </nav>
@@ -131,9 +153,9 @@
             if (shipment == null) {
         %>
             <h2>Shipment Not Found</h2>
-            <p style="text-align: center; color: #ff6b6b;">The requested shipment could not be found.</p>
+            <p class="not-found">The requested shipment could not be found or you don't have permission to view it.</p>
             <div class="action-buttons">
-                <a href="shipment-dashboard.jsp" class="btn-secondary">Back to Shipments</a>
+                <a href="shipment-dashboard.jsp" class="btn-action btn-secondary">Back to Shipments</a>
             </div>
         <%
             } else {
@@ -193,11 +215,11 @@
             
             <div class="action-buttons">
                 <% if ("Pending".equals(shipment.getStatus())) { %>
-                    <a href="ShipmentServlet?action=edit&id=<%= shipment.getShipmentId() %>" class="btn-primary">Edit Shipment</a>
-                    <a href="ShipmentServlet?action=delete&id=<%= shipment.getShipmentId() %>" class="btn-important" 
+                    <a href="ShipmentServlet?action=edit&id=<%= shipment.getShipmentId() %>" class="btn-action btn-primary">Edit Shipment</a>
+                    <a href="ShipmentServlet?action=delete&id=<%= shipment.getShipmentId() %>" class="btn-action btn-important" 
                        onclick="return confirm('Are you sure you want to delete this shipment?')">Delete Shipment</a>
                 <% } %>
-                <a href="shipment-dashboard.jsp" class="btn-secondary">Back to Shipments</a>
+                <a href="shipment-dashboard.jsp" class="btn-action btn-secondary">Back to Shipments</a>
             </div>
         <% } %>
     </div>

@@ -8,86 +8,122 @@
   <title>Shipment Management - IoTBay</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Dashboard container styling */
-    .dashboard-container {
-      margin: 20px;
+    .container {
+      max-width: 1000px;
+      margin: 100px auto 50px auto;
+      padding: 0 20px;
     }
-    .dashboard-section {
-      margin-bottom: 40px;
-    }
-    .dashboard-section h2 {
+    
+    .page-title {
       text-align: center;
-      margin-bottom: 15px;
-    }
-    /* Status indicators */
-    .status-pending {
-      background-color: #ffc107;
-      padding: 4px 8px;
-      border-radius: 4px;
-      color: #000;
-    }
-    .status-processing {
-      background-color: #17a2b8;
-      padding: 4px 8px;
-      border-radius: 4px;
       color: #fff;
+      margin-bottom: 30px;
     }
-    .status-shipped {
-      background-color: #28a745;
-      padding: 4px 8px;
+    
+    .card {
+      background-color: #28243c;
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-title {
+      color: #a6a6ff;
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    
+    .message {
+      padding: 15px;
       border-radius: 4px;
-      color: #fff;
-    }
-    .status-delivered {
-      background-color: #6c757d;
-      padding: 4px 8px;
-      border-radius: 4px;
-      color: #fff;
-    }
-    .search-container {
       margin-bottom: 20px;
       text-align: center;
     }
-    .search-container form {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
+    
+    .message.success {
+      background-color: rgba(40, 167, 69, 0.2);
+      border: 1px solid rgba(40, 167, 69, 0.4);
+      color: #28a745;
     }
-    .message-box {
-      padding: 10px 15px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      text-align: center;
+    
+    .message.error {
+      background-color: rgba(220, 53, 69, 0.2);
+      border: 1px solid rgba(220, 53, 69, 0.4);
+      color: #dc3545;
     }
-    .success-message {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-    .error-message {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-    .action-button {
-      padding: 10px 20px;
-      border-radius: 5px;
-      text-decoration: none;
-      display: inline-block;
-      margin-right: 10px;
-      text-align: center;
-    }
-    .btn-add {
-      background-color: #28a745;
+    
+    .btn-create {
+      display: block;
+      width: 250px;
+      margin: 0 auto 25px auto;
+      background: linear-gradient(to right, #2575fc, #6a11cb);
       color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      text-align: center;
+      transition: all 0.3s ease;
     }
-    .btn-add:hover {
-      background-color: #218838;
+    
+    .btn-create:hover {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(37, 117, 252, 0.3);
+    }
+    
+    .search-form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .search-form select,
+    .search-form input[type="text"] {
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background-color: #3a3760;
+      color: #fff;
+    }
+    
+    .search-form button {
+      background: linear-gradient(to right, #2575fc, #6a11cb);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .shipment-list-frame {
+      width: 100%;
+      height: 500px;
+      border: none;
+      border-radius: 8px;
+      background-color: #1f1c2c;
+      margin-top: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .search-form {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .search-form select,
+      .search-form input[type="text"],
+      .search-form button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- NavBar -->
   <nav class="page-nav">
     <div class="nav-left">
       <a href="index.jsp">Home</a>
@@ -100,9 +136,9 @@
     </div>
   </nav>
   
-  <h1 style="text-align:center;">Shipment Management</h1>
-  
-  <div class="dashboard-container">
+  <div class="container">
+    <h1 class="page-title">Shipment Management</h1>
+    
     <%
       // Display success or error messages if any
       String successMessage = (String) session.getAttribute("successMessage");
@@ -114,7 +150,7 @@
       
       if (successMessage != null) {
     %>
-    <div class="message-box success-message">
+    <div class="message success">
       <%= successMessage %>
     </div>
     <%
@@ -122,33 +158,29 @@
       
       if (shipmentError != null) {
     %>
-    <div class="message-box error-message">
+    <div class="message error">
       <%= shipmentError %>
     </div>
     <%
       }
     %>
-
-    <div class="dashboard-section">
-      <div style="text-align: center; margin-bottom: 20px;">
-        <a href="ShipmentServlet?action=create" class="action-button btn-add">Create New Shipment</a>
-      </div>
+    
+    <div class="card">
+      <a href="ShipmentServlet?action=create" class="btn-create">Create New Shipment</a>
       
-      <h2>Search Shipments</h2>
-      <div class="search-container">
-        <form action="ShipmentServlet" method="get">
-          <input type="hidden" name="action" value="search">
-          <select name="searchBy" style="padding: 8px; border-radius: 4px;">
-            <option value="id">Shipment ID</option>
-            <option value="date">Shipment Date</option>
-          </select>
-          <input type="text" name="searchTerm" placeholder="Search term..." style="padding: 8px; border-radius: 4px; width: 200px;">
-          <button type="submit" style="padding: 8px 16px; border-radius: 4px; background-color: #2575fc; color: white; border: none; cursor: pointer;">Search</button>
-        </form>
-      </div>
+      <h2 class="card-title">Search Shipments</h2>
+      <form action="ShipmentServlet" method="get" class="search-form">
+        <input type="hidden" name="action" value="search">
+        <select name="searchBy">
+          <option value="id">Shipment ID</option>
+          <option value="date">Shipment Date</option>
+        </select>
+        <input type="text" name="searchTerm" placeholder="Search term...">
+        <button type="submit">Search</button>
+      </form>
       
-      <h2>Your Shipments</h2>
-      <iframe src="ShipmentServlet" style="width:100%; height:400px; border:none;"></iframe>
+      <!-- The iframe with target="_parent" for all links -->
+      <iframe src="ShipmentServlet" class="shipment-list-frame" name="shipment-list"></iframe>
     </div>
   </div>
 </body>

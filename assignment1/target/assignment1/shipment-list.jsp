@@ -13,11 +13,14 @@
             margin: 0;
             padding: 20px;
         }
+        
         h1 {
-            color: #fff;
+            color: #a6a6ff;
             text-align: center;
             margin-bottom: 20px;
+            font-weight: 600;
         }
+        
         table { 
             border-collapse: collapse; 
             width: 100%;
@@ -25,65 +28,87 @@
             background-color: #28243c;
             border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 2px 16px rgba(30, 22, 54, 0.25);
         }
+        
         table, th, td { 
             border: 1px solid #35325a; 
         }
+        
         th, td { 
             padding: 12px; 
             text-align: center; 
         }
+        
         th { 
             background-color: #22203a;
             color: #a6a6ff;
             font-weight: 600;
         }
+        
         tr:hover td {
-            background-color: #23203a;
+            background-color: #35325a;
         }
+        
         .action-link {
             color: #4dabf7;
             text-decoration: none;
             margin: 0 5px;
+            transition: color 0.2s;
+            font-weight: 500;
         }
+        
         .action-link:hover {
+            color: #83c9ff;
             text-decoration: underline;
         }
+        
+        /* Status indicators */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
         .status-pending {
             background-color: #ffc107;
-            padding: 4px 8px;
-            border-radius: 4px;
             color: #000;
         }
+        
         .status-processing {
             background-color: #17a2b8;
-            padding: 4px 8px;
-            border-radius: 4px;
             color: #fff;
         }
+        
         .status-shipped {
             background-color: #28a745;
-            padding: 4px 8px;
-            border-radius: 4px;
             color: #fff;
         }
+        
         .status-delivered {
             background-color: #6c757d;
-            padding: 4px 8px;
-            border-radius: 4px;
             color: #fff;
         }
+        
         .no-records {
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             font-style: italic;
-            color: #ccc;
+            color: #b2b2b2;
+            background: #28243c;
+            border-radius: 8px;
+            box-shadow: 0 2px 16px rgba(30, 22, 54, 0.25);
         }
+        
         .search-info {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             font-style: italic;
-            color: #ccc;
+            color: #b2b2b2;
+            background-color: #28243c;
+            padding: 10px;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -97,7 +122,7 @@
         if (searchTerm != null && !searchTerm.isEmpty()) {
     %>
     <div class="search-info">
-        Search results for <%= searchBy.equals("id") ? "Shipment ID" : "Shipment Date" %>: <%= searchTerm %>
+        Search results for <%= searchBy.equals("id") ? "Shipment ID" : "Shipment Date" %>: "<%= searchTerm %>"
     </div>
     <% } %>
     
@@ -105,7 +130,7 @@
         List<Shipment> shipments = (List<Shipment>) request.getAttribute("shipments");
         if (shipments == null || shipments.isEmpty()) {
     %>
-        <div class="no-records">No shipments found.</div>
+        <div class="no-records">No shipments found. Create a new shipment to get started!</div>
     <%
         } else {
     %>
@@ -146,12 +171,13 @@
                     <td><%= shipment.getOrderId() %></td>
                     <td><%= shipment.getShipmentMethod() %></td>
                     <td><%= shipment.getShipmentDate() %></td>
-                    <td><span class="<%= statusClass %>"><%= shipment.getStatus() %></span></td>
+                    <td><span class="status-badge <%= statusClass %>"><%= shipment.getStatus() %></span></td>
                     <td>
-                        <a href="ShipmentServlet?action=view&id=<%= shipment.getShipmentId() %>" class="action-link">View</a>
+                        <a href="ShipmentServlet?action=view&id=<%= shipment.getShipmentId() %>" class="action-link" target="_top">View</a>
                         <% if ("Pending".equals(shipment.getStatus())) { %>
-                            | <a href="ShipmentServlet?action=edit&id=<%= shipment.getShipmentId() %>" class="action-link">Edit</a>
-                            | <a href="ShipmentServlet?action=delete&id=<%= shipment.getShipmentId() %>" class="action-link" onclick="return confirm('Are you sure you want to delete this shipment?')">Delete</a>
+                            | <a href="ShipmentServlet?action=edit&id=<%= shipment.getShipmentId() %>" class="action-link" target="_top">Edit</a>
+                            | <a href="ShipmentServlet?action=delete&id=<%= shipment.getShipmentId() %>" class="action-link" 
+                                 onclick="return confirm('Are you sure you want to delete this shipment?')" target="_top">Delete</a>
                         <% } %>
                     </td>
                 </tr>

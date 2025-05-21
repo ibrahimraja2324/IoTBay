@@ -225,6 +225,7 @@ public class ShipmentServlet extends HttpServlet {
         ShipmentDAO shipmentDAO = new ShipmentDAO(conn);
         List<Shipment> shipments = shipmentDAO.findShipmentsByUser(currentUser.getEmail());
         
+        // Simply set the shipments as a request attribute and forward to shipment-list.jsp
         request.setAttribute("shipments", shipments);
         request.getRequestDispatcher("shipment-list.jsp").forward(request, response);
     }
@@ -448,10 +449,12 @@ public class ShipmentServlet extends HttpServlet {
         ShipmentDAO shipmentDAO = new ShipmentDAO(conn);
         List<Shipment> shipments = shipmentDAO.searchShipments(currentUser.getEmail(), searchTerm, searchBy);
         
-        // Store results in request attribute and forward to list page
+        // Store results in request attribute
         request.setAttribute("shipments", shipments);
         request.setAttribute("searchTerm", searchTerm);
         request.setAttribute("searchBy", searchBy);
-        request.getRequestDispatcher("shipment-list.jsp").forward(request, response);
+        
+        // Forward to the new search results page
+        request.getRequestDispatcher("shipment-search-results.jsp").forward(request, response);
     }
 }
