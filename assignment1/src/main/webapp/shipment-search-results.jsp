@@ -107,7 +107,7 @@
             padding: 40px 20px;
             font-style: italic;
             color: #b2b2b2;
-            background: #28243c;
+            background: #35325a;
             border-radius: 8px;
             margin: 20px 0;
         }
@@ -144,12 +144,25 @@
         }
         
         .search-form select,
-        .search-form input[type="text"] {
+        .search-form input[type="text"],
+        .search-form input[type="date"] {
             padding: 10px;
             border: none;
             border-radius: 4px;
             background-color: #3a3760;
             color: #fff;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 14px;
+            min-width: 120px;
+        }
+        
+        .search-form input[type="date"] {
+            color-scheme: dark;
+        }
+        
+        .search-form input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
         }
         
         .search-form button {
@@ -159,6 +172,29 @@
             padding: 10px 20px;
             border-radius: 4px;
             cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .search-form button:hover {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            transform: translateY(-1px);
+        }
+        
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .search-form select,
+            .search-form input[type="text"],
+            .search-form input[type="date"],
+            .search-form button {
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
@@ -195,14 +231,24 @@
                 </div>
             <% } %>
             
-            <!-- New Search Form -->
+            <!-- Enhanced Search Form with Calendar -->
             <form action="ShipmentServlet" method="get" class="search-form">
                 <input type="hidden" name="action" value="search">
-                <select name="searchBy">
+                <select name="searchBy" id="searchBy" onchange="toggleSearchInput()">
                     <option value="id" <%= (searchBy != null && searchBy.equals("id")) ? "selected" : "" %>>Shipment ID</option>
                     <option value="date" <%= (searchBy != null && searchBy.equals("date")) ? "selected" : "" %>>Shipment Date</option>
                 </select>
-                <input type="text" name="searchTerm" placeholder="Search term..." value="<%= searchTerm != null ? searchTerm : "" %>">
+                
+                <!-- Text input for Shipment ID -->
+                <input type="text" name="searchTerm" id="textSearch" placeholder="Enter Shipment ID..." 
+                       value="<%= (searchBy != null && searchBy.equals("id") && searchTerm != null) ? searchTerm : "" %>" 
+                       style="<%= (searchBy != null && searchBy.equals("date")) ? "display: none;" : "" %>">
+                
+                <!-- Date input for Shipment Date -->
+                <input type="date" name="searchTerm" id="dateSearch" 
+                       value="<%= (searchBy != null && searchBy.equals("date") && searchTerm != null) ? searchTerm : "" %>"
+                       style="<%= (searchBy == null || !searchBy.equals("date")) ? "display: none;" : "" %>">
+                
                 <button type="submit">Search</button>
             </form>
             
@@ -278,5 +324,30 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleSearchInput() {
+            var searchBy = document.getElementById('searchBy').value;
+            var textSearch = document.getElementById('textSearch');
+            var dateSearch = document.getElementById('dateSearch');
+            
+            if (searchBy === 'date') {
+                textSearch.style.display = 'none';
+                dateSearch.style.display = 'inline-block';
+                textSearch.name = '';
+                dateSearch.name = 'searchTerm';
+            } else {
+                textSearch.style.display = 'inline-block';
+                dateSearch.style.display = 'none';
+                textSearch.name = 'searchTerm';
+                dateSearch.name = '';
+            }
+        }
+
+        // Initialize the form on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleSearchInput();
+        });
+    </script>
 </body>
 </html>
