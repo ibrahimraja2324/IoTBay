@@ -7,8 +7,6 @@
   <title>Edit Payment Method - IoTBay</title>
   <link rel="stylesheet" href="style.css">
   <script>
-    // Formats the card number:
-    // Removes non-digit characters, limits to 16 digits, and inserts dashes every 4 digits.
     function formatCardNumber(input) {
       var digits = input.value.replace(/\D/g, '');
       if(digits.length > 16) {
@@ -26,8 +24,6 @@
   </script>
 </head>
 <body>
-  
-  <!-- Main Content Area -->
   <main class="content-area">
     <h1 class="page-title">Edit Payment Method</h1>
     
@@ -43,7 +39,6 @@
       <form action="PaymentMethodServlet?action=update" method="post" class="edit-payment-form">
          <input type="hidden" name="paymentId" value="<%= paymentMethod.getPaymentId() %>">
          
-         <!-- Payment Method -->
          <div class="edit-payment-form-group">
            <label for="paymentMethod">Payment Method:</label>
            <% if(request.getAttribute("paymentMethodError") != null) { %>
@@ -57,7 +52,6 @@
            </select>
          </div>
          
-         <!-- Card Holder Name -->
          <div class="edit-payment-form-group">
            <label for="cardHolderName">Card Holder Name:</label>
            <% if(request.getAttribute("cardHolderNameError") != null) { %>
@@ -66,8 +60,6 @@
            <input type="text" id="cardHolderName" name="cardHolderName" 
                   value="<%= paymentMethod.getCardHolderName() != null ? paymentMethod.getCardHolderName() : "" %>" required>
          </div>
-         
-         <!-- Card Number -->
          <div class="edit-payment-form-group">
            <label for="cardNumber">Card Number:</label>
            <% if(request.getAttribute("cardNumberError") != null) { %>
@@ -77,8 +69,6 @@
                   value="<%= paymentMethod.getCardNumber() != null ? paymentMethod.getCardNumber() : "" %>" 
                   oninput="formatCardNumber(this)" required>
          </div>
-         
-         <!-- CVV (max 4 characters) -->
          <div class="edit-payment-form-group">
            <label for="cvv">CVV:</label>
            <% if(request.getAttribute("cvvError") != null) { %>
@@ -87,8 +77,6 @@
            <input type="text" id="cvv" name="cvv" maxlength="4"
                   value="<%= paymentMethod.getCvv() != null ? paymentMethod.getCvv() : "" %>" required>
          </div>
-         
-         <!-- Expiry Date -->
          <div class="edit-payment-form-group">
            <label for="expiryDate">Expiry Date:</label>
            <% if(request.getAttribute("expiryDateError") != null) { %>

@@ -7,8 +7,6 @@
   <title>Payment Dashboard - IoTBay</title>
   <link rel="stylesheet" href="style.css">
   <script>
-    // Format the card number:
-    // Removes non-digit characters, limits to 16 digits, and inserts dashes every 4 digits.
     function formatCardNumber(input) {
       var digits = input.value.replace(/\D/g, '');
       if (digits.length > 16) {
@@ -40,11 +38,10 @@
   <h1 class="dashboard-title">Payment Dashboard</h1>
   
   <div class="dashboard-container">
-    <!-- Payment Form Container -->
+  
     <div class="payment-form-container">
       <h2>Add New Payment Method</h2>
       <form action="PaymentMethodServlet?action=add" method="post">
-        <!-- Payment Method Dropdown -->
         <label for="paymentMethod">Payment Method:</label>
         <% if (request.getAttribute("paymentMethodError") != null) { %>
           <div class="error"><%= request.getAttribute("paymentMethodError") %></div>
@@ -57,7 +54,6 @@
           <option value="Discover" <%= "Discover".equals(request.getAttribute("paymentMethodInput")) ? "selected" : "" %>>Discover</option>
         </select>
         
-        <!-- Card Holder Name -->
         <label for="cardHolderName">Card Holder Name:</label>
         <% if (request.getAttribute("cardHolderNameError") != null) { %>
           <div class="error"><%= request.getAttribute("cardHolderNameError") %></div>
@@ -65,7 +61,6 @@
         <input type="text" id="cardHolderName" name="cardHolderName" placeholder="Full Name"
                value="<%= request.getAttribute("cardHolderNameInput") != null ? request.getAttribute("cardHolderNameInput") : "" %>" required>
         
-        <!-- Card Number -->
         <label for="cardNumber">Card Number:</label>
         <% if (request.getAttribute("cardNumberError") != null) { %>
           <div class="error"><%= request.getAttribute("cardNumberError") %></div>
@@ -73,8 +68,7 @@
         <input type="text" id="cardNumber" name="cardNumber" placeholder="1234-5678-9012-3456"
                oninput="formatCardNumber(this)" 
                value="<%= request.getAttribute("cardNumberInput") != null ? request.getAttribute("cardNumberInput") : "" %>" required>
-        
-        <!-- CVV (locked to 4 characters) -->
+
         <label for="cvv">CVV:</label>
         <% if (request.getAttribute("cvvError") != null) { %>
           <div class="error"><%= request.getAttribute("cvvError") %></div>
@@ -82,7 +76,6 @@
         <input type="text" id="cvv" name="cvv" placeholder="3 or 4-digit CVV" maxlength="4"
                value="<%= request.getAttribute("cvvInput") != null ? request.getAttribute("cvvInput") : "" %>" required>
         
-        <!-- Expiry Date -->
         <label for="expiryDate">Expiry Date:</label>
         <% if (request.getAttribute("expiryDateError") != null) { %>
           <div class="error"><%= request.getAttribute("expiryDateError") %></div>
@@ -93,14 +86,11 @@
         <input type="submit" value="Save Payment Method">
       </form>
     </div>
-    
-    <!-- Payment Methods Table -->
     <div class="table-container">
       <h2>Your Payment Methods</h2>
       <iframe src="PaymentMethodServlet?action=list" class="list-iframe"></iframe>
     </div>
     
-    <!-- Order History Table -->
     <div class="table-container">
       <h2>Order History</h2>
       <iframe src="OrderHistoryServlet" class="list-iframe"></iframe>
