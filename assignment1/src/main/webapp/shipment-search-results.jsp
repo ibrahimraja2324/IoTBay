@@ -6,197 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shipment Search Results - IoTBay</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .container {
-            max-width: 1000px;
-            margin: 100px auto 50px auto;
-            padding: 0 20px;
-        }
-        
-        .page-title {
-            text-align: center;
-            color: #fff;
-            margin-bottom: 30px;
-        }
-        
-        .card {
-            background-color: #28243c;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-        
-        .search-info {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 10px 15px;
-            background-color: #35325a;
-            border-radius: 6px;
-            color: #b2b2b2;
-        }
-        
-        .shipment-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .shipment-table th, 
-        .shipment-table td {
-            padding: 15px;
-            border: 1px solid #35325a;
-            text-align: center;
-        }
-        
-        .shipment-table th {
-            background-color: #22203a;
-            color: #a6a6ff;
-            font-weight: 600;
-        }
-        
-        .shipment-table tr:hover td {
-            background-color: #35325a;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-weight: 500;
-        }
-        
-        .status-pending {
-            background-color: #ffc107;
-            color: #000;
-        }
-        
-        .status-processing {
-            background-color: #17a2b8;
-            color: #fff;
-        }
-        
-        .status-shipped {
-            background-color: #28a745;
-            color: #fff;
-        }
-        
-        .status-delivered {
-            background-color: #6c757d;
-            color: #fff;
-        }
-        
-        .action-link {
-            color: #4dabf7;
-            text-decoration: none;
-            margin: 0 5px;
-            transition: color 0.2s;
-            font-weight: 500;
-        }
-        
-        .action-link:hover {
-            color: #83c9ff;
-            text-decoration: underline;
-        }
-        
-        .no-records {
-            text-align: center;
-            padding: 40px 20px;
-            font-style: italic;
-            color: #b2b2b2;
-            background: #35325a;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-        
-        .back-link {
-            display: inline-block;
-            padding: 12px 24px;
-            background: linear-gradient(to right, #2575fc, #6a11cb);
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 500;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        .back-link:hover {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(37, 117, 252, 0.3);
-        }
-        
-        .action-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .search-form {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-        }
-        
-        .search-form select,
-        .search-form input[type="text"],
-        .search-form input[type="date"] {
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            background-color: #3a3760;
-            color: #fff;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 14px;
-            min-width: 120px;
-        }
-        
-        .search-form input[type="date"] {
-            color-scheme: dark;
-        }
-        
-        .search-form input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
-        }
-        
-        .search-form button {
-            background: linear-gradient(to right, #2575fc, #6a11cb);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'Quicksand', sans-serif;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .search-form button:hover {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            transform: translateY(-1px);
-        }
-        
-        @media (max-width: 768px) {
-            .search-form {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .search-form select,
-            .search-form input[type="text"],
-            .search-form input[type="date"],
-            .search-form button {
-                width: 100%;
-                max-width: 300px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="shipment-style.css">
 </head>
 <body>
     <!-- Navigation Menu -->
@@ -242,12 +52,12 @@
                 <!-- Text input for Shipment ID -->
                 <input type="text" name="searchTerm" id="textSearch" placeholder="Enter Shipment ID..." 
                        value="<%= (searchBy != null && searchBy.equals("id") && searchTerm != null) ? searchTerm : "" %>" 
-                       style="<%= (searchBy != null && searchBy.equals("date")) ? "display: none;" : "" %>">
+                       class="<%= (searchBy != null && searchBy.equals("date")) ? "d-none" : "" %>">
                 
                 <!-- Date input for Shipment Date -->
                 <input type="date" name="searchTerm" id="dateSearch" 
                        value="<%= (searchBy != null && searchBy.equals("date") && searchTerm != null) ? searchTerm : "" %>"
-                       style="<%= (searchBy == null || !searchBy.equals("date")) ? "display: none;" : "" %>">
+                       class="<%= (searchBy == null || !searchBy.equals("date")) ? "d-none" : "" %>">
                 
                 <button type="submit">Search</button>
             </form>
@@ -332,13 +142,13 @@
             var dateSearch = document.getElementById('dateSearch');
             
             if (searchBy === 'date') {
-                textSearch.style.display = 'none';
-                dateSearch.style.display = 'inline-block';
+                textSearch.classList.add('d-none');
+                dateSearch.classList.remove('d-none');
                 textSearch.name = '';
                 dateSearch.name = 'searchTerm';
             } else {
-                textSearch.style.display = 'inline-block';
-                dateSearch.style.display = 'none';
+                textSearch.classList.remove('d-none');
+                dateSearch.classList.add('d-none');
                 textSearch.name = 'searchTerm';
                 dateSearch.name = '';
             }
