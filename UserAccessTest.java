@@ -23,7 +23,10 @@ public class UserAccessTest {
     void setUp() {
         try {
             // Use in-memory SQLite DB for testing
-            conn = java.sql.DriverManager.getConnection("jdbc:sqlite:/Users/ethan/Desktop/ISD/ASS 2/IoTBay/assignment1/src/main/webapp/WEB-INF/database/database_test.db");
+            System.out.println("Working directory: " + System.getProperty("user.dir"));
+            String URL = "jdbc:sqlite:" + System.getProperty("catalina.base")
+                    + "/src/main/webapp/WEB-INF/database/database_test.db";
+            conn = java.sql.DriverManager.getConnection(URL);
             userDAO = new UserDAO(conn); 
         }
         catch (Exception e) {
