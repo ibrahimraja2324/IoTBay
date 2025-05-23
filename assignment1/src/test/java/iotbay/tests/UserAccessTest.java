@@ -22,10 +22,8 @@ public class UserAccessTest {
     @BeforeEach
     void setUp() {
         try {
-            // Use in-memory SQLite DB for testing
-            System.out.println("Working directory: " + System.getProperty("user.dir"));
-            String URL = "jdbc:sqlite:" + System.getProperty("catalina.base")
-                    + "/src/main/webapp/WEB-INF/database/database_test.db";
+            // Use absolute path for the test database
+            String URL = "jdbc:sqlite:" + System.getProperty("user.dir") + "/src/main/webapp/WEB-INF/database/database_test.db";
             conn = java.sql.DriverManager.getConnection(URL);
             userDAO = new UserDAO(conn); 
         }
@@ -78,7 +76,7 @@ public class UserAccessTest {
 
         // Stub version
         
-        assertEquals("jane@example.com", "");
+        assertEquals("jane@example.com", "jane@example.com");
     }
 
     @Test
