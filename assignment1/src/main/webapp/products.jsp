@@ -17,6 +17,7 @@
         }
         h1 {
             text-align: center;
+            color: #28a745;
             margin-top: 20px;
         }
         .grid {
@@ -62,6 +63,20 @@
     </script>
 </head>
 <body>
+    <nav class="page-nav">
+        <div class="nav-left">
+          <a href="index.jsp">Home</a>
+        </div>
+        <div class="nav-right">
+          <a href="logout.jsp">Logout</a>
+          <a href="payment-dashboard.jsp">Manage Payments</a>
+          <a href="shipment-dashboard.jsp">Manage Shipments</a>
+          <% if (currentUser != null && "staff".equalsIgnoreCase(currentUser.getRole())) { %>
+            <a href="viewuser.jsp">View Users</a>
+          <% } %>
+          <a href="http://localhost:8080/assignment1/devices">Products</a>
+        </div>
+      </nav>
     <h1>Available Devices</h1>
     <div class="grid">
         <%
