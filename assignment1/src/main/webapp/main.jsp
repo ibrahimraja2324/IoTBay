@@ -25,7 +25,7 @@
       <% if (currentUser != null && "staff".equalsIgnoreCase(currentUser.getRole())) { %>
         <a href="viewuser.jsp">View Users</a>
       <% } %>
-      <a href="products.jsp">Products</a>
+      <a href="http://localhost:8080/assignment1/devices">Products</a>
     </div>
   </nav>
 
