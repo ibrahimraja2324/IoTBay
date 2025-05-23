@@ -6,6 +6,32 @@
 <head>
     <title>Products</title>
     <style>
+        .page-nav {
+            background: #22203a;
+            color: #a6a6ff;
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .page-nav .nav-left a,
+        .page-nav .nav-right a {
+            color: #a6a6ff;
+            margin-right: 15px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .page-nav .nav-right {
+            float: right;
+        }
+
+        .page-nav a:hover {
+            background-color: #555;
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #1a5ac7;
