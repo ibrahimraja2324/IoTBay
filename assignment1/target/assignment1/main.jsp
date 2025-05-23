@@ -18,6 +18,7 @@
       <a href="logout.jsp">Logout</a>
       <a href="payment-dashboard.jsp">Manage Payments</a>
       <a href="shipment-dashboard.jsp">Manage Shipments</a>
+      <a href="viewuser.jsp">View Users</a>
     </div>
   </nav>
  

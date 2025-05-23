@@ -7,6 +7,7 @@ public class User {
     private String password;
     private String phone;
     private String role;
+    private boolean isActive;
   
     public User() {
     }
@@ -65,4 +66,11 @@ public class User {
         this.role = role;
     }
     
+    public boolean isActive() {
+        return isActive;
+    }
+    
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
 }

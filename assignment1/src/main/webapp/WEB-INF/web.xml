@@ -136,4 +136,16 @@
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+
+    <!-- UserServlet Mapping -->
+    <servlet>
+        <servlet-name>UserServlet</servlet-name>
+        <servlet-class>iotbay.controller.UserServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UserServlet</servlet-name>
+        <url-pattern>/UserServlet</url-pattern>
+    </servlet-mapping>
+
 </web-app>
