@@ -1,9 +1,14 @@
 package iotbay.dao;
 
-import iotbay.model.Device;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import iotbay.model.Device;
 
 public class DeviceDAO {
     private final Connection conn;
@@ -83,5 +88,19 @@ public class DeviceDAO {
             rs.getDouble("UnitPrice"),
             rs.getInt("Quantity")
         );
+    }
+
+    // READ - Get a device by its ID
+    public Device getDeviceById(int id) throws SQLException {
+        String sql = "SELECT * FROM Device WHERE ID = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extractDevice(rs);
+                }
+            }
+        }
+        return null;
     }
 }

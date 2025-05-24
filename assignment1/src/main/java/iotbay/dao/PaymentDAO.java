@@ -1,15 +1,19 @@
 package iotbay.dao;
 
-import iotbay.model.Payment;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import iotbay.model.Payment;
 
 public class PaymentDAO {
     private Connection conn;
  
-    public PaymentDAO(Connection conn) {
-        this.conn = conn;
+    public PaymentDAO(Connection conn2) {
+        this.conn = conn2;
     }
     
     public List<Payment> findPaymentMethods(String userEmail) throws SQLException {
