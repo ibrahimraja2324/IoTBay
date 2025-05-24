@@ -111,7 +111,6 @@ public class PaymentManagementTest {
         List<Payment> payments = paymentDAO.findPaymentMethods("ibrahim@example.com");
         Payment stored = payments.get(0);
         
-        // Update cardholder name and expiry date
         stored.setCardHolderName("Ibrahim Updated");
         stored.setExpiryDate("10/25");
         paymentDAO.updatePayment(stored);
@@ -139,6 +138,92 @@ public class PaymentManagementTest {
         List<Payment> paymentsAfter = paymentDAO.findPaymentMethods("ibrahim@example.com");
         assertEquals(0, paymentsAfter.size(), "No payment methods should exist after deletion.");
     }
+
+    /**
+     * [418] Search/Filter Saved Payment Methods (Customer)
+     */
+    @Test
+    public void testSearchFilteredPaymentMethods() throws SQLException {
+    
+        String userEmail = "john@example.com";
+    
+        Payment payment1 = new Payment(0, 0, "Visa", "John Doe", 
+                "1111222233334444", "123", "09/25", 0.0, userEmail);
+        Payment payment2 = new Payment(0, 0, "MasterCard", "Johnny Bravo", 
+                "5555666677778888", "456", "10/25", 0.0, userEmail);
+        Payment payment3 = new Payment(0, 0, "Amex", "Jenny Doe", 
+                "9999888877776666", "789", "11/25", 0.0, userEmail);
+
+        paymentDAO.addPayment(payment1);
+        paymentDAO.addPayment(payment2);
+        paymentDAO.addPayment(payment3);
+        
+    
+        List<Payment> allPayments = paymentDAO.findPaymentMethods(userEmail);
+        
+    
+        String searchName = "John Doe";
+        final String searchNameLower = searchName.trim().toLowerCase();
+        List<Payment> filteredByName = allPayments.stream().filter(pm -> {
+            boolean nameMatches = pm.getCardHolderName().toLowerCase().contains(searchNameLower);
+            boolean cardMatches = false;
+            String cardNumber = pm.getCardNumber(); 
+            if (cardNumber != null && cardNumber.length() >= 4) {
+                String lastFour = cardNumber.substring(cardNumber.length() - 4);
+                cardMatches = lastFour.contains(searchName);
+            }
+            return nameMatches || cardMatches;
+        }).collect(Collectors.toList());
+        assertEquals(1, filteredByName.size(), "Search for 'John Doe' should return exactly one matching payment.");
+        assertEquals("John Doe", filteredByName.get(0).getCardHolderName(),
+                "The returned payment's cardholder name should match 'John Doe'.");
+
+        String searchDigits = "8888"; 
+        List<Payment> filteredByCard = allPayments.stream().filter(pm -> {
+            boolean nameMatches = pm.getCardHolderName().toLowerCase().contains(searchDigits.toLowerCase());
+            boolean cardMatches = false;
+            String cardNumber = pm.getCardNumber();
+            if (cardNumber != null && cardNumber.length() >= 4) {
+                String lastFour = cardNumber.substring(cardNumber.length() - 4);
+                cardMatches = lastFour.contains(searchDigits);
+            }
+            return nameMatches || cardMatches;
+        }).collect(Collectors.toList());
+        assertEquals(1, filteredByCard.size(), "Search for '8888' should return exactly one matching payment.");
+        assertEquals("5555666677778888", filteredByCard.get(0).getCardNumber(),
+                "The returned payment's card number should match the search query.");
+
+        String searchNone = "notfound";
+        List<Payment> filteredNone = allPayments.stream().filter(pm -> {
+            boolean nameMatches = pm.getCardHolderName().toLowerCase().contains(searchNone.toLowerCase());
+            boolean cardMatches = false;
+            String cardNumber = pm.getCardNumber();
+            if (cardNumber != null && cardNumber.length() >= 4) {
+                String lastFour = cardNumber.substring(cardNumber.length() - 4);
+                cardMatches = lastFour.contains(searchNone);
+            }
+            return nameMatches || cardMatches;
+        }).collect(Collectors.toList());
+        assertTrue(filteredNone.isEmpty(), "Search for 'notfound' should return zero results.");
+
+
+        Payment toDelete = filteredByCard.get(0);
+        paymentDAO.deletePayment(toDelete.getPaymentId());
+    
+        List<Payment> updatedPayments = paymentDAO.findPaymentMethods(userEmail);
+        List<Payment> filteredAfterDeletion = updatedPayments.stream().filter(pm -> {
+            boolean nameMatches = pm.getCardHolderName().toLowerCase().contains(searchDigits.toLowerCase());
+            boolean cardMatches = false;
+            String cardNumber = pm.getCardNumber();
+            if (cardNumber != null && cardNumber.length() >= 4) {
+                String lastFour = cardNumber.substring(cardNumber.length() - 4);
+                cardMatches = lastFour.contains(searchDigits);
+            }
+            return nameMatches || cardMatches;
+        }).collect(Collectors.toList());
+        assertTrue(filteredAfterDeletion.isEmpty(), "After deletion, search for '8888' should yield no results.");
+    }
+
 
     /**
      * [503] Save multiple payment methods (Customer)
