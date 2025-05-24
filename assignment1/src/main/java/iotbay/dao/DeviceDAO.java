@@ -36,19 +36,51 @@ public class DeviceDAO {
         return list;
     }
 
-    // READ - Search by name and/or type
+    // READ - Get a device by ID
+    public Device getDeviceById(int id) throws SQLException {
+        String sql = "SELECT * FROM Device WHERE ID = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extractDevice(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    // READ - Search by name and/or type (advanced search)
     public List<Device> searchDevices(String name, String type) throws SQLException {
         List<Device> list = new ArrayList<>();
-        String sql = "SELECT * FROM Device WHERE Name LIKE ? AND Type LIKE ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, name == null || name.isEmpty() ? "%" : "%" + name + "%");
-            ps.setString(2, type == null || type.isEmpty() ? "%" : "%" + type + "%");
+        StringBuilder sql = new StringBuilder("SELECT * FROM Device WHERE 1=1");
+    
+        if (name != null && !name.isEmpty()) {
+            sql.append(" AND Name LIKE ?");
+        }
+    
+        if (type != null && !type.isEmpty()) {
+            sql.append(" AND Type = ?");
+        }
+    
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            int index = 1;
+    
+            if (name != null && !name.isEmpty()) {
+                ps.setString(index++, "%" + name + "%");
+            }
+    
+            if (type != null && !type.isEmpty()) {
+                ps.setString(index++, type);
+            }
+    
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(extractDevice(rs));
                 }
             }
         }
+    
         return list;
     }
 
