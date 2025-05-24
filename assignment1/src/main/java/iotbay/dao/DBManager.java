@@ -1,10 +1,8 @@
 package iotbay.dao;
 
-import iotbay.model.Payment;
 import iotbay.model.User;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class DBManager {
 

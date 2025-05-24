@@ -10,6 +10,17 @@
 </head>
 <body>
   <h1 style="text-align:center;">Your Payment Methods</h1>
+  
+  <!-- Updated Search Form using .search-container and .btn-submit -->
+  <div class="search-container" style="text-align:center; margin-bottom:20px;">
+    <form action="PaymentMethodServlet" method="get">
+      <input type="hidden" name="action" value="list">
+      <input type="text" name="search" placeholder="Search by name or last 4 digits" 
+             style="width:300px; padding:8px; font-size:16px;">
+      <button type="submit" class="btn-submit">Search</button>
+    </form>
+  </div>
+  
   <%
      List<Payment> paymentMethods = (List<Payment>) request.getAttribute("paymentMethods");
      if (paymentMethods != null && !paymentMethods.isEmpty()) {
@@ -32,7 +43,7 @@
       <tr>
          <td><%= pm.getPaymentMethod() %></td>
          <td><%= pm.getCardHolderName() %></td>
-         <td><%= pm.getCardNumber() %></td>
+         <td><%= pm.getCardNumber().replaceAll(".(?=.{4})", "*") %></td>
          <td><%= pm.getCvv() %></td>
          <td><%= pm.getExpiryDate() %></td>
          <td>

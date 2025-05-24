@@ -60,6 +60,7 @@
            <input type="text" id="cardHolderName" name="cardHolderName" 
                   value="<%= paymentMethod.getCardHolderName() != null ? paymentMethod.getCardHolderName() : "" %>" required>
          </div>
+         
          <div class="edit-payment-form-group">
            <label for="cardNumber">Card Number:</label>
            <% if(request.getAttribute("cardNumberError") != null) { %>
@@ -69,6 +70,7 @@
                   value="<%= paymentMethod.getCardNumber() != null ? paymentMethod.getCardNumber() : "" %>" 
                   oninput="formatCardNumber(this)" required>
          </div>
+         
          <div class="edit-payment-form-group">
            <label for="cvv">CVV:</label>
            <% if(request.getAttribute("cvvError") != null) { %>
@@ -77,12 +79,13 @@
            <input type="text" id="cvv" name="cvv" maxlength="4"
                   value="<%= paymentMethod.getCvv() != null ? paymentMethod.getCvv() : "" %>" required>
          </div>
+         
          <div class="edit-payment-form-group">
            <label for="expiryDate">Expiry Date:</label>
            <% if(request.getAttribute("expiryDateError") != null) { %>
              <div class="error-message"><%= request.getAttribute("expiryDateError") %></div>
            <% } %>
-           <input type="date" id="expiryDate" name="expiryDate"
+           <input type="month" id="expiryDate" name="expiryDate"
                   value="<%= paymentMethod.getExpiryDate() != null ? paymentMethod.getExpiryDate() : "" %>" required>
          </div>
          

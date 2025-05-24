@@ -1,7 +1,7 @@
 package iotbay.controller;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Matcher;
@@ -13,7 +13,7 @@ public class Validator implements Serializable {
     private String passwordPattern = "[a-z0-9]{4,}";     
     private String cardNumberPattern = "\\d{16}";
     private String cvvPattern = "\\d{3,4}";
-    private String expiryDatePattern = "\\d{4}-\\d{2}-\\d{2}";
+    private String expiryDatePattern = "^\\d{4}-(0[1-9]|1[0-2])$";
 
     public Validator() { }       
 
@@ -39,19 +39,16 @@ public class Validator implements Serializable {
         return password != null && validate(passwordPattern, password); 
     }
    
-   
     public boolean validateCardNumber(String cardNumber) {
         if (cardNumber == null) return false;
         String digitsOnly = cardNumber.replaceAll("-", "");
         return validate(cardNumberPattern, digitsOnly);
     }
 
- 
     public boolean validateCVV(String cvv) {
         return cvv != null && validate(cvvPattern, cvv);
     }
 
- 
     public boolean validateExpiryDateFormat(String expiryDate) {
         return expiryDate != null && validate(expiryDatePattern, expiryDate);
     }
@@ -61,14 +58,14 @@ public class Validator implements Serializable {
             return false;
         }
         try {
-            LocalDate expDate = LocalDate.parse(expiryDate, DateTimeFormatter.ISO_LOCAL_DATE);
-            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+            YearMonth expDate = YearMonth.parse(expiryDate, formatter);
+            YearMonth currentDate = YearMonth.now();
             return expDate.isAfter(currentDate);
         } catch (DateTimeParseException e) {
             return false;
         }
     }
-
 
     public boolean validatePaymentMethod(String paymentMethod) {
         if (paymentMethod == null) return false;
@@ -87,7 +84,7 @@ public class Validator implements Serializable {
     }
 
     public boolean validateCardHolderName(String name) {
-    return name != null && !name.trim().isEmpty();
+    return validateName(name);
 }
 
 }

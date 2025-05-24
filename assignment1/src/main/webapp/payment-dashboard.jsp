@@ -38,7 +38,6 @@
   <h1 class="dashboard-title">Payment Dashboard</h1>
   
   <div class="dashboard-container">
-  
     <div class="payment-form-container">
       <h2>Add New Payment Method</h2>
       <form action="PaymentMethodServlet?action=add" method="post">
@@ -80,12 +79,14 @@
         <% if (request.getAttribute("expiryDateError") != null) { %>
           <div class="error"><%= request.getAttribute("expiryDateError") %></div>
         <% } %>
-        <input type="date" id="expiryDate" name="expiryDate"
+        
+        <input id="expiry-date-unique-id" type="month" id="expiryDate" name="expiryDate"
                value="<%= request.getAttribute("expiryDateInput") != null ? request.getAttribute("expiryDateInput") : "" %>" required>
         
         <input type="submit" value="Save Payment Method">
       </form>
     </div>
+    
     <div class="table-container">
       <h2>Your Payment Methods</h2>
       <iframe src="PaymentMethodServlet?action=list" class="list-iframe"></iframe>
@@ -96,6 +97,5 @@
       <iframe src="OrderHistoryServlet" class="list-iframe"></iframe>
     </div>
   </div>
-  
 </body>
 </html>

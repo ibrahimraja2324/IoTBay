@@ -412,7 +412,7 @@ html, body {
     align-items: center;
     justify-content: center;
 }
-
+/* payment (pls stop deleting this comment :'( i'm using it to cntr + f) */
 
 .dashboard-container {
   margin: 20px auto;
@@ -447,8 +447,10 @@ html, body {
   font-size: 16px;
   color: #a6a6ff;
 }
+/* Updated selector: added input[type="month"] */
 .payment-form-container input[type="text"],
 .payment-form-container input[type="date"],
+.payment-form-container input[type="month"],
 .payment-form-container select {
   width: 100%;
   padding: 10px;
@@ -460,7 +462,8 @@ html, body {
 }
 .payment-form-container input[type="text"],
 .payment-form-container select,
-.payment-form-container input[type="date"] {
+.payment-form-container input[type="date"],
+.payment-form-container input[type="month"] {
   background-color: #fff;
   color: #333;
 }
@@ -490,7 +493,6 @@ html, body {
   text-align: center;
 }
 
-
 .list-iframe {
   width: 100%;
   min-height: 300px; 
@@ -498,7 +500,6 @@ html, body {
   margin: 20px auto;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
-
 
 /* order history table formatting */
 .order-history-table {
@@ -569,7 +570,6 @@ html, body {
   color: #e0e0e0;
 }
 
-
 .edit-payment-form-group {
   margin-bottom: 15px;
 }
@@ -579,8 +579,10 @@ html, body {
   font-weight: bold;
   color: #a6a6ff;
 }
+/* Updated selector: added input[type="month"] */
 .edit-payment-form-group input[type="text"],
 .edit-payment-form-group input[type="date"],
+.edit-payment-form-group input[type="month"],
 .edit-payment-form-group select {
   width: 100%;
   padding: 10px;
@@ -608,12 +610,34 @@ html, body {
   background-color: #1a5ac7;
 }
 
-
 .error-message {
   color: #d93025;
   font-size: 14px;
   margin-top: 2px;
 }
+
+.payment-form-container input[type="month"],
+.edit-payment-form-group input[type="month"] {
+  margin-bottom: 20px;
+}
+
+.payment-form-container input#expiry-date-unique-id {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  padding: 10px !important;
+  font-size: 16px !important;
+  border: none !important;
+  border-radius: 4px !important;
+  background-color: #fff !important;
+  color: #333 !important;
+  box-sizing: border-box;
+  margin-bottom: 20px !important;
+}
+
+
+
 
 
 /* Fixed Navigation Bar */
