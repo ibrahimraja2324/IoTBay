@@ -137,8 +137,11 @@
               for (User u : users) {
                   boolean isAdminAccount = "admin@example.com".equalsIgnoreCase(u.getEmail());
                   boolean isCurrentUser = currentUser != null && currentUser.getEmail().equals(u.getEmail());
-                  // Staff can modify regular users and their own account
-                  boolean canModify = isAdmin || (isStaff && (!u.getRole().equals("ADMIN") && !u.getRole().equals("STAFF"))) || isCurrentUser;
+                  boolean isStaffAccount = "STAFF".equalsIgnoreCase(u.getRole());
+                  // Staff can edit regular users, other staff accounts, and their own account
+                  boolean canModify = isAdmin || (isStaff && !isAdminAccount) || isCurrentUser;
+                  // Staff can only delete/deactivate regular users and their own account
+                  boolean canDeleteOrDeactivate = isAdmin || (isStaff && (!isStaffAccount || isCurrentUser)) || isCurrentUser;
         %>
         <tr>
           <td><%= u.getEmail() %></td>
@@ -157,7 +160,7 @@
               <a href="UserServlet?action=edit&email=<%= u.getEmail() %>" 
                  class="btn-secondary" style="padding: 6px 10px; font-size: 13px;">Edit</a>
             
-              <% if (!isAdminAccount && (isAdmin || (isStaff && u.getRole().equals("USER")) || isCurrentUser)) { %>
+              <% if (!isAdminAccount && canDeleteOrDeactivate) { %>
                 <a href="UserServlet?action=delete&email=<%= u.getEmail() %>" 
                    class="btn-important" style="padding: 6px 10px; font-size: 13px;"
                    onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>

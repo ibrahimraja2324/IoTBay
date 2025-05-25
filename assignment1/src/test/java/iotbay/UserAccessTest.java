@@ -41,6 +41,14 @@ public class UserAccessTest {
                     "Role VARCHAR(20) DEFAULT 'USER' NOT NULL" +
                     ")";
             stmt.execute(initScript);
+
+            // Insert additional test users
+            String insertUsers = "INSERT INTO Users (Email, Password, FirstName, LastName, PhoneNumber, Role, IsActive) VALUES " +
+                    "('user1@example.com', 'password123', 'John', 'Doe', '0412345678', 'USER', true), " +
+                    "('user2@example.com', 'password123', 'Jane', 'Smith', '0423456789', 'USER', true), " +
+                    "('staff1@iotbay.com', 'staffpass123', 'Michael', 'Johnson', '0434567890', 'STAFF', true), " +
+                    "('staff2@iotbay.com', 'staffpass123', 'Sarah', 'Williams', '0445678901', 'STAFF', true)";
+            stmt.execute(insertUsers);
         } catch (SQLException e) {
             fail("Failed to initialize database: " + e.getMessage());
         }

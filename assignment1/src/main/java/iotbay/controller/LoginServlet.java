@@ -25,7 +25,6 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         DBManager manager = (DBManager) session.getAttribute("manager");
-        UserDAO userDAO = new UserDAO(manager != null ? manager.getConnection() : null);
         
         // Initialize DBManager if not present
         if (manager == null) {
@@ -40,6 +39,9 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
         }
+
+        // Create new UserDAO with fresh connection
+        UserDAO userDAO = new UserDAO(manager.getConnection());
         
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -66,6 +68,9 @@ public class LoginServlet extends HttpServlet {
             user = userDAO.findUser(email, password);
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Error finding user", ex);
+            session.setAttribute("loginError", "An error occurred while trying to log in. Please try again.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
         }
         
         if (user != null) {
