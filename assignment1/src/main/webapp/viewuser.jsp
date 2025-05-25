@@ -134,6 +134,8 @@
           if (manager != null) {
               UserDAO userDAO = new UserDAO(manager.getConnection());
               List<User> users = userDAO.getAllUsers();
+              // Add debug logging
+              System.out.println("Total users loaded: " + users.size());
               for (User u : users) {
                   boolean isAdminAccount = "admin@example.com".equalsIgnoreCase(u.getEmail());
                   boolean isCurrentUser = currentUser != null && currentUser.getEmail().equals(u.getEmail());
@@ -199,15 +201,14 @@
     let sortColumn = 0;
     let sortDirection = 1;
 
-    function filterTable() {
+    function getFilteredRows() {
+      const table = document.getElementById('userTable');
+      const rows = Array.from(table.getElementsByTagName('tr')).slice(1);
       const searchText = document.getElementById('searchInput').value.toLowerCase();
       const roleFilter = document.getElementById('roleFilter').value;
       const statusFilter = document.getElementById('statusFilter').value;
-      const table = document.getElementById('userTable');
-      const rows = table.getElementsByTagName('tr');
 
-      for (let i = 1; i < rows.length; i++) {
-        const row = rows[i];
+      return rows.filter(row => {
         const cells = row.getElementsByTagName('td');
         let showRow = true;
 
@@ -235,50 +236,30 @@
           if (statusFilter === 'inactive' && status !== 'inactive') showRow = false;
         }
 
-        row.style.display = showRow ? '' : 'none';
-      }
-
-      updatePagination();
+        return showRow;
+      });
     }
 
-    function sortTable(column) {
-      if (sortColumn === column) {
-        sortDirection *= -1;
-      } else {
-        sortColumn = column;
-        sortDirection = 1;
-      }
+    function showPage() {
+      const rows = Array.from(document.getElementById('userTable').getElementsByTagName('tr')).slice(1);
+      const filteredRows = getFilteredRows();
+      const start = (currentPage - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
 
-      const table = document.getElementById('userTable');
-      const rows = Array.from(table.getElementsByTagName('tr')).slice(1);
-      const headers = table.getElementsByTagName('th');
+      // Hide all rows first
+      rows.forEach(row => row.style.display = 'none');
 
-      // Update sort indicators
-      for (let i = 0; i < headers.length; i++) {
-        headers[i].textContent = headers[i].textContent.replace(' ↑', '').replace(' ↓', '');
-        if (i === column) {
-          headers[i].textContent += sortDirection === 1 ? ' ↑' : ' ↓';
+      // Show only the filtered rows for the current page
+      filteredRows.forEach((row, index) => {
+        if (index >= start && index < end) {
+          row.style.display = '';
         }
-      }
-
-      rows.sort((a, b) => {
-        const aValue = a.getElementsByTagName('td')[column].textContent;
-        const bValue = b.getElementsByTagName('td')[column].textContent;
-        return sortDirection * aValue.localeCompare(bValue);
       });
-
-      const tbody = table.getElementsByTagName('tbody')[0];
-      rows.forEach(row => tbody.appendChild(row));
-
-      updatePagination();
     }
 
     function updatePagination() {
-      const table = document.getElementById('userTable');
-      const rows = Array.from(table.getElementsByTagName('tr')).slice(1);
-      const visibleRows = rows.filter(row => row.style.display !== 'none');
-      const totalPages = Math.ceil(visibleRows.length / rowsPerPage);
-      
+      const filteredRows = getFilteredRows();
+      const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
       const pagination = document.getElementById('pagination');
       pagination.innerHTML = '';
 
@@ -291,6 +272,7 @@
         if (currentPage > 1) {
           currentPage--;
           showPage();
+          updatePagination();
         }
       };
       pagination.appendChild(prevButton);
@@ -307,6 +289,7 @@
           e.preventDefault();
           currentPage = i;
           showPage();
+          updatePagination();
         };
         pagination.appendChild(pageLink);
       }
@@ -320,6 +303,7 @@
         if (currentPage < totalPages) {
           currentPage++;
           showPage();
+          updatePagination();
         }
       };
       pagination.appendChild(nextButton);
@@ -327,22 +311,21 @@
       showPage();
     }
 
-    function showPage() {
-      const table = document.getElementById('userTable');
-      const rows = Array.from(table.getElementsByTagName('tr')).slice(1);
-      const visibleRows = rows.filter(row => row.style.display !== 'none');
-      
-      const start = (currentPage - 1) * rowsPerPage;
-      const end = start + rowsPerPage;
+    // Update event handlers to reset to page 1 and update pagination
+    document.getElementById('searchInput').onkeyup = function() {
+      currentPage = 1;
+      updatePagination();
+    };
+    document.getElementById('roleFilter').onchange = function() {
+      currentPage = 1;
+      updatePagination();
+    };
+    document.getElementById('statusFilter').onchange = function() {
+      currentPage = 1;
+      updatePagination();
+    };
 
-      rows.forEach((row, index) => {
-        if (row.style.display !== 'none') {
-          row.style.display = (index >= start && index < end) ? '' : 'none';
-        }
-      });
-    }
-
-    // Initialize pagination
+    // Initialize
     updatePagination();
   </script>
 </body>
