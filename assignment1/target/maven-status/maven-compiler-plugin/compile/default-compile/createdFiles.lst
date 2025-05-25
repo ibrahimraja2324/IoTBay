@@ -18,7 +18,6 @@ iotbay/controller/ConnServlet.class
 iotbay/model/User.class
 iotbay/dao/CartItemDAO.class
 iotbay/controller/DeleteOrderServlet.class
-iotbay/controller/OrderDetailsServlet.class
 iotbay/controller/DeviceServlet.class
 iotbay/controller/UpdateCartQuantityServlet.class
 iotbay/controller/UserServlet$ThreadLocalRequestHolder.class
@@ -35,7 +34,6 @@ iotbay/controller/RemoveFromCartServlet.class
 iotbay/controller/OrderListServlet.class
 iotbay/dao/DeviceDAO.class
 iotbay/dao/DB.class
-iotbay/controller/OrderSaveServlet.class
 iotbay/dao/DBConnector.class
 iotbay/controller/UpdateOrderQtyServlet.class
 iotbay/controller/TestDB.class

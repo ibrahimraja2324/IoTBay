@@ -21,14 +21,12 @@ public class UpdateOrderQtyServlet extends HttpServlet {
             throws ServletException, IOException {
 
         int orderId;
-        String quantityStr;
 
         // Step 1: Parse input
         try {
             orderId = Integer.parseInt(request.getParameter("orderId"));
-            quantityStr = request.getParameter("quantity");
         } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "Invalid order ID or quantity.");
+            request.setAttribute("errorMessage", "Invalid order ID.");
             request.getRequestDispatcher("orderlist.jsp").forward(request, response);
             return;
         }
@@ -36,7 +34,7 @@ public class UpdateOrderQtyServlet extends HttpServlet {
         // Step 2: Validate quantity
         int qty;
         try {
-            qty = Integer.parseInt(quantityStr);
+            qty = Integer.parseInt(request.getParameter("quantity"));
             if (qty < 1) {
                 request.setAttribute("errorMessage", "Quantity must be at least 1.");
                 request.getRequestDispatcher("orderlist.jsp").forward(request, response);
@@ -57,7 +55,7 @@ public class UpdateOrderQtyServlet extends HttpServlet {
 
             Order order = orderDAO.getOrder(orderId);
             if (order != null) {
-                order.setQuantity(String.valueOf(qty));
+                order.setQuantity(qty); // ✅ fix: now uses int
                 boolean updated = orderDAO.updateOrder(order);
 
                 if (!updated) {

@@ -14,7 +14,6 @@
 /Users/ichan-yeong/Desktop/IoTBay/assignment1/src/main/java/iotbay/controller/AddToCartServlet.java
 /Users/ichan-yeong/Desktop/IoTBay/assignment1/src/main/java/iotbay/dao/ShipmentDAO.java
 /Users/ichan-yeong/Desktop/IoTBay/assignment1/src/main/java/iotbay/dao/PaymentDAO.java
-/Users/ichan-yeong/Desktop/IoTBay/assignment1/src/main/java/iotbay/controller/OrderSaveServlet.java
 /Users/ichan-yeong/Desktop/IoTBay/assignment1/src/main/java/iotbay/model/User.java
 /Users/ichan-yeong/Desktop/IoTBay/assignment1/src/main/java/iotbay/controller/DeleteAccountServlet.java
 /Users/ichan-yeong/Desktop/IoTBay/assignment1/src/main/java/iotbay/controller/DeviceServlet.java

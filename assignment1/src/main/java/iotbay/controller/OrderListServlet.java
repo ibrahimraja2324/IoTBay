@@ -38,7 +38,7 @@ public class OrderListServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("currentUser");
 
         if (user == null) {
             response.sendRedirect("login.jsp");

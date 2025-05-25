@@ -1,8 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="iotbay.model.Cart" %>
+<%@ page import="iotbay.model.Cart" %>
+<%@ page import="iotbay.model.User" %>
 <%@ page import="java.text.DecimalFormat" %>
 
 <%
+    User user = (User) session.getAttribute("currentUser");
+    if (user == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+
     Cart cart = (Cart) session.getAttribute("cart");
     double totalAmount = (cart != null) ? cart.getTotalPrice() : 0.0;
     DecimalFormat df = new DecimalFormat("0.00");
@@ -95,7 +103,8 @@
     <div class="error-message"><%= error %></div>
   <% } %>
 
-  <form id="checkoutForm" action="saveOrders" method="post" onsubmit="return validateForm();">
+  <%-- <form id="checkoutForm" action="saveOrders" method="post" onsubmit="return validateForm();"> --%>
+    <form id="checkoutForm" action="checkout" method="post" onsubmit="return validateForm();">
     <p><strong>Total Amount:</strong> $<%= df.format(totalAmount) %></p>
     <input type="hidden" name="totalAmount" value="<%= totalAmount %>">
 

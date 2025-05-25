@@ -1,9 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="iotbay.model.Order" %>
+<%@ page import="iotbay.model.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 
 <%
+    iotbay.model.User currentUser = (iotbay.model.User) session.getAttribute("currentUser");
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp"); 
+        return;
+    }
+
     List<Order> orderList = (List<Order>) request.getAttribute("orderList");
     String currentSortBy = (String) request.getAttribute("currentSortBy");
     String currentSortOrder = (String) request.getAttribute("currentSortOrder");
@@ -78,7 +85,6 @@
     <a href="index.jsp">Home</a>
   </div>
   <div class="nav-right">
-    <a href="edit.jsp">Edit</a>
     <a href="logout.jsp">Logout</a>
   </div>
 </nav>

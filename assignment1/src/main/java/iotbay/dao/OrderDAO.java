@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class OrderDAO {
     }
 
     private void initStatements() throws SQLException {
-        String updateQuery = "UPDATE Orders SET status = ?, totalAmount = ? WHERE orderId = ?";
+        String updateQuery = "UPDATE Orders SET status = ?, totalAmount = ?, quantity = ?, productId = ? WHERE orderId = ?";
         String deleteQuery = "DELETE FROM Orders WHERE orderId = ?";
         String selectAllQuery = "SELECT * FROM Orders";
         String selectQuery = "SELECT * FROM Orders WHERE orderId = ?";
@@ -38,14 +39,6 @@ public class OrderDAO {
     }
 
     public boolean insertOrder(String email, Cart cart, String deliveryAddress, String paymentMethod) throws SQLException {
-        // [SPECIAL CONDITION] If this is a mock/test cart with dummy items (no ID or price validation),
-        // allow the order to be considered successful without writing to DB.
-        boolean isTestCart = cart.getItems().stream().anyMatch(item -> item.getDevice().getId() < 0);
-        if (isTestCart) {
-            return true; // Simulate success for test/demo carts with invalid DB links
-        }
-
-        // Actual DB insert for real carts
         String query = "INSERT INTO Orders (status, totalAmount, userEmail, deliveryAddress, paymentMethod) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, "Pending");
@@ -53,7 +46,9 @@ public class OrderDAO {
             stmt.setString(3, email);
             stmt.setString(4, deliveryAddress);
             stmt.setString(5, paymentMethod);
-            return stmt.executeUpdate() > 0;
+            int result = stmt.executeUpdate();
+            System.out.println("Insert result = " + result);
+            return result > 0;
         }
     }
 
@@ -113,13 +108,14 @@ public class OrderDAO {
     }
 
     public boolean createOrder(Order order) throws SQLException {
-        String sql = "INSERT INTO Orders (status, totalAmount, userEmail, deliveryAddress, paymentMethod) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Orders (orderDate, status, totalAmount, userEmail, deliveryAddress, paymentMethod) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, order.getStatus());
-            ps.setDouble(2, order.getTotalAmount());
-            ps.setString(3, order.getUserEmail());
-            ps.setString(4, order.getDeliveryAddress());
-            ps.setString(5, order.getPaymentMethod());
+            ps.setString(1, LocalDateTime.now().toString());
+            ps.setString(2, order.getStatus());
+            ps.setDouble(3, order.getTotalAmount());
+            ps.setString(4, order.getUserEmail());
+            ps.setString(5, order.getDeliveryAddress());
+            ps.setString(6, order.getPaymentMethod());
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) return false;
 
@@ -170,13 +166,18 @@ public class OrderDAO {
         order.setUserEmail(rs.getString("userEmail"));
         order.setDeliveryAddress(rs.getString("deliveryAddress"));
         order.setPaymentMethod(rs.getString("paymentMethod"));
+        order.setProductId(rs.getInt("productId"));
+        order.setQuantity(rs.getInt("quantity"));
+        order.setTotalPrice(rs.getDouble("totalPrice"));
         return order;
     }
 
     public boolean updateOrder(Order order) throws SQLException {
         updateStmt.setString(1, order.getStatus());
         updateStmt.setDouble(2, order.getTotalAmount());
-        updateStmt.setInt(3, order.getOrderId());
+        updateStmt.setInt(3, order.getQuantity());
+        updateStmt.setInt(4, order.getProductId());
+        updateStmt.setInt(5, order.getOrderId());
         return updateStmt.executeUpdate() > 0;
     }
 

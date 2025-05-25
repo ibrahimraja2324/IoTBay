@@ -1,20 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, iotbay.model.Cart, iotbay.model.CartItem, iotbay.model.Device" %>
+<%@ page import="java.util.*, iotbay.model.Cart, iotbay.model.CartItem, iotbay.model.Device, iotbay.model.User" %>
 
-<%
+<%  
+    User user = (User) session.getAttribute("currentUser");
+    if (user == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+
     Cart cart = (Cart) session.getAttribute("cart");
     if (cart == null) {
-        cart = new Cart();
-
-        // Sample devices
-        Device d1 = new Device(1, "Smart Sensor", "Sensor", 59.99, 100);
-        Device d2 = new Device(2, "IoT Camera", "Camera", 129.99, 50);
-        Device d3 = new Device(3, "Gateway Hub", "Hub", 199.99, 30);
-
-        cart.addItem(new CartItem(d1, 1));
-        cart.addItem(new CartItem(d2, 1));
-        cart.addItem(new CartItem(d3, 1));
-
+        cart = new Cart(new ArrayList<>());
         session.setAttribute("cart", cart);
     }
 
@@ -40,6 +36,7 @@
     .details-table th, .details-table td {
       padding: 10px;
       border: 1px solid #ccc;
+      text-align: center;
     }
     .btn {
       padding: 8px 16px;
@@ -48,26 +45,45 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      height: 38px;
     }
     .btn:hover {
       background-color: #0056b3;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+    }
+    .btn-danger:hover {
+      background-color: #b52a37;
+    }
+    .btn-large {
+      min-width: 200px;
+      padding: 12px 24px;
+      height: 48px;
+      font-size: 16px;
+      display: inline-block;
+      margin: 0 6px;
+      text-decoration: none;
+      line-height: 1;
     }
     .bottom-nav {
       position: fixed;
       bottom: 0;
       width: 100%;
       background: #f9f9f9;
-      padding: 12px 0;
+      padding: 20px 0;
       text-align: center;
       box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
     }
     .main-box {
       padding: 40px;
-      margin-bottom: 140px;
+      margin-bottom: 160px;
     }
     input[type="number"] {
       width: 60px;
-      padding: 4px;
+      padding: 6px;
+      height: 38px;
+      text-align: center;
     }
     form.inline {
       display: inline;
@@ -127,7 +143,7 @@
           <td>
             <form action="removeFromCart" method="post" class="inline">
               <input type="hidden" name="deviceId" value="<%= device.getId() %>">
-              <button type="submit" class="btn" style="background:#dc3545;">Remove</button>
+              <button type="submit" class="btn btn-danger">Remove</button>
             </form>
           </td>
         </tr>
@@ -139,9 +155,9 @@
 </div>
 
 <div class="bottom-nav">
-  <a href="products.jsp" class="btn">← Back to Products</a>
+  <a href="products.jsp" class="btn btn-large">← Back to Products</a>
   <form action="checkout.jsp" method="get" style="display:inline;">
-    <button class="btn" type="submit">Proceed to Checkout →</button>
+    <button class="btn btn-large" type="submit">Proceed to Checkout →</button>
   </form>
 </div>
 

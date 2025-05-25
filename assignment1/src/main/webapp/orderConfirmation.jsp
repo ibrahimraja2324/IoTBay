@@ -1,7 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="iotbay.model.User" %>
 <%@ page import="jakarta.servlet.http.*, jakarta.servlet.*" %>
 
 <%
+    iotbay.model.User currentUser = (iotbay.model.User) session.getAttribute("currentUser");
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp"); 
+        return;
+    }
+
     String message = (String) session.getAttribute("orderConfirmationMessage");
     if (message == null || message.trim().isEmpty()) {
         message = "Your order has been successfully placed.";

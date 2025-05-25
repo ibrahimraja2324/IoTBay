@@ -9,7 +9,7 @@ public class Order {
 
     private int userId;
     private int productId;
-    private String quantity;
+    private int quantity;
     private String deliveryAddress;
     private double totalPrice;
 
@@ -25,7 +25,7 @@ public class Order {
     }
 
     public Order(int orderId, String orderDate, String status, double totalAmount, String userEmail,
-                 int userId, int productId, String quantity, String deliveryAddress, double totalPrice, String paymentMethod) {
+                 int userId, int productId, int quantity, String deliveryAddress, double totalPrice, String paymentMethod) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.status = status;
@@ -89,10 +89,10 @@ public class Order {
         this.productId = productId;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

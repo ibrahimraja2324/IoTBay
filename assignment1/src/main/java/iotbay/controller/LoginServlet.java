@@ -1,15 +1,25 @@
 package iotbay.controller;
 
-import iotbay.model.Log;
-import iotbay.model.User;
-import iotbay.dao.DBManager;
-import iotbay.dao.LogDAO;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import iotbay.dao.CartItemDAO;
+import iotbay.dao.DBManager;
+import iotbay.dao.DeviceDAO;
+import iotbay.dao.LogDAO;
+import iotbay.model.Cart;
+import iotbay.model.CartItem;
+import iotbay.model.Log;
+import iotbay.model.User;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 public class LoginServlet extends HttpServlet {
 
@@ -60,6 +70,19 @@ public class LoginServlet extends HttpServlet {
                 ex.printStackTrace();
             }
             session.setAttribute("currentUser", user);
+
+            try {
+                Connection conn = manager.getConnection();
+                CartItemDAO cartItemDAO = new CartItemDAO(conn);
+                DeviceDAO deviceDAO = new DeviceDAO(conn);
+
+                List<CartItem> items = cartItemDAO.getCartItems(user.getEmail(), deviceDAO);
+                Cart cart = new Cart(items);
+                session.setAttribute("cart", cart);
+            } catch (SQLException e) {
+                e.printStackTrace(); 
+            }
+
             response.sendRedirect("main.jsp");
         } else {
             session.setAttribute("loginError", "User does not exist.");
