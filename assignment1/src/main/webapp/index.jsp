@@ -11,7 +11,7 @@
  
     <nav class="page-nav">
        <div class="nav-left">
-          <a href="index.jsp">Home</a>
+          <a href="main.jsp">Home</a>
           <a href="LogServlet">Logs (ONLY FOR TESTING)</a>
        </div>
     </nav>
