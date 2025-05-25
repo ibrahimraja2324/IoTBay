@@ -11,7 +11,7 @@
  
     <nav class="page-nav">
        <div class="nav-left">
-          <a href="main.jsp">Home</a>
+          <a href="index.jsp">Home</a>
           <a href="LogServlet">Logs (ONLY FOR TESTING)</a>
        </div>
     </nav>
@@ -24,6 +24,7 @@
         <div class="action-buttons">
             <a href="login.jsp" class="btn-primary">Login</a>
             <a href="register.jsp" class="btn-secondary">Register</a>
+            <a href="GuestLoginServlet" class="btn-secondary">Continue as Guest</a>
         </div>
     </div>
     <jsp:include page="/ConnServlet" flush="true" />
