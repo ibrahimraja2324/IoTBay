@@ -10,7 +10,7 @@ import iotbay.model.User;
 
 public class DBManager {
 
-    private Connection conn;
+    private final Connection conn;
     private Statement st;
 
     public DBManager(Connection conn) throws SQLException {
