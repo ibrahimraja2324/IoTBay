@@ -7,6 +7,9 @@ public class Device {
     private double unitPrice;    
     private int quantity;     
 
+    public Device() {
+    }
+
     public Device(int id, String name, String type, double unitPrice, int quantity) {
         this.id = id;
         this.name = name;
