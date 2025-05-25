@@ -84,7 +84,12 @@ public class Validator implements Serializable {
     }
 
     public boolean validateCardHolderName(String name) {
-    return validateName(name);
-}
+        return validateName(name);
+    }
 
+    public boolean validatePhoneNumber(String phoneNumber) {
+        if (phoneNumber == null) return false;
+        // Check if the input contains only digits and is exactly 10 characters long
+        return phoneNumber.matches("\\d{10}");
+    }
 }

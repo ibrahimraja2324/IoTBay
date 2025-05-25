@@ -4,11 +4,13 @@
     String emailError    = (String) session.getAttribute("emailError");
     String passwordError = (String) session.getAttribute("passwordError");
     String nameError     = (String) session.getAttribute("nameError");
+    String phoneError    = (String) session.getAttribute("phoneError");
 
     session.removeAttribute("registerError");
     session.removeAttribute("emailError");
     session.removeAttribute("passwordError");
     session.removeAttribute("nameError");
+    session.removeAttribute("phoneError");
 %>
 <!DOCTYPE html>
 <html lang="en" id="register-page">
@@ -30,7 +32,7 @@
         <h2>Create Account</h2>
         
         <%
-            if (registerError != null || emailError != null || passwordError != null || nameError != null) {
+            if (registerError != null || emailError != null || passwordError != null || nameError != null || phoneError != null) {
         %>
             <div class="error-messages">
                 <%
@@ -45,6 +47,9 @@
                 <% }
                     if (nameError != null) { %>
                         <p><%= nameError %></p>
+                <% }
+                    if (phoneError != null) { %>
+                        <p><%= phoneError %></p>
                 <% }
                 %>
             </div>
