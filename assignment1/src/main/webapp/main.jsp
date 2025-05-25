@@ -16,7 +16,7 @@
 
   <nav class="page-nav">
     <div class="nav-left">
-      <a href="index.jsp">Home</a>
+      <a href="main.jsp">Home</a>
     </div>
     <div class="nav-right">
       <a href="logout.jsp">Logout</a>
