@@ -76,7 +76,7 @@
     </div>
     
     <div class="dashboard-section">
-      <h2>Your Shipments</h2>
+      <h2>📦 Your Shipments</h2>
       <iframe src="ShipmentServlet" class="shipment-list-iframe"></iframe>
     </div>
   </div>
