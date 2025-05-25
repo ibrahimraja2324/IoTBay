@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DriverManager;
 import java.util.UUID;
-import java.io.File;
 
 import iotbay.model.User;
 import iotbay.dao.UserDAO;
