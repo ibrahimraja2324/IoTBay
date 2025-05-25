@@ -4,7 +4,7 @@
 # IoTBay Web Application
 
 This Java-based web application simulates an IoT device ordering system. It provides separate functionality for customers (placing orders), staff (managing operations), and system administrators (configuring system settings).
-
+  ```
 ## Requirements
 
 1. **Java JDK 17**
@@ -18,7 +18,6 @@ This Java-based web application simulates an IoT device ordering system. It prov
    Open your terminal and run:
    ```bash
    git clone https://github.com/ibrahimraja2324/IoTBay.git
-   ```
 
 2. **Navigate to the Project Folder**  
    From the root "IoTBay" folder, navigate to the  "assignment1" folder
