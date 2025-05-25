@@ -54,14 +54,17 @@ public class UserDAO {
             String userPassword = rs.getString("Password");
             String phoneNumber = rs.getString("PhoneNumber");
             String role = rs.getString("Role");
-            return new User(firstName, lastName, userEmail, userPassword, phoneNumber, role);
+            boolean isActive = rs.getBoolean("IsActive");
+            User user = new User(firstName, lastName, userEmail, userPassword, phoneNumber, role);
+            user.setActive(isActive);
+            return user;
         }
         return null;
     }
     
 
     public boolean registerUser(User user) throws SQLException {
-        String sql = "INSERT INTO Users (Email, Password, FirstName, LastName, PhoneNumber) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (Email, Password, FirstName, LastName, PhoneNumber, Role, IsActive) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, user.getEmail());
         ps.setString(2, user.getPassword());
@@ -69,6 +72,7 @@ public class UserDAO {
         ps.setString(4, user.getLastName());
         ps.setString(5, user.getPhone());
         ps.setString(6, user.getRole());
+        ps.setBoolean(7, user.isActive());
         int affectedRows = ps.executeUpdate();
         return affectedRows > 0;
     }

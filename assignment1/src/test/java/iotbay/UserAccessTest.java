@@ -1,18 +1,24 @@
 package iotbay;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.UUID;
+
 import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.sql.*;
-import java.util.HashMap;
-import java.util.UUID;
-
-import iotbay.model.User;
 import iotbay.dao.UserDAO;
+import iotbay.model.User;
 public class UserAccessTest {
 
     private UserDAO userDAO;
@@ -95,12 +101,12 @@ public class UserAccessTest {
     @Test
     void testLoginToAccount() {
         // Initialize a session map for testing purposes
-        // As we are not using a real session, we can use a simple HashMap to simulate it
         HashMap<String, Object> session = new HashMap<>();
 
         String email = generateRandomEmail();
         String password = "1234";
         User user = new User("John", "Smith", email, password, "0101924567", "USER");
+        user.setActive(true);  // Set user as active
         
         try {
             // Register the user first
@@ -124,12 +130,12 @@ public class UserAccessTest {
     @Test
     void testLogoutOfAccount() {
         // Initialize a session map for testing purposes
-        // As we are not using a real session, we can use a simple HashMap to simulate it
         HashMap<String, Object> session = new HashMap<>();
 
         String email = generateRandomEmail();
         String password = "1234";
         User user = new User("John", "Smith", email, password, "0101924567", "USER");
+        user.setActive(true);  // Set user as active
 
         try {
             // Register the user first
@@ -142,8 +148,6 @@ public class UserAccessTest {
             assertEquals(session.get("currentUser"), user);
 
             // Simulate logout
-            // In the real application, the session key would be removed
-            // Here we just remove it from our simulated session
             session.remove("currentUser");
             assertNull(session.get("currentUser"), "User should be logged out");
         } catch (Exception e) {
@@ -154,12 +158,12 @@ public class UserAccessTest {
     @Test
     void testUpdateProfileInformation() {
         // Initialize a session map for testing purposes
-        // As we are not using a real session, we can use a simple HashMap to simulate it
         HashMap<String, Object> session = new HashMap<>();
 
         String email = generateRandomEmail();
         String password = "1234";
         User user = new User("John", "Smith", email, password, "0101924567", "USER");
+        user.setActive(true);  // Set user as active
 
         try {
             // Register the user first
@@ -172,13 +176,12 @@ public class UserAccessTest {
             assertEquals(session.get("currentUser"), user);
 
             // Update profile information
-            // The UserDAO expects that the updated user object has the same email
-            // as the original user to identify which user to update
             String newFirstName = "Johnathan";
             String newLastName = "Doe";
             String newPassword = "newpassword";
             String newPhone = "0202020202";
             User updatedUser = new User(newFirstName, newLastName, email, newPassword, newPhone, "USER");
+            updatedUser.setActive(true);  // Keep user active after update
             userDAO.updateUser(updatedUser);
             session.put("currentUser", updatedUser);
 
