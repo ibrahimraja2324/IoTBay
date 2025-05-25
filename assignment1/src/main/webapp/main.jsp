@@ -19,7 +19,7 @@
       <a href="main.jsp">Home</a>
     </div>
     <div class="nav-right">
-      <a href="logout.jsp">Logout</a>
+      <a href="LogoutServlet">Logout</a>
       <% if (currentUser != null && !"GUEST".equalsIgnoreCase(currentUser.getRole())) { %>
         <a href="payment-dashboard.jsp">Manage Payments</a>
         <a href="shipment-dashboard.jsp">Manage Shipments</a>

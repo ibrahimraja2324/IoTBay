@@ -32,7 +32,7 @@
             <a href="shipment-dashboard.jsp">Shipments</a>
             <a href="payment-dashboard.jsp">Payments</a>
             <a href="edit.jsp">Profile</a>
-            <a href="logout.jsp">Logout</a>
+            <a href="LogoutServlet">Logout</a>
         </div>
     </nav>
     

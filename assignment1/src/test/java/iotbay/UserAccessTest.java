@@ -41,6 +41,14 @@ public class UserAccessTest {
                     "Role VARCHAR(20) DEFAULT 'USER' NOT NULL" +
                     ")";
             stmt.execute(initScript);
+
+            // Insert additional test users
+            String insertUsers = "INSERT INTO Users (Email, Password, FirstName, LastName, PhoneNumber, Role, IsActive) VALUES " +
+                    "('user1@example.com', 'password123', 'John', 'Doe', '0412345678', 'USER', true), " +
+                    "('user2@example.com', 'password123', 'Jane', 'Smith', '0423456789', 'USER', true), " +
+                    "('staff1@iotbay.com', 'staffpass123', 'Michael', 'Johnson', '0434567890', 'STAFF', true), " +
+                    "('staff2@iotbay.com', 'staffpass123', 'Sarah', 'Williams', '0445678901', 'STAFF', true)";
+            stmt.execute(insertUsers);
         } catch (SQLException e) {
             fail("Failed to initialize database: " + e.getMessage());
         }
@@ -208,14 +216,29 @@ public class UserAccessTest {
 
     @Test
     void testDeleteAccount() {
-        // User user = userDAO.login("chris@example.com", "deleteMe");
-        // boolean deleted = userDAO.deleteAccount(user, "deleteMe");
-        // assertTrue(deleted);
-        // assertNull(userDAO.login("chris@example.com", "deleteMe"));
+        // Initialize a session map for testing purposes
+        HashMap<String, Object> session = new HashMap<>();
 
-        // Stub version
-        User user = new User();
-        user = null; // Simulate deletion
-        assertNull(user);
+        String email = generateRandomEmail();
+        String password = "1234";
+        User user = new User("John", "Smith", email, password, "0101924567", "USER");
+        user.setActive(true); // Set user as active
+
+        try {
+            // Register the user first
+            userDAO.registerUser(user);
+            session.put("currentUser", user);
+
+            // Delete the user account
+            boolean deleted = userDAO.deleteUser(email);
+            assertEquals(true, deleted, "User should be deleted successfully");
+            session.remove("currentUser");
+            assertNull(session.get("currentUser"), "Session should not have current user after deletion");
+            // Verify the user is no longer in the database
+            User deletedUser = userDAO.findUser(email);
+            assertNull(deletedUser, "Deleted user should not be found in the database");
+        } catch (Exception e) {
+            fail("Login failed: " + e.getMessage());
+        }
     }
 }

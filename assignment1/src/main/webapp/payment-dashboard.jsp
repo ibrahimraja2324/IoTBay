@@ -30,7 +30,7 @@
     </div>
     <div class="nav-right">
       <a href="edit.jsp">Edit</a>
-      <a href="logout.jsp">Logout</a>
+      <a href="LogoutServlet">Logout</a>
     </div>
   </nav>
   

@@ -67,7 +67,7 @@
     
     <div class="action-buttons">
       <a href="main.jsp" class="btn-primary">Go to Main Page</a>
-      <a href="logout.jsp" class="btn-secondary">Logout</a>
+      <a href="LogoutServlet" class="btn-secondary">Logout</a>
     </div>
 
   </body>
