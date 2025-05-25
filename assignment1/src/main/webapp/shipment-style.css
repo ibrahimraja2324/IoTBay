@@ -204,17 +204,18 @@ html, body {
     transform: translateY(-2px);
 }
 
-/* table links */
+/* Action links styling - UPDATED FOR CONSISTENCY */
 .action-link {
-    color: #4dabf7;
+    color: #ffffff;
     text-decoration: none;
     margin: 0 5px;
-    transition: color 0.2s;
-    font-weight: 500;
+    transition: opacity 0.2s;
+    white-space: nowrap; /* Prevent breaking to second line */
+    display: inline-block;
 }
 
 .action-link:hover {
-    color: #83c9ff;
+    opacity: 0.8;
     text-decoration: underline;
 }
 
@@ -321,11 +322,11 @@ html, body {
 
 /* search components */
 .search-container {
-    margin-bottom: 20px;
+    margin: 20px 0;
     text-align: center;
 }
 
-.search-container form {
+.search-form {
     display: inline-flex;
     align-items: center;
     flex-wrap: wrap;
@@ -336,90 +337,52 @@ html, body {
 .search-container select,
 .search-container input[type="text"],
 .search-container input[type="date"] {
-    padding: 10px;
+    padding: 10px 15px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     background-color: #3a3760;
     color: #fff;
     font-size: 16px;
-    font-family: 'Quicksand', sans-serif;
-    min-width: 120px;
-}
-
-.search-container input[type="date"] {
-    color-scheme: dark;
-}
-
-.search-container input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    cursor: pointer;
+    min-width: 150px;
 }
 
 .search-container button {
     padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
     background: linear-gradient(to right, #2575fc, #6a11cb);
     color: white;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
     transition: all 0.3s ease;
-    font-family: 'Quicksand', sans-serif;
     font-weight: 500;
 }
 
 .search-container button:hover {
     background: linear-gradient(to right, #6a11cb, #2575fc);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(37, 117, 252, 0.3);
 }
 
-/* search result info */
+/* search info */
 .search-info {
     text-align: center;
-    margin-bottom: 20px;
-    font-style: italic;
-    color: #b2b2b2;
-    background-color: #28243c;
+    margin: 10px 0 20px 0;
     padding: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    border: 1px solid #35325a;
+    color: #fff;
 }
 
-/* shipment table */
-.shipment-table {
-    width: 95%;
-    border-collapse: collapse;
-    margin: 20px;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #28243c;
-    box-shadow: 0 2px 16px rgba(30, 22, 54, 0.25);
-}
-
-.shipment-table th, 
-.shipment-table td {
-    padding: 15px;
-    border: 1px solid #35325a;
-    text-align: center;
-}
-
-.shipment-table th {
-    background-color: #22203a;
-    color: #a6a6ff;
-    font-weight: 600;
-}
-
-.shipment-table tr:hover td {
-    background-color: #35325a;
-}
-
-/* status indicators */
+/* status styling */
 .status-badge {
     display: inline-block;
-    padding: 6px 12px;
+    padding: 8px 12px;
     border-radius: 4px;
     font-weight: 500;
     font-size: 14px;
+    text-align: center;
+    min-width: 100px;
 }
 
 .status-pending {
@@ -427,56 +390,36 @@ html, body {
     color: #000;
 }
 
-.status-processing {
-    background-color: #17a2b8;
-    color: #fff;
-}
-
-.status-shipped {
-    background-color: #28a745;
-    color: #fff;
-}
-
-.status-delivered {
+.status-complete {
     background-color: #6c757d;
     color: #fff;
 }
 
-/* notification messages */
-.error-messages {
-    padding: 15px;
-    margin-bottom: 20px;
-    background-color: rgba(220, 53, 69, 0.2);
-    border: 1px solid rgba(220, 53, 69, 0.3);
-    border-radius: 8px;
-    color: #ff6b6b;
-}
-
-.error-messages p {
-    margin: 0;
-    font-size: 14px;
+/* back link styling - updated to match search button */
+.back-link {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    margin-top: 20px;
     font-weight: 500;
+    background: linear-gradient(to right, #2575fc, #6a11cb);
+    border-radius: 6px;
+    transition: all 0.3s ease;
 }
 
-.error-message {
-    background-color: rgba(220, 53, 69, 0.2);
-    color: #ff6b6b;
-    border: 1px solid rgba(220, 53, 69, 0.3);
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: 500;
+.back-link:hover {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(37, 117, 252, 0.3);
+    color: white;
+    text-decoration: none;
 }
 
-.success-message {
-    background-color: rgba(40, 167, 69, 0.2);
-    color: #28a745;
-    border: 1px solid rgba(40, 167, 69, 0.3);
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
+/* action container styles */
+.action-container {
     text-align: center;
+    margin: 20px 0;
 }
 
 /* empty results message */
@@ -486,7 +429,8 @@ html, body {
     color: #b2b2b2;
     background: rgba(53, 50, 90, 0.3);
     border-radius: 8px;
-    margin: 20px;
+    margin: 20px auto;
+    width: 80%;
     border: 1px dashed #35325a;
 }
 
@@ -503,14 +447,38 @@ html, body {
     font-style: italic;
 }
 
-/* package icon */
-.no-records::before {
-    content: '📦';
-    display: block;
-    font-size: 40px;
-    margin: 0 0 15px 0;
-    opacity: 0.6;
-    line-height: 1;
+/* shipment table styling */
+.shipment-table {
+    width: 95%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 15px auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(30, 22, 54, 0.25);
+}
+
+.shipment-table th, 
+.shipment-table td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #35325a;
+}
+
+.shipment-table th {
+    background-color: #28243c;
+    color: #a6a6ff;
+    font-weight: 600;
+}
+
+.shipment-table tr:hover td {
+    background-color: #2f2d45;
+}
+
+/* Make sure actions cell doesn't wrap */
+.shipment-table td:last-child {
+    white-space: nowrap;
+    min-width: 140px;
 }
 
 /* iframe containers */
@@ -595,6 +563,60 @@ input[type="number"]::-webkit-inner-spin-button {
 .form-field label::after {
     content: " *";
     color: #ff6b6b;
+}
+
+/* utility classes */
+.d-none {
+    display: none;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+/* notification messages */
+.error-messages {
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: rgba(220, 53, 69, 0.2);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-radius: 8px;
+    color: #ff6b6b;
+}
+
+.error-messages p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.error-message {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #ff6b6b;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.success-message {
+    background-color: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    text-align: center;
 }
 
 /* mobile adjustments */
@@ -710,21 +732,4 @@ input[type="number"]::-webkit-inner-spin-button {
     .shipment-list-iframe {
         min-height: 250px;
     }
-}
-
-/* simple utility classes */
-.d-none {
-    display: none;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.text-left {
-    text-align: left;
-}
-
-.text-right {
-    text-align: right;
 }

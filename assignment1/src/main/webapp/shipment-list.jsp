@@ -1,5 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, iotbay.model.Shipment" %>
+<%@ page import="java.util.*, iotbay.model.Shipment, java.time.LocalDate, java.time.format.DateTimeFormatter" %>
+<%!
+    // Function to format date from YYYY-MM-DD to DD/MM/YYYY
+    public String formatDate(String inputDate) {
+        try {
+            // Parse the input date (assuming YYYY-MM-DD format)
+            LocalDate date = LocalDate.parse(inputDate);
+            // Format as DD/MM/YYYY
+            return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } catch (Exception e) {
+            // Return original if there's any error
+            return inputDate;
+        }
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,14 +60,8 @@
                             case "pending":
                                 statusClass = "status-pending";
                                 break;
-                            case "processing":
-                                statusClass = "status-processing";
-                                break;
-                            case "shipped":
-                                statusClass = "status-shipped";
-                                break;
-                            case "delivered":
-                                statusClass = "status-delivered";
+                            case "complete":
+                                statusClass = "status-complete";
                                 break;
                             default:
                                 statusClass = "";
@@ -63,7 +71,7 @@
                     <td><%= shipment.getShipmentId() %></td>
                     <td><%= shipment.getOrderId() %></td>
                     <td><%= shipment.getShipmentMethod() %></td>
-                    <td><%= shipment.getShipmentDate() %></td>
+                    <td><%= formatDate(shipment.getShipmentDate()) %></td>
                     <td><span class="status-badge <%= statusClass %>"><%= shipment.getStatus() %></span></td>
                     <td>
                         <a href="ShipmentServlet?action=view&id=<%= shipment.getShipmentId() %>" class="action-link" target="_top">View</a>

@@ -1,5 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="iotbay.model.Shipment" %>
+<%@ page import="iotbay.model.Shipment, java.time.LocalDate, java.time.format.DateTimeFormatter" %>
+<%!
+    // Function to format date from YYYY-MM-DD to DD/MM/YYYY
+    public String formatDate(String inputDate) {
+        try {
+            // Parse YYYY-MM-DD 
+            LocalDate date = LocalDate.parse(inputDate);
+            // Format as DD/MM/YYYY
+            return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } catch (Exception e) {
+            return inputDate;
+        }
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,21 +47,10 @@
         <%
             } else {
                 String statusClass = "";
-                switch (shipment.getStatus().toLowerCase()) {
-                    case "pending":
-                        statusClass = "status-pending";
-                        break;
-                    case "processing":
-                        statusClass = "status-processing";
-                        break;
-                    case "shipped":
-                        statusClass = "status-shipped";
-                        break;
-                    case "delivered":
-                        statusClass = "status-delivered";
-                        break;
-                    default:
-                        statusClass = "";
+                if ("Pending".equals(shipment.getStatus())) {
+                    statusClass = "status-pending";
+                } else if ("Complete".equals(shipment.getStatus())) {
+                    statusClass = "status-complete";
                 }
         %>
             <h2>Shipment Details</h2>
@@ -71,7 +73,7 @@
                 
                 <div class="details-row">
                     <div class="details-label">Shipment Date:</div>
-                    <div class="details-value"><%= shipment.getShipmentDate() %></div>
+                    <div class="details-value"><%= formatDate(shipment.getShipmentDate()) %></div>
                 </div>
                 
                 <div class="details-row">
@@ -92,6 +94,8 @@
                     <a href="ShipmentServlet?action=edit&id=<%= shipment.getShipmentId() %>" class="btn-action btn-primary">Edit Shipment</a>
                     <a href="ShipmentServlet?action=delete&id=<%= shipment.getShipmentId() %>" class="btn-action btn-important" 
                        onclick="return confirm('Are you sure you want to delete this shipment?')">Delete Shipment</a>
+                    <a href="ShipmentServlet?action=complete&id=<%= shipment.getShipmentId() %>" class="btn-action btn-secondary" 
+                       onclick="return confirm('Are you sure you want to mark this shipment as complete? This action cannot be undone.')">Mark as Complete</a>
                 <% } %>
                 <a href="shipment-dashboard.jsp" class="btn-action btn-secondary">Back to Shipments</a>
             </div>

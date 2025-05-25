@@ -90,6 +90,14 @@ public class ShipmentServlet extends HttpServlet {
                         throw new ServletException("Error searching shipments", e);
                     }
                 }
+                case "complete" -> {
+                    try {
+                        completeShipment(request, response, manager);
+                    } catch (ServletException | IOException e) {
+                        LOGGER.log(Level.SEVERE, "Error completing shipment", e);
+                        throw new ServletException("Error completing shipment", e);
+                    }
+                }
                 default -> {
                     try {
                         listShipments(request, response, manager);
@@ -229,7 +237,7 @@ public class ShipmentServlet extends HttpServlet {
             return;
         }
         
-        // Create new shipment
+        // Create new shipment - Only allowing "Pending" status for new shipments
         Shipment shipment = new Shipment();
         shipment.setOrderId(orderId);
         shipment.setShipmentMethod(shipmentMethod);
@@ -304,9 +312,9 @@ public class ShipmentServlet extends HttpServlet {
             return;
         }
         
-        // Check if the shipment is finalized (not in pending status)
+        // Check if the shipment is not in pending status
         if (!"Pending".equals(shipment.getStatus())) {
-            session.setAttribute("shipmentError", "Cannot edit a shipment that has been finalized");
+            session.setAttribute("shipmentError", "Cannot edit a shipment that has been completed");
             response.sendRedirect("shipment-dashboard.jsp");
             return;
         }
@@ -347,7 +355,7 @@ public class ShipmentServlet extends HttpServlet {
         
         // Check if the shipment is finalized
         if (!"Pending".equals(existingShipment.getStatus())) {
-            session.setAttribute("shipmentError", "Cannot edit a shipment that has been finalized");
+            session.setAttribute("shipmentError", "Cannot edit a shipment that has been completed");
             response.sendRedirect("shipment-dashboard.jsp");
             return;
         }
@@ -472,7 +480,7 @@ public class ShipmentServlet extends HttpServlet {
         
         // Check if the shipment is finalized
         if (!"Pending".equals(shipment.getStatus())) {
-            session.setAttribute("shipmentError", "Cannot delete a shipment that has been finalized");
+            session.setAttribute("shipmentError", "Cannot delete a shipment that has been completed");
             response.sendRedirect("shipment-dashboard.jsp");
             return;
         }
@@ -551,5 +559,57 @@ public class ShipmentServlet extends HttpServlet {
         
         // Forward to the new search results page
         request.getRequestDispatcher("shipment-search-results.jsp").forward(request, response);
+    }
+    
+    // New method to mark a shipment as complete
+    private void completeShipment(HttpServletRequest request, HttpServletResponse response, DBManager manager) 
+            throws ServletException, IOException, SQLException {
+        
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("currentUser");
+        
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        
+        // Get the shipment ID from the request
+        int shipmentId = Integer.parseInt(request.getParameter("id"));
+        
+        // Get the shipment from the database
+        Connection conn = manager.getConnection();
+        ShipmentDAO shipmentDAO = new ShipmentDAO(conn);
+        Shipment shipment = shipmentDAO.findShipment(shipmentId);
+        
+        // Check if the shipment exists and belongs to the current user
+        if (shipment == null || !shipment.getUserEmail().equals(currentUser.getEmail())) {
+            session.setAttribute("shipmentError", "Shipment not found or you do not have permission to complete it");
+            response.sendRedirect("shipment-dashboard.jsp");
+            return;
+        }
+        
+        // Check if the shipment is already complete
+        if (!"Pending".equals(shipment.getStatus())) {
+            session.setAttribute("shipmentError", "This shipment is already marked as complete");
+            response.sendRedirect("shipment-dashboard.jsp");
+            return;
+        }
+        
+        // Update the shipment status to Complete
+        shipment.setStatus("Complete");
+        boolean isUpdated = shipmentDAO.updateShipment(shipment);
+        
+        if (isUpdated) {
+            // Log the completion
+            Log log = new Log(currentUser.getEmail(), "Marked shipment as complete", currentUser.getRole());
+            LogDAO logDAO = new LogDAO(conn);
+            logDAO.createLog(log);
+            
+            session.setAttribute("successMessage", "Shipment marked as complete successfully");
+        } else {
+            session.setAttribute("shipmentError", "Failed to mark shipment as complete");
+        }
+        
+        response.sendRedirect("shipment-dashboard.jsp");
     }
 }
