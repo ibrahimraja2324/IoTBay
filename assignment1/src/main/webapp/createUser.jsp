@@ -25,29 +25,29 @@
         <h2>User Details</h2>
 
         <label for="firstName">First Name:</label>
-        <input type="text" name="firstName" required>
+        <input type="text" name="firstName" pattern="[A-Za-z ]+" title="Please enter letters only">
 
         <label for="lastName">Last Name:</label>
-        <input type="text" name="lastName" required>
+        <input type="text" name="lastName" pattern="[A-Za-z ]+" title="Please enter letters only">
 
         <label for="email">Email:</label>
-        <input type="text" name="email" required>
+        <input type="text" name="email">
 
         <label for="password">Password:</label>
-        <input type="password" name="password" required>
+        <input type="password" name="password">
 
         <label for="phone">Phone Number:</label>
-        <input type="text" name="phone" required>
+        <input type="tel" name="phone" pattern="[0-9]+" title="Please enter numbers only">
 
         <label for="role">Role:</label>
-        <select name="role" required>
+        <select name="role">
           <option value="">-- Select Role --</option>
           <option value="USER">User</option>
           <option value="STAFF">Staff</option>
         </select>
 
         <label for="active">Status:</label>
-        <select name="active" required>
+        <select name="active">
           <option value="1">Active</option>
           <option value="0">Inactive</option>
         </select>

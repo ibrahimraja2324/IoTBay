@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import iotbay.dao.DBConnector;
 import iotbay.dao.DBManager;
 import iotbay.dao.LogDAO;
 import iotbay.dao.UserDAO;
@@ -22,12 +23,21 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         HttpSession session = request.getSession();
         DBManager manager = (DBManager) session.getAttribute("manager");
         
+        // Initialize DBManager if not present
         if (manager == null) {
-            throw new ServletException("DBManager not initialized. Please navigate from the home page.");
+            try {
+                DBConnector db = new DBConnector();
+                manager = new DBManager(db.openConnection());
+                session.setAttribute("manager", manager);
+            } catch (ClassNotFoundException | SQLException ex) {
+                LOGGER.log(Level.SEVERE, "Error initializing DBManager", ex);
+                session.setAttribute("loginError", "Database connection error. Please try again later.");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
         }
         
         String email = request.getParameter("email");

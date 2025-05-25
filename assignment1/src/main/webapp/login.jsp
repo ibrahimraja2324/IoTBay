@@ -39,6 +39,11 @@
             } 
         %>
         
+        <% String error = request.getParameter("error"); %>
+        <% if (error != null) { %>
+          <p style="color: red;"><%= error %></p>
+        <% } %>
+        
         <input type="text" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
         <input type="submit" value="Login">

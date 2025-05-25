@@ -31,6 +31,7 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
         String phone = request.getParameter("phone");
+        String staffRole = request.getParameter("staffRole");
 
         HttpSession session = request.getSession();
         // Clear any previous error messages from the session
@@ -81,8 +82,11 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
+        // If staffRole is provided, validate it
+        String role = (staffRole != null && staffRole.equals("Staff")) ? "STAFF" : "USER";
+
         // Create User object using the validated values
-        User user = new User(firstName, lastName, email, password, phone, "USER");
+        User user = new User(firstName, lastName, email, password, phone, role);
 
         // Get the underlying connection from the DBManager and instantiate UserDAO
         Connection conn = manager.getConnection();

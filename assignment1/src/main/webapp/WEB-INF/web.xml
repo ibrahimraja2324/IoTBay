@@ -160,4 +160,23 @@
         <url-pattern>/UserServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GuestLoginServlet</servlet-name>
+        <servlet-class>iotbay.controller.GuestLoginServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GuestLoginServlet</servlet-name>
+        <url-pattern>/GuestLoginServlet</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>iotbay.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/createUser.jsp</url-pattern>
+    </filter-mapping>
+
 </web-app>

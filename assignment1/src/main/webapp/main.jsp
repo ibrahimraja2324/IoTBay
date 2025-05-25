@@ -20,8 +20,10 @@
     </div>
     <div class="nav-right">
       <a href="logout.jsp">Logout</a>
-      <a href="payment-dashboard.jsp">Manage Payments</a>
-      <a href="shipment-dashboard.jsp">Manage Shipments</a>
+      <% if (currentUser != null && !"GUEST".equalsIgnoreCase(currentUser.getRole())) { %>
+        <a href="payment-dashboard.jsp">Manage Payments</a>
+        <a href="shipment-dashboard.jsp">Manage Shipments</a>
+      <% } %>
         <% if (currentUser != null && "STAFF".equalsIgnoreCase(currentUser.getRole())) { %>
           <a href="viewuser.jsp">View Users</a>
         <% } %>
@@ -57,10 +59,16 @@
         </tr>
       </table>
 
-      <div class="action-buttons">
-        <a href="edit.jsp" class="btn-primary">Edit Details</a>
-        <a href="LogServlet" class="btn-secondary">View Your Logs</a>
-      </div>
+      <% if (!"GUEST".equalsIgnoreCase(currentUser.getRole())) { %>
+        <div class="action-buttons">
+          <a href="edit.jsp" class="btn-primary">Edit Details</a>
+          <a href="LogServlet" class="btn-secondary">View Your Logs</a>
+        </div>
+      <% } else { %>
+        <div class="action-buttons">
+          <span>You are browsing as a guest and are unable to edit details or view logs. Please register or log in for full access.</span>
+        </div>
+      <% } %>
     <%
       } else {
     %>

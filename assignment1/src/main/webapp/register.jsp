@@ -73,6 +73,11 @@
         <label class="heading" for="phone">Phone Number</label>
         <input type="text" name="phone" id="phone" placeholder="Phone Number" 
                value="<%= request.getParameter("phone") != null ? request.getParameter("phone") : "" %>" required>
+        <div class="form-field staff-checkbox">
+            <label class="radio-label" for="roleStaff">Register as staff?</label>
+            <input type="checkbox" name="role" id="roleStaff" value="Staff" <%= "Staff".equals(request.getParameter("role")) ? "checked" : "" %>>
+        </div>
+        
         <input type="submit" value="Register">
         <a href="login.jsp">Already have an account? Login</a>
     </form>
