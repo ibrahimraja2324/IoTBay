@@ -63,7 +63,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
-        User user = null;
+        User user;
         try {
             user = userDAO.findUser(email, password);
         } catch (SQLException ex) {
