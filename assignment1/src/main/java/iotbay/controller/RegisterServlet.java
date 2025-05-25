@@ -38,6 +38,7 @@ public class RegisterServlet extends HttpServlet {
         session.setAttribute("emailError", null);
         session.setAttribute("passwordError", null);
         session.setAttribute("nameError", null);
+        session.setAttribute("phoneError", null);
 
         // Instantiate Validator (assumes you have a Validator class)
         Validator validator = new Validator();
@@ -59,6 +60,11 @@ public class RegisterServlet extends HttpServlet {
         // (must be at least 4 characters and contain only lowercase letters and digits)
         if (!validator.validatePassword(password)) {
             session.setAttribute("passwordError", "Password must be at least 4 characters.");
+            hasError = true;
+        }
+
+        if (!validator.validatePhoneNumber(phone)) {
+            session.setAttribute("phoneError", "Phone number must be 10 digits.");
             hasError = true;
         }
 
