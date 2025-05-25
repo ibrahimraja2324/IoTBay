@@ -20,7 +20,7 @@ public class UserDAO {
     // This method is used to find a user by email and password
     // It is used for user login
     public User findUser(String email, String password) throws SQLException {
-        String sql = "SELECT * FROM \"User\" WHERE Email = ? AND Password = ? AND IsActive = true";
+        String sql = "SELECT * FROM Users WHERE Email = ? AND Password = ? AND IsActive = true";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, email);
         ps.setString(2, password);
@@ -43,7 +43,7 @@ public class UserDAO {
     // Find a user by email without password
     // Can be used for checking if the email already exists during registration
     public User findUser(String email) throws SQLException {
-        String sql = "SELECT * FROM \"User\" WHERE Email = ?";
+        String sql = "SELECT * FROM Users WHERE Email = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, email);
         ResultSet rs = ps.executeQuery();
@@ -61,7 +61,7 @@ public class UserDAO {
     
 
     public boolean registerUser(User user) throws SQLException {
-        String sql = "INSERT INTO \"User\" (Email, Password, FirstName, LastName, PhoneNumber, Role) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (Email, Password, FirstName, LastName, PhoneNumber) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, user.getEmail());
         ps.setString(2, user.getPassword());
@@ -74,7 +74,7 @@ public class UserDAO {
     }
     
     public boolean updateUser(User user) throws SQLException {
-        String sql = "UPDATE \"User\" SET FirstName = ?, LastName = ?, Password = ?, PhoneNumber = ? WHERE Email = ?";
+        String sql = "UPDATE Users SET FirstName = ?, LastName = ?, Password = ?, PhoneNumber = ? WHERE Email = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, user.getFirstName());
         ps.setString(2, user.getLastName());
@@ -86,7 +86,7 @@ public class UserDAO {
     }
 
     public boolean toggleUserStatus(String email) throws SQLException {
-        String sql = "UPDATE \"User\" SET IsActive = NOT IsActive WHERE Email = ?";
+        String sql = "UPDATE Users SET IsActive = NOT IsActive WHERE Email = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, email);
         int affectedRows = ps.executeUpdate();
@@ -94,7 +94,7 @@ public class UserDAO {
     }
 
     public boolean deleteUser(String email) throws SQLException {
-        String sql = "DELETE FROM \"User\" WHERE Email = ?";
+        String sql = "DELETE FROM Users WHERE Email = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, email);
         int affectedRows = ps.executeUpdate();
@@ -103,7 +103,7 @@ public class UserDAO {
     
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM \"User\"";
+        String sql = "SELECT * FROM Users";
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {

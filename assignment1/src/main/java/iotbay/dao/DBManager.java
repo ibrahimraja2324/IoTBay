@@ -24,7 +24,7 @@ public class DBManager {
 
     // ----- User Operations -----
     public User findUser(String email, String password) throws SQLException {
-        String query = "SELECT * FROM User WHERE Email='" + email + "' AND Password='" + password + "' AND IsActive=true";
+        String query = "SELECT * FROM Users WHERE Email='" + email + "' AND Password='" + password + "' AND IsActive=true";
         ResultSet rs = st.executeQuery(query);
         if (rs.next()) {
             String FirstName = rs.getString("FirstName");
