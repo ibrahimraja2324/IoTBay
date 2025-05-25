@@ -3,6 +3,9 @@ package iotbay.controller;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -152,31 +155,77 @@ public class ShipmentServlet extends HttpServlet {
         }
         
         // Retrieve form parameters
-        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        String orderIdStr = request.getParameter("orderId");
         String shipmentMethod = request.getParameter("shipmentMethod");
         String shipmentDate = request.getParameter("shipmentDate");
         String address = request.getParameter("address");
         
-        // Validation - Basic example, expand as needed
+        // Validation - Enhanced with specific checks
         boolean hasError = false;
         
+        // Order ID validation - Must be a positive number
+        int orderId = 0;
+        try {
+            orderId = Integer.parseInt(orderIdStr);
+            if (orderId <= 0) {
+                session.setAttribute("shipmentError", "Order ID must be a positive number");
+                hasError = true;
+            }
+        } catch (NumberFormatException e) {
+            session.setAttribute("shipmentError", "Order ID must be a valid number");
+            hasError = true;
+        }
+        
+        // Check for duplicate order ID for this user
+        if (!hasError) {
+            Connection conn = manager.getConnection();
+            ShipmentDAO shipmentDAO = new ShipmentDAO(conn);
+            List<Shipment> existingShipments = shipmentDAO.findShipmentsByUser(currentUser.getEmail());
+            for (Shipment s : existingShipments) {
+                if (s.getOrderId() == orderId) {
+                    session.setAttribute("shipmentError", "A shipment with this Order ID already exists");
+                    hasError = true;
+                    break;
+                }
+            }
+        }
+        
+        // Shipment method validation
         if (shipmentMethod == null || shipmentMethod.trim().isEmpty()) {
             session.setAttribute("shipmentError", "Shipment method is required");
             hasError = true;
         }
         
+        // Shipment date validation - Must be today or in the future
         if (shipmentDate == null || shipmentDate.trim().isEmpty()) {
             session.setAttribute("shipmentError", "Shipment date is required");
             hasError = true;
+        } else {
+            try {
+                LocalDate date = LocalDate.parse(shipmentDate);
+                LocalDate today = LocalDate.now();
+                if (date.isBefore(today)) {
+                    session.setAttribute("shipmentError", "Shipment date cannot be in the past");
+                    hasError = true;
+                }
+            } catch (DateTimeParseException e) {
+                session.setAttribute("shipmentError", "Invalid date format");
+                hasError = true;
+            }
         }
         
+        // Address validation
         if (address == null || address.trim().isEmpty()) {
             session.setAttribute("shipmentError", "Address is required");
             hasError = true;
         }
         
         if (hasError) {
-            response.sendRedirect("ShipmentServlet?action=create");
+            request.setAttribute("orderId", orderIdStr);
+            request.setAttribute("shipmentMethod", shipmentMethod);
+            request.setAttribute("shipmentDate", shipmentDate);
+            request.setAttribute("address", address);
+            request.getRequestDispatcher("shipment-form.jsp").forward(request, response);
             return;
         }
         
@@ -279,33 +328,10 @@ public class ShipmentServlet extends HttpServlet {
         
         // Retrieve form parameters
         int shipmentId = Integer.parseInt(request.getParameter("shipmentId"));
-        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        String orderIdStr = request.getParameter("orderId");
         String shipmentMethod = request.getParameter("shipmentMethod");
         String shipmentDate = request.getParameter("shipmentDate");
         String address = request.getParameter("address");
-        
-        // Validation - Basic example, expand as needed
-        boolean hasError = false;
-        
-        if (shipmentMethod == null || shipmentMethod.trim().isEmpty()) {
-            session.setAttribute("shipmentError", "Shipment method is required");
-            hasError = true;
-        }
-        
-        if (shipmentDate == null || shipmentDate.trim().isEmpty()) {
-            session.setAttribute("shipmentError", "Shipment date is required");
-            hasError = true;
-        }
-        
-        if (address == null || address.trim().isEmpty()) {
-            session.setAttribute("shipmentError", "Address is required");
-            hasError = true;
-        }
-        
-        if (hasError) {
-            response.sendRedirect("ShipmentServlet?action=edit&id=" + shipmentId);
-            return;
-        }
         
         // Get the existing shipment
         Connection conn = manager.getConnection();
@@ -323,6 +349,76 @@ public class ShipmentServlet extends HttpServlet {
         if (!"Pending".equals(existingShipment.getStatus())) {
             session.setAttribute("shipmentError", "Cannot edit a shipment that has been finalized");
             response.sendRedirect("shipment-dashboard.jsp");
+            return;
+        }
+        
+        // Validation - Enhanced with specific checks
+        boolean hasError = false;
+        
+        // Order ID validation - Must be a positive number
+        int orderId = 0;
+        try {
+            orderId = Integer.parseInt(orderIdStr);
+            if (orderId <= 0) {
+                session.setAttribute("shipmentError", "Order ID must be a positive number");
+                hasError = true;
+            }
+        } catch (NumberFormatException e) {
+            session.setAttribute("shipmentError", "Order ID must be a valid number");
+            hasError = true;
+        }
+        
+        // Check for duplicate order ID for this user (excluding the current shipment)
+        if (!hasError && orderId != existingShipment.getOrderId()) {
+            List<Shipment> userShipments = shipmentDAO.findShipmentsByUser(currentUser.getEmail());
+            for (Shipment s : userShipments) {
+                if (s.getShipmentId() != shipmentId && s.getOrderId() == orderId) {
+                    session.setAttribute("shipmentError", "A shipment with this Order ID already exists");
+                    hasError = true;
+                    break;
+                }
+            }
+        }
+        
+        // Shipment method validation
+        if (shipmentMethod == null || shipmentMethod.trim().isEmpty()) {
+            session.setAttribute("shipmentError", "Shipment method is required");
+            hasError = true;
+        }
+        
+        // Shipment date validation - Must be today or in the future
+        if (shipmentDate == null || shipmentDate.trim().isEmpty()) {
+            session.setAttribute("shipmentError", "Shipment date is required");
+            hasError = true;
+        } else {
+            try {
+                LocalDate date = LocalDate.parse(shipmentDate);
+                LocalDate today = LocalDate.now();
+                if (date.isBefore(today)) {
+                    session.setAttribute("shipmentError", "Shipment date cannot be in the past");
+                    hasError = true;
+                }
+            } catch (DateTimeParseException e) {
+                session.setAttribute("shipmentError", "Invalid date format");
+                hasError = true;
+            }
+        }
+        
+        // Address validation
+        if (address == null || address.trim().isEmpty()) {
+            session.setAttribute("shipmentError", "Address is required");
+            hasError = true;
+        }
+        
+        if (hasError) {
+            // Prepare the shipment object for the form to display with the entered values
+            existingShipment.setOrderId(orderId);
+            existingShipment.setShipmentMethod(shipmentMethod);
+            existingShipment.setShipmentDate(shipmentDate);
+            existingShipment.setAddress(address);
+            
+            request.setAttribute("shipment", existingShipment);
+            request.getRequestDispatcher("shipment-form.jsp").forward(request, response);
             return;
         }
         
