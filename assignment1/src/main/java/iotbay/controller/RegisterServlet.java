@@ -1,5 +1,11 @@
 package iotbay.controller;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import iotbay.dao.DBManager;
 import iotbay.dao.LogDAO;
 import iotbay.dao.UserDAO;
@@ -10,11 +16,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class RegisterServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(RegisterServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -89,7 +93,6 @@ public class RegisterServlet extends HttpServlet {
             }
             isRegistered = userDAO.registerUser(user);
         } catch (SQLException ex) {
-            ex.printStackTrace();
             session.setAttribute("registerError", "Database error: " + ex.getMessage());
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
@@ -102,7 +105,7 @@ public class RegisterServlet extends HttpServlet {
             try {
                 logDAO.createLog(log);
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Error creating registration log", ex);
             }
             session.setAttribute("currentUser", user);
             session.setAttribute("welcomeMessage", "Registration successful. Welcome, " + firstName + "!");

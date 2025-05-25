@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 public class LoginServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(LoginServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -53,7 +54,7 @@ public class LoginServlet extends HttpServlet {
         try {
             user = manager.findUser(email, password);
         } catch (SQLException ex) {
-            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "Error finding user", ex);
         }
         
         if (user != null) {
@@ -62,7 +63,7 @@ public class LoginServlet extends HttpServlet {
             try {
                 logDAO.createLog(log);
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Error creating login log", ex);
             }
             session.setAttribute("currentUser", user);
             response.sendRedirect("main.jsp");
