@@ -1,24 +1,23 @@
 package iotbay.controller;
 
-import iotbay.dao.DBManager;
-import iotbay.dao.LogDAO;
-import iotbay.dao.ShipmentDAO;
-import iotbay.model.Log;
-import iotbay.model.Shipment;
-import iotbay.model.User;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import iotbay.dao.DBManager;
+import iotbay.dao.LogDAO;
+import iotbay.dao.ShipmentDAO;
+import iotbay.model.Log;
+import iotbay.model.Shipment;
+import iotbay.model.User;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 public class ShipmentServlet extends HttpServlet {
     
@@ -48,54 +47,54 @@ public class ShipmentServlet extends HttpServlet {
         
         try {
             switch (action) {
-                case "create":
+                case "create" -> {
                     try {
                         showCreateForm(request, response);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error showing create form", e);
                         throw new ServletException("Error showing create form", e);
                     }
-                    break;
-                case "edit":
+                }
+                case "edit" -> {
                     try {
                         showEditForm(request, response, manager);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error showing edit form", e);
                         throw new ServletException("Error showing edit form", e);
                     }
-                    break;
-                case "delete":
+                }
+                case "delete" -> {
                     try {
                         deleteShipment(request, response, manager);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error deleting shipment", e);
                         throw new ServletException("Error deleting shipment", e);
                     }
-                    break;
-                case "view":
+                }
+                case "view" -> {
                     try {
                         viewShipment(request, response, manager);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error viewing shipment", e);
                         throw new ServletException("Error viewing shipment", e);
                     }
-                    break;
-                case "search":
+                }
+                case "search" -> {
                     try {
                         searchShipments(request, response, manager);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error searching shipments", e);
                         throw new ServletException("Error searching shipments", e);
                     }
-                    break;
-                default:
+                }
+                default -> {
                     try {
                         listShipments(request, response, manager);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error listing shipments", e);
                         throw new ServletException("Error listing shipments", e);
                     }
-                    break;
+                }
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Database error in ShipmentServlet", ex);

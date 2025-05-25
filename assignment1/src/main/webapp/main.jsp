@@ -22,9 +22,12 @@
       <a href="logout.jsp">Logout</a>
       <a href="payment-dashboard.jsp">Manage Payments</a>
       <a href="shipment-dashboard.jsp">Manage Shipments</a>
-      <% if (currentUser != null && "staff".equalsIgnoreCase(currentUser.getRole())) { %>
-        <a href="viewuser.jsp">View Users</a>
-      <% } %>
+        <% if (currentUser != null && "STAFF".equalsIgnoreCase(currentUser.getRole())) { %>
+          <a href="viewuser.jsp">View Users</a>
+        <% } %>
+        <% if (currentUser != null && "ADMIN".equalsIgnoreCase(currentUser.getRole())) { %>
+          <a href="viewuser.jsp">View Users</a>
+        <% } %>
       <a href="http://localhost:8080/assignment1/devices">Products</a>
     </div>
   </nav>

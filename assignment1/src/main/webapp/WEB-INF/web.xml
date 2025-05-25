@@ -7,6 +7,18 @@
     
     <display-name>assignment1</display-name>
     
+    <!-- Admin Filter Configuration -->
+    <filter>
+        <filter-name>AdminFilter</filter-name>
+        <filter-class>iotbay.filter.AdminFilter</filter-class>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
+        <url-pattern>/viewuser.jsp</url-pattern>
+        <url-pattern>/UserServlet</url-pattern>
+    </filter-mapping>
+
     <!-- Welcome page Default  -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

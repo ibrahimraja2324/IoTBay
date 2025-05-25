@@ -11,7 +11,7 @@ import iotbay.model.User;
 
 
 public class UserDAO {
-    private Connection conn;
+    private final Connection conn;
 
     public UserDAO(Connection conn) {
         this.conn = conn;
@@ -20,7 +20,7 @@ public class UserDAO {
     // This method is used to find a user by email and password
     // It is used for user login
     public User findUser(String email, String password) throws SQLException {
-        String sql = "SELECT * FROM User WHERE Email = ? AND Password = ?";
+        String sql = "SELECT * FROM User WHERE Email = ? AND Password = ? AND IsActive = true";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, email);
         ps.setString(2, password);
@@ -32,7 +32,10 @@ public class UserDAO {
             String userPassword = rs.getString("Password");
             String phoneNumber = rs.getString("PhoneNumber");
             String role = rs.getString("Role");
-            return new User(firstName, lastName, userEmail, userPassword, phoneNumber, role);
+            boolean isActive = rs.getBoolean("IsActive");
+            User user = new User(firstName, lastName, userEmail, userPassword, phoneNumber, role);
+            user.setActive(isActive);
+            return user;
         }
         return null;
     }
@@ -77,6 +80,14 @@ public class UserDAO {
         ps.setString(3, user.getPassword());
         ps.setString(4, user.getPhone());
         ps.setString(5, user.getEmail());
+        int affectedRows = ps.executeUpdate();
+        return affectedRows > 0;
+    }
+
+    public boolean toggleUserStatus(String email) throws SQLException {
+        String sql = "UPDATE User SET IsActive = NOT IsActive WHERE Email = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, email);
         int affectedRows = ps.executeUpdate();
         return affectedRows > 0;
     }
