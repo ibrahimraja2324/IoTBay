@@ -216,14 +216,29 @@ public class UserAccessTest {
 
     @Test
     void testDeleteAccount() {
-        // User user = userDAO.login("chris@example.com", "deleteMe");
-        // boolean deleted = userDAO.deleteAccount(user, "deleteMe");
-        // assertTrue(deleted);
-        // assertNull(userDAO.login("chris@example.com", "deleteMe"));
+        // Initialize a session map for testing purposes
+        HashMap<String, Object> session = new HashMap<>();
 
-        // Stub version
-        User user = new User();
-        user = null; // Simulate deletion
-        assertNull(user);
+        String email = generateRandomEmail();
+        String password = "1234";
+        User user = new User("John", "Smith", email, password, "0101924567", "USER");
+        user.setActive(true); // Set user as active
+
+        try {
+            // Register the user first
+            userDAO.registerUser(user);
+            session.put("currentUser", user);
+
+            // Delete the user account
+            boolean deleted = userDAO.deleteUser(email);
+            assertEquals(true, deleted, "User should be deleted successfully");
+            session.remove("currentUser");
+            assertNull(session.get("currentUser"), "Session should not have current user after deletion");
+            // Verify the user is no longer in the database
+            User deletedUser = userDAO.findUser(email);
+            assertNull(deletedUser, "Deleted user should not be found in the database");
+        } catch (Exception e) {
+            fail("Login failed: " + e.getMessage());
+        }
     }
 }
