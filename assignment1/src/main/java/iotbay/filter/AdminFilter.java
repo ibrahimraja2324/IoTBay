@@ -28,8 +28,8 @@ public class AdminFilter implements Filter {
         
         User user = (User) session.getAttribute("currentUser");
         
-        // Check if user is logged in and is an admin
-        if (user == null || !user.getRole().equals("ADMIN")) {
+        // Check if user is logged in and is either an admin or staff
+        if (user == null || (!user.getRole().equals("ADMIN") && !user.getRole().equals("STAFF"))) {
             httpResponse.sendRedirect("main.jsp");
             return;
         }

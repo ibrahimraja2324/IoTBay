@@ -23,6 +23,7 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         DBManager manager = (DBManager) session.getAttribute("manager");
+        User currentUser = (User) session.getAttribute("currentUser");
     
         if (manager == null) {
             throw new ServletException("DBManager not initialized.");
@@ -44,7 +45,6 @@ public class UserServlet extends HttpServlet {
             LOGGER.severe(() -> "Error processing request: " + e.getMessage());
             response.getWriter().println("An error occurred: " + e.getMessage());
         }
-        
     }
     
 
@@ -142,18 +142,41 @@ public class UserServlet extends HttpServlet {
     }
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException {
-    String email = request.getParameter("email");
-
-    userDAO.deleteUser(email);
-    response.sendRedirect("UserServlet");
-}
+            throws SQLException, IOException {
+        HttpSession session = request.getSession();
+        String email = request.getParameter("email");
+        User currentUser = (User) session.getAttribute("currentUser");
+        
+        if (userDAO.deleteUser(email)) {
+            // If the user deleted their own account
+            if (currentUser != null && currentUser.getEmail().equals(email)) {
+                session.invalidate(); // Clear the session
+                response.sendRedirect("main.jsp?error=Account deleted successfully. Please login with a different account.");
+            } else {
+                response.sendRedirect("UserServlet");
+            }
+        } else {
+            response.sendRedirect("UserServlet?error=Failed to delete user");
+        }
+    }
 
     private void toggleUserStatus(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
+        HttpSession session = request.getSession();
         String email = request.getParameter("email");
-        userDAO.toggleUserStatus(email);
-        response.sendRedirect("UserServlet");
+        User currentUser = (User) session.getAttribute("currentUser");
+        
+        if (userDAO.toggleUserStatus(email)) {
+            // If the user deactivated their own account
+            if (currentUser != null && currentUser.getEmail().equals(email)) {
+                session.invalidate(); // Clear the session
+                response.sendRedirect("main.jsp?error=Account deactivated. Please contact an administrator to reactivate your account.");
+            } else {
+                response.sendRedirect("UserServlet");
+            }
+        } else {
+            response.sendRedirect("UserServlet?error=Failed to update user status");
+        }
     }
 
 }
