@@ -202,7 +202,7 @@ h1 {
   </form>
 </div>
 
-<% if (currentUser != null && "staff".equals(currentUser.getRole())) { %>
+<% if (currentUser != null && "STAFF".equalsIgnoreCase(currentUser.getRole())) { %>
 <div style="text-align:center;">
     <form action="devices" method="get">
         <input type="hidden" name="action" value="addNewDevice">
@@ -222,7 +222,7 @@ h1 {
         <p><strong>Price:</strong> $<%= d.getUnitPrice() %></p>
         <p><strong>Quantity:</strong> <%= d.getQuantity() %></p>
         <p><small>ID: <%= d.getId() %></small></p>
-        <% if (currentUser != null && "staff".equals(currentUser.getRole())) { %>
+        <% if (currentUser != null && "STAFF".equalsIgnoreCase(currentUser.getRole())) { %>
             <form action="devices" method="post" style="display:inline-block;">
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="id" value="<%= d.getId() %>">
