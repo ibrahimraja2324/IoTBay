@@ -24,18 +24,6 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
-    <!-- ShipmentTableInitializer Servlet - Initialize Shipment table -->
-    <servlet>
-        <servlet-name>ShipmentTableInitializer</servlet-name>
-        <servlet-class>iotbay.controller.ShipmentTableInitializer</servlet-class>
-        <load-on-startup>0</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>ShipmentTableInitializer</servlet-name>
-        <url-pattern>/ShipmentTableInitializer</url-pattern>
-    </servlet-mapping>
-
     <!-- ConnServlet Mapping -->
     <servlet>
         <servlet-name>ConnServlet</servlet-name>
