@@ -28,6 +28,8 @@
       padding: 8px;
       border: 1px solid #ddd;
       border-radius: 4px;
+      width: 200px;
+      min-width: 0;
     }
     .pagination {
       margin-top: 20px;
@@ -58,6 +60,24 @@
     .sort-header:hover {
       background-color: #f8f9fa;
     }
+    .user-details td.actions-cell {
+      white-space: normal;
+    }
+    .user-details td.actions-cell a,
+    .user-details td.actions-cell button {
+      display: block;
+      margin-bottom: 6px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .user-details td.actions-cell a:last-child,
+    .user-details td.actions-cell button:last-child {
+      margin-bottom: 0;
+    }
+    .dashboard-section {
+      overflow-x: auto;
+      
+    }
   </style>
 </head>
 <body>
@@ -81,7 +101,7 @@
       <h2>All Users</h2>
       
       <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search users..." onkeyup="filterTable()">
+        <input type="text" id="searchInput" placeholder="Search users by email, phone, or name..." onkeyup="filterTable()">
         <select id="roleFilter" onchange="filterTable()">
           <option value="">All Roles</option>
           <option value="ADMIN">Admin</option>
@@ -132,7 +152,7 @@
               <span class="status-badge status-delivered">Inactive</span>
             <% } %>
           </td>
-          <td>
+          <td class="actions-cell">
             <% if (canModify) { %>
               <a href="UserServlet?action=edit&email=<%= u.getEmail() %>" 
                  class="btn-secondary" style="padding: 6px 10px; font-size: 13px;">Edit</a>
