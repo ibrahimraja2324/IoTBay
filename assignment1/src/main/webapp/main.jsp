@@ -57,10 +57,16 @@
         </tr>
       </table>
 
-      <div class="action-buttons">
-        <a href="edit.jsp" class="btn-primary">Edit Details</a>
-        <a href="LogServlet" class="btn-secondary">View Your Logs</a>
-      </div>
+      <% if (!"GUEST".equalsIgnoreCase(currentUser.getRole())) { %>
+        <div class="action-buttons">
+          <a href="edit.jsp" class="btn-primary">Edit Details</a>
+          <a href="LogServlet" class="btn-secondary">View Your Logs</a>
+        </div>
+      <% } else { %>
+        <div class="action-buttons">
+          <span>You are browsing as a guest and are unable to edit details or view logs. Please register or log in for full access.</span>
+        </div>
+      <% } %>
     <%
       } else {
     %>
