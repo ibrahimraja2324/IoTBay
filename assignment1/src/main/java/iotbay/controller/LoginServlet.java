@@ -25,6 +25,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         DBManager manager = (DBManager) session.getAttribute("manager");
+        UserDAO userDAO = new UserDAO(manager != null ? manager.getConnection() : null);
         
         // Initialize DBManager if not present
         if (manager == null) {
@@ -62,7 +63,7 @@ public class LoginServlet extends HttpServlet {
         
         User user = null;
         try {
-            user = manager.findUser(email, password);
+            user = userDAO.findUser(email, password);
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Error finding user", ex);
         }
@@ -79,7 +80,6 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("main.jsp");
         } else {
             // Check if the user exists but is deactivated
-            UserDAO userDAO = new UserDAO(manager.getConnection());
             try {
                 User deactivatedUser = userDAO.findUser(email);
                 if (deactivatedUser != null && !deactivatedUser.isActive()) {

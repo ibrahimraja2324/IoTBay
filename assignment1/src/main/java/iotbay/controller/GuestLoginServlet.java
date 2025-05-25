@@ -30,11 +30,12 @@ public class GuestLoginServlet extends HttpServlet {
         UserDAO userDAO = new UserDAO(manager.getConnection());
 
         try {
-            User guest = manager.findUser("guest@iotbay.com", "guestpassword");
-            if (guest == null) {
-                guest = new User("Guest", "User", "guest@iotbay.com", "guestpassword", "0000000000", "GUEST");
-                userDAO.registerUser(guest);
+            User guest = userDAO.findUser("guest@iotbay.com", "guestpassword");
+            if (guest != null) {
+                userDAO.deleteUser(guest.getEmail());
             }
+            guest = new User("Guest", "User", "guest@iotbay.com", "guestpassword", "0000000000", "GUEST");
+            userDAO.registerUser(guest);
 
             session.setAttribute("currentUser", guest);
 
