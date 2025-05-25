@@ -1,28 +1,47 @@
 package iotbay.controller;
 
-import iotbay.model.Log;
-import iotbay.model.User;
-import iotbay.dao.DBManager;
-import iotbay.dao.LogDAO;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import iotbay.dao.DBConnector;
+import iotbay.dao.DBManager;
+import iotbay.dao.LogDAO;
+import iotbay.dao.UserDAO;
+import iotbay.model.Log;
+import iotbay.model.User;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 public class LoginServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(LoginServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         HttpSession session = request.getSession();
         DBManager manager = (DBManager) session.getAttribute("manager");
         
+        // Initialize DBManager if not present
         if (manager == null) {
-            throw new ServletException("DBManager not initialized. Please navigate from the home page.");
+            try {
+                DBConnector db = new DBConnector();
+                manager = new DBManager(db.openConnection());
+                session.setAttribute("manager", manager);
+            } catch (ClassNotFoundException | SQLException ex) {
+                LOGGER.log(Level.SEVERE, "Error initializing DBManager", ex);
+                session.setAttribute("loginError", "Database connection error. Please try again later.");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
         }
+
+        // Create new UserDAO with fresh connection
+        UserDAO userDAO = new UserDAO(manager.getConnection());
         
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -44,11 +63,14 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
-        User user = null;
+        User user;
         try {
-            user = manager.findUser(email, password);
+            user = userDAO.findUser(email, password);
         } catch (SQLException ex) {
-            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "Error finding user", ex);
+            session.setAttribute("loginError", "An error occurred while trying to log in. Please try again.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
         }
         
         if (user != null) {
@@ -57,12 +79,22 @@ public class LoginServlet extends HttpServlet {
             try {
                 logDAO.createLog(log);
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Error creating login log", ex);
             }
             session.setAttribute("currentUser", user);
             response.sendRedirect("main.jsp");
         } else {
-            session.setAttribute("loginError", "User does not exist.");
+            // Check if the user exists but is deactivated
+            try {
+                User deactivatedUser = userDAO.findUser(email);
+                if (deactivatedUser != null && !deactivatedUser.isActive()) {
+                    session.setAttribute("loginError", "This account has been deactivated. Please contact support.");
+                } else {
+                    session.setAttribute("loginError", "Invalid email or password.");
+                }
+            } catch (SQLException ex) {
+                session.setAttribute("loginError", "Invalid email or password.");
+            }
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }

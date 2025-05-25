@@ -7,22 +7,22 @@
     
     <display-name>assignment1</display-name>
     
+    <!-- Admin Filter Configuration -->
+    <filter>
+        <filter-name>AdminFilter</filter-name>
+        <filter-class>iotbay.filter.AdminFilter</filter-class>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
+        <url-pattern>/viewuser.jsp</url-pattern>
+        <url-pattern>/UserServlet</url-pattern>
+    </filter-mapping>
+
     <!-- Welcome page Default  -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-
-    <!-- ShipmentTableInitializer Servlet - Initialize Shipment table -->
-    <servlet>
-        <servlet-name>ShipmentTableInitializer</servlet-name>
-        <servlet-class>iotbay.controller.ShipmentTableInitializer</servlet-class>
-        <load-on-startup>0</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>ShipmentTableInitializer</servlet-name>
-        <url-pattern>/ShipmentTableInitializer</url-pattern>
-    </servlet-mapping>
 
     <!-- ConnServlet Mapping -->
     <servlet>
@@ -146,6 +146,35 @@
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/UserServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GuestLoginServlet</servlet-name>
+        <servlet-class>iotbay.controller.GuestLoginServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GuestLoginServlet</servlet-name>
+        <url-pattern>/GuestLoginServlet</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>iotbay.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/createUser.jsp</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>iotbay.controller.LogoutServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
 
 </web-app>

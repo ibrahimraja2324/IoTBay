@@ -11,7 +11,7 @@ CREATE TABLE AccessLog (
 -- Insert sample data into AccessLog
 INSERT INTO AccessLog (Email, Action, Role) VALUES
 ('alice@example.com', 'Login', 'Customer'),
-('bob@example.com', 'Logout', 'Staff'),
+('bob@example.com', 'Logout', 'Admin'),
 ('carol@example.com', 'ViewProduct', 'Customer'),
-('dave@example.com', 'UpdateInventory', 'Staff'),
+('dave@example.com', 'UpdateInventory', 'Admin'),
 ('eve@example.com', 'Login', 'Admin')

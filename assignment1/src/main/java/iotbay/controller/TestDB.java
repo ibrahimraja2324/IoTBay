@@ -2,8 +2,6 @@ package iotbay.controller;
 
 import java.sql.*;
 
-import java.util.*;
-
 import java.util.logging.*;
 
 import iotbay.dao.*;
@@ -11,8 +9,6 @@ import iotbay.dao.*;
 import iotbay.model.User;
 
 public class TestDB {
-
-    private static Scanner in = new Scanner(System.in);
 
     public static void main(String[] args) {
 

@@ -15,6 +15,11 @@ public class PaymentDAO {
     public PaymentDAO(Connection conn2) {
         this.conn = conn2;
     }
+
+    private String normalizeCardNumber(String cardNumber) {
+    return cardNumber.replaceAll("[^0-9]", "");
+    }
+
     
     public List<Payment> findPaymentMethods(String userEmail) throws SQLException {
         String sql = "SELECT * FROM Payment WHERE userEmail = ? AND orderId = 0";
@@ -38,18 +43,25 @@ public class PaymentDAO {
     }
     
     public void addPayment(Payment payment) throws SQLException {
-        String sql = "INSERT INTO Payment (orderId, paymentMethod, cardHolderName, cardNumber, cvv, expiryDate, amount, userEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, payment.getOrderId());
-        ps.setString(2, payment.getPaymentMethod());
-        ps.setString(3, payment.getCardHolderName());
-        ps.setString(4, payment.getCardNumber());
-        ps.setString(5, payment.getCvv());
-        ps.setString(6, payment.getExpiryDate());
-        ps.setDouble(7, payment.getAmount());
-        ps.setString(8, payment.getUserEmail());
-        ps.executeUpdate();
+    String normalizedNumber = normalizeCardNumber(payment.getCardNumber());
+    
+    if (!isCardNumberUnique(normalizedNumber)) {
+        throw new SQLException("Card number already exists.");
     }
+    
+    String sql = "INSERT INTO Payment (orderId, paymentMethod, cardHolderName, cardNumber, cvv, expiryDate, amount, userEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    PreparedStatement ps = conn.prepareStatement(sql);
+    ps.setInt(1, payment.getOrderId());
+    ps.setString(2, payment.getPaymentMethod());
+    ps.setString(3, payment.getCardHolderName());
+    ps.setString(4, normalizedNumber);
+    ps.setString(5, payment.getCvv());
+    ps.setString(6, payment.getExpiryDate());
+    ps.setDouble(7, payment.getAmount());
+    ps.setString(8, payment.getUserEmail());
+    ps.executeUpdate();
+}
+
     
     public void deletePayment(int paymentId) throws SQLException {
         String sql = "DELETE FROM Payment WHERE paymentId = ?";
@@ -78,17 +90,51 @@ public class PaymentDAO {
     }
     
     public void updatePayment(Payment payment) throws SQLException {
-        String sql = "UPDATE Payment SET orderId = ?, paymentMethod = ?, cardHolderName = ?, cardNumber = ?, cvv = ?, expiryDate = ?, amount = ?, userEmail = ? WHERE paymentId = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, payment.getOrderId());
-        ps.setString(2, payment.getPaymentMethod());
-        ps.setString(3, payment.getCardHolderName());
-        ps.setString(4, payment.getCardNumber());
-        ps.setString(5, payment.getCvv());
-        ps.setString(6, payment.getExpiryDate());
-        ps.setDouble(7, payment.getAmount());
-        ps.setString(8, payment.getUserEmail());
-        ps.setInt(9, payment.getPaymentId());
-        ps.executeUpdate();
+    String normalizedNumber = normalizeCardNumber(payment.getCardNumber());
+    
+    if (!isCardNumberUniqueForUpdate(normalizedNumber, payment.getPaymentId())) {
+        throw new SQLException("Card number already exists.");
     }
+    
+    String sql = "UPDATE Payment SET orderId = ?, paymentMethod = ?, cardHolderName = ?, cardNumber = ?, cvv = ?, expiryDate = ?, amount = ?, userEmail = ? WHERE paymentId = ?";
+    PreparedStatement ps = conn.prepareStatement(sql);
+    ps.setInt(1, payment.getOrderId());
+    ps.setString(2, payment.getPaymentMethod());
+    ps.setString(3, payment.getCardHolderName());
+    ps.setString(4, normalizedNumber);
+    ps.setString(5, payment.getCvv());
+    ps.setString(6, payment.getExpiryDate());
+    ps.setDouble(7, payment.getAmount());
+    ps.setString(8, payment.getUserEmail());
+    ps.setInt(9, payment.getPaymentId());
+    ps.executeUpdate();
 }
+
+
+     public boolean isCardNumberUnique(String cardNumber) throws SQLException {
+        String sql = "SELECT COUNT(*) AS count FROM Payment WHERE cardNumber = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, cardNumber);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()){
+            return rs.getInt("count") == 0;
+        }
+        return true;
+    }
+    
+
+    public boolean isCardNumberUniqueForUpdate(String cardNumber, int paymentId) throws SQLException {
+        String sql = "SELECT COUNT(*) AS count FROM Payment WHERE cardNumber = ? AND paymentId != ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, cardNumber);
+        ps.setInt(2, paymentId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()){
+            return rs.getInt("count") == 0;
+        }
+        return true;
+    }
+
+}
+
+   

@@ -1,24 +1,25 @@
 package iotbay.controller;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import iotbay.dao.DBManager;
 import iotbay.dao.LogDAO;
 import iotbay.dao.ShipmentDAO;
 import iotbay.model.Log;
 import iotbay.model.Shipment;
 import iotbay.model.User;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ShipmentServlet extends HttpServlet {
     
@@ -48,54 +49,62 @@ public class ShipmentServlet extends HttpServlet {
         
         try {
             switch (action) {
-                case "create":
+                case "create" -> {
                     try {
                         showCreateForm(request, response);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error showing create form", e);
                         throw new ServletException("Error showing create form", e);
                     }
-                    break;
-                case "edit":
+                }
+                case "edit" -> {
                     try {
                         showEditForm(request, response, manager);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error showing edit form", e);
                         throw new ServletException("Error showing edit form", e);
                     }
-                    break;
-                case "delete":
+                }
+                case "delete" -> {
                     try {
                         deleteShipment(request, response, manager);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error deleting shipment", e);
                         throw new ServletException("Error deleting shipment", e);
                     }
-                    break;
-                case "view":
+                }
+                case "view" -> {
                     try {
                         viewShipment(request, response, manager);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error viewing shipment", e);
                         throw new ServletException("Error viewing shipment", e);
                     }
-                    break;
-                case "search":
+                }
+                case "search" -> {
                     try {
                         searchShipments(request, response, manager);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error searching shipments", e);
                         throw new ServletException("Error searching shipments", e);
                     }
-                    break;
-                default:
+                }
+                case "complete" -> {
+                    try {
+                        completeShipment(request, response, manager);
+                    } catch (ServletException | IOException e) {
+                        LOGGER.log(Level.SEVERE, "Error completing shipment", e);
+                        throw new ServletException("Error completing shipment", e);
+                    }
+                }
+                default -> {
                     try {
                         listShipments(request, response, manager);
                     } catch (ServletException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Error listing shipments", e);
                         throw new ServletException("Error listing shipments", e);
                     }
-                    break;
+                }
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Database error in ShipmentServlet", ex);
@@ -153,35 +162,81 @@ public class ShipmentServlet extends HttpServlet {
         }
         
         // Retrieve form parameters
-        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        String orderIdStr = request.getParameter("orderId");
         String shipmentMethod = request.getParameter("shipmentMethod");
         String shipmentDate = request.getParameter("shipmentDate");
         String address = request.getParameter("address");
         
-        // Validation - Basic example, expand as needed
+        // Validation - Enhanced with specific checks
         boolean hasError = false;
         
+        // Order ID validation - Must be a positive number
+        int orderId = 0;
+        try {
+            orderId = Integer.parseInt(orderIdStr);
+            if (orderId <= 0) {
+                session.setAttribute("shipmentError", "Order ID must be a positive number");
+                hasError = true;
+            }
+        } catch (NumberFormatException e) {
+            session.setAttribute("shipmentError", "Order ID must be a valid number");
+            hasError = true;
+        }
+        
+        // Check for duplicate order ID for this user
+        if (!hasError) {
+            Connection conn = manager.getConnection();
+            ShipmentDAO shipmentDAO = new ShipmentDAO(conn);
+            List<Shipment> existingShipments = shipmentDAO.findShipmentsByUser(currentUser.getEmail());
+            for (Shipment s : existingShipments) {
+                if (s.getOrderId() == orderId) {
+                    session.setAttribute("shipmentError", "A shipment with this Order ID already exists");
+                    hasError = true;
+                    break;
+                }
+            }
+        }
+        
+        // Shipment method validation
         if (shipmentMethod == null || shipmentMethod.trim().isEmpty()) {
             session.setAttribute("shipmentError", "Shipment method is required");
             hasError = true;
         }
         
+        // Shipment date validation - Must be today or in the future
         if (shipmentDate == null || shipmentDate.trim().isEmpty()) {
             session.setAttribute("shipmentError", "Shipment date is required");
             hasError = true;
+        } else {
+            try {
+                LocalDate date = LocalDate.parse(shipmentDate);
+                LocalDate today = LocalDate.now();
+                if (date.isBefore(today)) {
+                    session.setAttribute("shipmentError", "Shipment date cannot be in the past");
+                    hasError = true;
+                }
+            } catch (DateTimeParseException e) {
+                session.setAttribute("shipmentError", "Invalid date format");
+                hasError = true;
+            }
         }
         
+        // Address validation
         if (address == null || address.trim().isEmpty()) {
             session.setAttribute("shipmentError", "Address is required");
             hasError = true;
         }
         
         if (hasError) {
-            response.sendRedirect("ShipmentServlet?action=create");
+            request.setAttribute("orderId", orderIdStr);
+            request.setAttribute("shipmentMethod", shipmentMethod);
+            request.setAttribute("shipmentDate", shipmentDate);
+            request.setAttribute("address", address);
+            request.getRequestDispatcher("shipment-form.jsp").forward(request, response);
             return;
         }
         
-        // Create new shipment
+        // Create new shipment - Only allowing "Pending" status for new shipments
         Shipment shipment = new Shipment();
         shipment.setOrderId(orderId);
         shipment.setShipmentMethod(shipmentMethod);
@@ -256,9 +311,9 @@ public class ShipmentServlet extends HttpServlet {
             return;
         }
         
-        // Check if the shipment is finalized (not in pending status)
+        // Check if the shipment is not in pending status
         if (!"Pending".equals(shipment.getStatus())) {
-            session.setAttribute("shipmentError", "Cannot edit a shipment that has been finalized");
+            session.setAttribute("shipmentError", "Cannot edit a shipment that has been completed");
             response.sendRedirect("shipment-dashboard.jsp");
             return;
         }
@@ -280,33 +335,10 @@ public class ShipmentServlet extends HttpServlet {
         
         // Retrieve form parameters
         int shipmentId = Integer.parseInt(request.getParameter("shipmentId"));
-        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        String orderIdStr = request.getParameter("orderId");
         String shipmentMethod = request.getParameter("shipmentMethod");
         String shipmentDate = request.getParameter("shipmentDate");
         String address = request.getParameter("address");
-        
-        // Validation - Basic example, expand as needed
-        boolean hasError = false;
-        
-        if (shipmentMethod == null || shipmentMethod.trim().isEmpty()) {
-            session.setAttribute("shipmentError", "Shipment method is required");
-            hasError = true;
-        }
-        
-        if (shipmentDate == null || shipmentDate.trim().isEmpty()) {
-            session.setAttribute("shipmentError", "Shipment date is required");
-            hasError = true;
-        }
-        
-        if (address == null || address.trim().isEmpty()) {
-            session.setAttribute("shipmentError", "Address is required");
-            hasError = true;
-        }
-        
-        if (hasError) {
-            response.sendRedirect("ShipmentServlet?action=edit&id=" + shipmentId);
-            return;
-        }
         
         // Get the existing shipment
         Connection conn = manager.getConnection();
@@ -322,8 +354,78 @@ public class ShipmentServlet extends HttpServlet {
         
         // Check if the shipment is finalized
         if (!"Pending".equals(existingShipment.getStatus())) {
-            session.setAttribute("shipmentError", "Cannot edit a shipment that has been finalized");
+            session.setAttribute("shipmentError", "Cannot edit a shipment that has been completed");
             response.sendRedirect("shipment-dashboard.jsp");
+            return;
+        }
+        
+        // Validation - Enhanced with specific checks
+        boolean hasError = false;
+        
+        // Order ID validation - Must be a positive number
+        int orderId = 0;
+        try {
+            orderId = Integer.parseInt(orderIdStr);
+            if (orderId <= 0) {
+                session.setAttribute("shipmentError", "Order ID must be a positive number");
+                hasError = true;
+            }
+        } catch (NumberFormatException e) {
+            session.setAttribute("shipmentError", "Order ID must be a valid number");
+            hasError = true;
+        }
+        
+        // Check for duplicate order ID for this user (excluding the current shipment)
+        if (!hasError && orderId != existingShipment.getOrderId()) {
+            List<Shipment> userShipments = shipmentDAO.findShipmentsByUser(currentUser.getEmail());
+            for (Shipment s : userShipments) {
+                if (s.getShipmentId() != shipmentId && s.getOrderId() == orderId) {
+                    session.setAttribute("shipmentError", "A shipment with this Order ID already exists");
+                    hasError = true;
+                    break;
+                }
+            }
+        }
+        
+        // Shipment method validation
+        if (shipmentMethod == null || shipmentMethod.trim().isEmpty()) {
+            session.setAttribute("shipmentError", "Shipment method is required");
+            hasError = true;
+        }
+        
+        // Shipment date validation - Must be today or in the future
+        if (shipmentDate == null || shipmentDate.trim().isEmpty()) {
+            session.setAttribute("shipmentError", "Shipment date is required");
+            hasError = true;
+        } else {
+            try {
+                LocalDate date = LocalDate.parse(shipmentDate);
+                LocalDate today = LocalDate.now();
+                if (date.isBefore(today)) {
+                    session.setAttribute("shipmentError", "Shipment date cannot be in the past");
+                    hasError = true;
+                }
+            } catch (DateTimeParseException e) {
+                session.setAttribute("shipmentError", "Invalid date format");
+                hasError = true;
+            }
+        }
+        
+        // Address validation
+        if (address == null || address.trim().isEmpty()) {
+            session.setAttribute("shipmentError", "Address is required");
+            hasError = true;
+        }
+        
+        if (hasError) {
+            // Prepare the shipment object for the form to display with the entered values
+            existingShipment.setOrderId(orderId);
+            existingShipment.setShipmentMethod(shipmentMethod);
+            existingShipment.setShipmentDate(shipmentDate);
+            existingShipment.setAddress(address);
+            
+            request.setAttribute("shipment", existingShipment);
+            request.getRequestDispatcher("shipment-form.jsp").forward(request, response);
             return;
         }
         
@@ -377,7 +479,7 @@ public class ShipmentServlet extends HttpServlet {
         
         // Check if the shipment is finalized
         if (!"Pending".equals(shipment.getStatus())) {
-            session.setAttribute("shipmentError", "Cannot delete a shipment that has been finalized");
+            session.setAttribute("shipmentError", "Cannot delete a shipment that has been completed");
             response.sendRedirect("shipment-dashboard.jsp");
             return;
         }
@@ -456,5 +558,57 @@ public class ShipmentServlet extends HttpServlet {
         
         // Forward to the new search results page
         request.getRequestDispatcher("shipment-search-results.jsp").forward(request, response);
+    }
+    
+    // New method to mark a shipment as complete
+    private void completeShipment(HttpServletRequest request, HttpServletResponse response, DBManager manager) 
+            throws ServletException, IOException, SQLException {
+        
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("currentUser");
+        
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        
+        // Get the shipment ID from the request
+        int shipmentId = Integer.parseInt(request.getParameter("id"));
+        
+        // Get the shipment from the database
+        Connection conn = manager.getConnection();
+        ShipmentDAO shipmentDAO = new ShipmentDAO(conn);
+        Shipment shipment = shipmentDAO.findShipment(shipmentId);
+        
+        // Check if the shipment exists and belongs to the current user
+        if (shipment == null || !shipment.getUserEmail().equals(currentUser.getEmail())) {
+            session.setAttribute("shipmentError", "Shipment not found or you do not have permission to complete it");
+            response.sendRedirect("shipment-dashboard.jsp");
+            return;
+        }
+        
+        // Check if the shipment is already complete
+        if (!"Pending".equals(shipment.getStatus())) {
+            session.setAttribute("shipmentError", "This shipment is already marked as complete");
+            response.sendRedirect("shipment-dashboard.jsp");
+            return;
+        }
+        
+        // Update the shipment status to Complete
+        shipment.setStatus("Complete");
+        boolean isUpdated = shipmentDAO.updateShipment(shipment);
+        
+        if (isUpdated) {
+            // Log the completion
+            Log log = new Log(currentUser.getEmail(), "Marked shipment as complete", currentUser.getRole());
+            LogDAO logDAO = new LogDAO(conn);
+            logDAO.createLog(log);
+            
+            session.setAttribute("successMessage", "Shipment marked as complete successfully");
+        } else {
+            session.setAttribute("shipmentError", "Failed to mark shipment as complete");
+        }
+        
+        response.sendRedirect("shipment-dashboard.jsp");
     }
 }

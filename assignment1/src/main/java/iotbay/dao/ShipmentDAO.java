@@ -159,6 +159,11 @@ public class ShipmentDAO {
         String status = rs.getString("status");
         String userEmail = rs.getString("userEmail");
         
+        // Normalize status values to only be "Pending" or "Complete"
+        if (!"Complete".equals(status)) {
+            status = "Pending";
+        }
+        
         return new Shipment(shipmentId, orderId, shipmentMethod, shipmentDate, address, status, userEmail);
     }
 }

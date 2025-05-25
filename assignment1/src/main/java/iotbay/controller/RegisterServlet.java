@@ -1,5 +1,11 @@
 package iotbay.controller;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import iotbay.dao.DBManager;
 import iotbay.dao.LogDAO;
 import iotbay.dao.UserDAO;
@@ -10,11 +16,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class RegisterServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(RegisterServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -27,6 +31,7 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
         String phone = request.getParameter("phone");
+        String staffRole = request.getParameter("staffRole");
 
         HttpSession session = request.getSession();
         // Clear any previous error messages from the session
@@ -34,6 +39,7 @@ public class RegisterServlet extends HttpServlet {
         session.setAttribute("emailError", null);
         session.setAttribute("passwordError", null);
         session.setAttribute("nameError", null);
+        session.setAttribute("phoneError", null);
 
         // Instantiate Validator (assumes you have a Validator class)
         Validator validator = new Validator();
@@ -58,6 +64,11 @@ public class RegisterServlet extends HttpServlet {
             hasError = true;
         }
 
+        if (!validator.validatePhoneNumber(phone)) {
+            session.setAttribute("phoneError", "Phone number must be 10 digits.");
+            hasError = true;
+        }
+
         // Retrieve the DBManager from the session
         DBManager manager = (DBManager) session.getAttribute("manager");
         if (manager == null) {
@@ -71,8 +82,11 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
+        // If staffRole is provided, validate it
+        String role = (staffRole != null && staffRole.equals("Staff")) ? "STAFF" : "USER";
+
         // Create User object using the validated values
-        User user = new User(firstName, lastName, email, password, phone, "USER");
+        User user = new User(firstName, lastName, email, password, phone, role);
 
         // Get the underlying connection from the DBManager and instantiate UserDAO
         Connection conn = manager.getConnection();
@@ -89,7 +103,6 @@ public class RegisterServlet extends HttpServlet {
             }
             isRegistered = userDAO.registerUser(user);
         } catch (SQLException ex) {
-            ex.printStackTrace();
             session.setAttribute("registerError", "Database error: " + ex.getMessage());
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
@@ -102,7 +115,7 @@ public class RegisterServlet extends HttpServlet {
             try {
                 logDAO.createLog(log);
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Error creating registration log", ex);
             }
             session.setAttribute("currentUser", user);
             session.setAttribute("welcomeMessage", "Registration successful. Welcome, " + firstName + "!");

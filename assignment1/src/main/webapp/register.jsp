@@ -4,11 +4,13 @@
     String emailError    = (String) session.getAttribute("emailError");
     String passwordError = (String) session.getAttribute("passwordError");
     String nameError     = (String) session.getAttribute("nameError");
+    String phoneError    = (String) session.getAttribute("phoneError");
 
     session.removeAttribute("registerError");
     session.removeAttribute("emailError");
     session.removeAttribute("passwordError");
     session.removeAttribute("nameError");
+    session.removeAttribute("phoneError");
 %>
 <!DOCTYPE html>
 <html lang="en" id="register-page">
@@ -22,7 +24,7 @@
 <body>
     <nav class="page-nav">
         <div class="nav-left">
-            <a href="index.jsp">Home</a>
+            <a href="main.jsp">Home</a>
         </div>
     </nav>
     
@@ -30,7 +32,7 @@
         <h2>Create Account</h2>
         
         <%
-            if (registerError != null || emailError != null || passwordError != null || nameError != null) {
+            if (registerError != null || emailError != null || passwordError != null || nameError != null || phoneError != null) {
         %>
             <div class="error-messages">
                 <%
@@ -45,6 +47,9 @@
                 <% }
                     if (nameError != null) { %>
                         <p><%= nameError %></p>
+                <% }
+                    if (phoneError != null) { %>
+                        <p><%= phoneError %></p>
                 <% }
                 %>
             </div>
@@ -68,6 +73,11 @@
         <label class="heading" for="phone">Phone Number</label>
         <input type="text" name="phone" id="phone" placeholder="Phone Number" 
                value="<%= request.getParameter("phone") != null ? request.getParameter("phone") : "" %>" required>
+        <div class="form-field staff-checkbox">
+            <label class="radio-label" for="roleStaff">Register as staff?</label>
+            <input type="checkbox" name="role" id="roleStaff" value="Staff" <%= "Staff".equals(request.getParameter("role")) ? "checked" : "" %>>
+        </div>
+        
         <input type="submit" value="Register">
         <a href="login.jsp">Already have an account? Login</a>
     </form>

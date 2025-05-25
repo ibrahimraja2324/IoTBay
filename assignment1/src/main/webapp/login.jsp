@@ -11,7 +11,7 @@
   
     <nav class="page-nav">
        <div class="nav-left">
-          <a href="index.jsp">Home</a>
+          <a href="main.jsp">Home</a>
        </div>
     </nav>
     
@@ -38,6 +38,11 @@
         <% 
             } 
         %>
+        
+        <% String error = request.getParameter("error"); %>
+        <% if (error != null) { %>
+          <p style="color: red;"><%= error %></p>
+        <% } %>
         
         <input type="text" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
