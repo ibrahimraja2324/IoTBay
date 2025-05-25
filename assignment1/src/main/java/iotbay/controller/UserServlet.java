@@ -37,6 +37,7 @@ public class UserServlet extends HttpServlet {
             switch (action) {
                 case "edit" -> showEditForm(request, response);
                 case "delete" -> deleteUser(request, response);
+                case "toggleStatus" -> toggleUserStatus(request, response);
                 default -> listUsers(request, response);
             }
         } catch (SQLException | ServletException | IOException e) {
@@ -147,5 +148,12 @@ public class UserServlet extends HttpServlet {
     userDAO.deleteUser(email);
     response.sendRedirect("UserServlet");
 }
+
+    private void toggleUserStatus(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        String email = request.getParameter("email");
+        userDAO.toggleUserStatus(email);
+        response.sendRedirect("UserServlet");
+    }
 
 }

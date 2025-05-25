@@ -44,7 +44,7 @@
         <select name="role" required>
           <option value="">-- Select Role --</option>
           <option value="USER">User</option>
-          <option value="staff">Staff</option>
+          <option value="STAFF">Staff</option>
         </select>
 
         <label for="active">Status:</label>

@@ -1,15 +1,20 @@
 package iotbay.controller;
 
-import iotbay.model.Log;
-import iotbay.model.User;
-import iotbay.dao.DBManager;
-import iotbay.dao.LogDAO;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import iotbay.dao.DBManager;
+import iotbay.dao.LogDAO;
+import iotbay.dao.UserDAO;
+import iotbay.model.Log;
+import iotbay.model.User;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 public class LoginServlet extends HttpServlet {
 
@@ -62,7 +67,18 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("currentUser", user);
             response.sendRedirect("main.jsp");
         } else {
-            session.setAttribute("loginError", "User does not exist.");
+            // Check if the user exists but is deactivated
+            UserDAO userDAO = new UserDAO(manager.getConnection());
+            try {
+                User deactivatedUser = userDAO.findUser(email);
+                if (deactivatedUser != null && !deactivatedUser.isActive()) {
+                    session.setAttribute("loginError", "This account has been deactivated. Please contact support.");
+                } else {
+                    session.setAttribute("loginError", "Invalid email or password.");
+                }
+            } catch (SQLException ex) {
+                session.setAttribute("loginError", "Invalid email or password.");
+            }
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
