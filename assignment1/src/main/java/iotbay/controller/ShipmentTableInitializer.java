@@ -1,10 +1,4 @@
 package iotbay.controller;
-
-import iotbay.dao.DBConnector;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,6 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import iotbay.dao.DBConnector;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ShipmentTableInitializer extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(ShipmentTableInitializer.class.getName());
@@ -28,14 +28,14 @@ public class ShipmentTableInitializer extends HttpServlet {
             
             // Execute SQL file
             String sqlFilePath = getServletContext().getRealPath("/WEB-INF/database/create_shipment_table.sql");
-            LOGGER.info("SQL file path: " + sqlFilePath);
+            LOGGER.info(() -> "SQL file path: " + sqlFilePath);
             
             executeScriptFromFile(conn, sqlFilePath);
             
             // Close connection
             connector.closeConnection();
             
-            LOGGER.info("Shipment table initialization completed successfully.");
+            LOGGER.info(() -> "Shipment table initialization completed successfully.");
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error initializing Shipment table: " + e.getMessage(), e);
             throw new ServletException("Error initializing Shipment table: " + e.getMessage(), e);
@@ -54,7 +54,7 @@ public class ShipmentTableInitializer extends HttpServlet {
     }
     
     private void executeScriptFromFile(Connection conn, String filePath) throws SQLException, IOException {
-        LOGGER.info("Reading SQL script from: " + filePath);
+        LOGGER.info(() -> "Reading SQL script from: " + filePath);
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
         StringBuilder script = new StringBuilder();
         String line;
@@ -72,12 +72,12 @@ public class ShipmentTableInitializer extends HttpServlet {
         
         for (String statement : statements) {
             if (!statement.trim().isEmpty()) {
-                LOGGER.info("Executing SQL: " + statement.trim());
+                LOGGER.info(() -> "Executing SQL: " + statement.trim());
                 stmt.execute(statement);
             }
         }
         
         stmt.close();
-        LOGGER.info("SQL script executed successfully: " + filePath);
+        LOGGER.info(() -> "SQL script executed successfully: " + filePath);
     }
 }

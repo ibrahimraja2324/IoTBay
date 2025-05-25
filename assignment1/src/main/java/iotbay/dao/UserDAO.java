@@ -68,6 +68,7 @@ public class UserDAO {
         ps.setString(3, user.getFirstName());
         ps.setString(4, user.getLastName());
         ps.setString(5, user.getPhone());
+        ps.setString(6, user.getRole());
         int affectedRows = ps.executeUpdate();
         return affectedRows > 0;
     }
@@ -123,6 +124,32 @@ public class UserDAO {
         User user = new User(firstName, lastName, email, password, phone, role);
         user.setActive(isActive);
         return user;
+    }
+
+    public User login(String email, String password) throws SQLException {
+        return findUser(email, password);
+    }
+
+    public boolean updateProfile(User user, String firstName, String lastName, String phone, String newPassword, String oldPassword) throws SQLException {
+        if (!user.getPassword().equals(oldPassword)) {
+            return false;
+        }
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setPhone(phone);
+        user.setPassword(newPassword);
+        return updateUser(user);
+    }
+
+    public boolean deleteAccount(User user, String password) throws SQLException {
+        if (!user.getPassword().equals(password)) {
+            return false;
+        }
+        return deleteUser(user.getEmail());
+    }
+
+    public boolean toggleAccountStatus(User user) throws SQLException {
+        return toggleUserStatus(user.getEmail());
     }
 
 }

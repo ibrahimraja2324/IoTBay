@@ -144,11 +144,16 @@ public class UserServlet extends HttpServlet {
             throws SQLException, IOException {
         HttpSession session = request.getSession();
         String email = request.getParameter("email");
+        User currentUser = (User) session.getAttribute("currentUser");
         
         if (userDAO.deleteUser(email)) {
-            // If the user deleted their own account
-            session.invalidate(); // Clear the session
-            response.sendRedirect("main.jsp?error=Account deleted successfully. Please login with a different account.");
+            // Invalidate session and redirect if the current staff user deleted their own account
+            if (currentUser != null && currentUser.getEmail().equals(email)) {
+                session.invalidate();
+                response.sendRedirect("main.jsp?error=Account deleted successfully. Please login with a different account.");
+            } else {
+                response.sendRedirect("UserServlet");
+            }
         } else {
             response.sendRedirect("UserServlet?error=Failed to delete user");
         }
@@ -158,11 +163,16 @@ public class UserServlet extends HttpServlet {
             throws SQLException, IOException {
         HttpSession session = request.getSession();
         String email = request.getParameter("email");
+        User currentUser = (User) session.getAttribute("currentUser");
         
         if (userDAO.toggleUserStatus(email)) {
-            // If the user deactivated their own account
-            session.invalidate(); // Clear the session
-            response.sendRedirect("main.jsp?error=Account deactivated. Please contact an administrator to reactivate your account.");
+            // Invalidate session and redirect if the current user deactivated their own account
+            if (currentUser != null && currentUser.getEmail().equals(email)) {
+                session.invalidate();
+                response.sendRedirect("main.jsp?error=Account deactivated. Please contact an administrator to reactivate your account.");
+            } else {
+                response.sendRedirect("UserServlet");
+            }
         } else {
             response.sendRedirect("UserServlet?error=Failed to update user status");
         }
