@@ -62,11 +62,16 @@
             <% } %>
           </td>
           <td>
-            <a href="UserServlet?action=edit&email=<%= u.getEmail() %>" class="btn-secondary" style="padding: 6px 10px; font-size: 13px;">Edit</a>
-            <a href="UserServlet?action=delete&email=<%= u.getEmail() %>" 
-                class="btn-important" style="padding: 6px 10px; font-size: 13px;"
-                onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>             
+            <a href="UserServlet?action=edit&email=<%= u.getEmail() %>" 
+               class="btn-secondary" style="padding: 6px 10px; font-size: 13px;">Edit</a>
+          
+            <% if (!"admin@example.com".equalsIgnoreCase(u.getEmail())) { %>
+              <a href="UserServlet?action=delete&email=<%= u.getEmail() %>" 
+                 class="btn-important" style="padding: 6px 10px; font-size: 13px;"
+                 onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+            <% } %>
           </td>
+          
         </tr>
         <%
               }

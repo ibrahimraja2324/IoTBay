@@ -39,8 +39,8 @@ public class UserServlet extends HttpServlet {
                 case "delete" -> deleteUser(request, response);
                 default -> listUsers(request, response);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | ServletException | IOException e) {
+            LOGGER.severe(() -> "Error processing request: " + e.getMessage());
             response.getWriter().println("An error occurred: " + e.getMessage());
         }
         
@@ -67,8 +67,8 @@ public class UserServlet extends HttpServlet {
                 case "update" -> updateUser(request, response);
                 default -> response.sendRedirect("viewuser.jsp");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | IOException e) {
+            LOGGER.severe(() -> "Error processing request: " + e.getMessage());
             response.getWriter().println("An error occurred: " + e.getMessage());
         }
         
@@ -85,16 +85,16 @@ public class UserServlet extends HttpServlet {
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, ServletException, IOException {
     String email = request.getParameter("email");
-    System.out.println("[DEBUG] Entered showEditForm with email: " + email);
+    LOGGER.info(() -> "Entered showEditForm with email: " + email);
 
     if (email == null || email.trim().isEmpty()) {
-        System.out.println("[DEBUG] Email parameter is missing or empty.");
+        LOGGER.warning("Email parameter is missing or empty.");
         response.sendRedirect("viewuser.jsp");
         return;
     }
 
     User existingUser = userDAO.findUser(email);
-    System.out.println("🔍 [DEBUG] Found user: " + (existingUser != null ? existingUser.getEmail() : "null"));
+    LOGGER.info(() -> "Found user: " + (existingUser != null ? existingUser.getEmail() : "null"));
 
     if (existingUser != null) {
         request.setAttribute("user", existingUser);
@@ -141,19 +141,11 @@ public class UserServlet extends HttpServlet {
     }
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        String email = request.getParameter("email");
-        userDAO.deleteUser(email);
-        response.sendRedirect("UserServlet");
-    }
+        throws SQLException, IOException {
+    String email = request.getParameter("email");
 
-    // Used to retrieve request object inside init()
-    private static HttpServletRequest getThreadLocalRequest() {
-        return ((HttpServletRequest) jakarta.servlet.ServletRequest.class.cast(
-                ThreadLocalRequestHolder.request.get()));
-    }
+    userDAO.deleteUser(email);
+    response.sendRedirect("UserServlet");
+}
 
-    private static class ThreadLocalRequestHolder {
-        private static final ThreadLocal<jakarta.servlet.ServletRequest> request = new ThreadLocal<>();
-    }
 }
