@@ -11,7 +11,7 @@ import iotbay.model.User;
 
 
 public class UserDAO {
-    private Connection conn;
+    private final Connection conn;
 
     public UserDAO(Connection conn) {
         this.conn = conn;
